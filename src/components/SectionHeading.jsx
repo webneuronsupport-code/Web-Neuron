@@ -5,47 +5,49 @@ import './SectionHeading.css';
 /**
  * Cabecera de sección con revelado por líneas.
  *
- * Se repite en cada bloque de la página, así que la animación vive aquí una
- * sola vez en lugar de copiarse cuatro veces.
+ * Se repite en cada bloque, así que la animación vive aquí una sola vez.
  */
-const SectionHeading = ({ eyebrow, title, lede, align = 'center' }) => {
+const SectionHeading = ({ label, title, lede, align = 'left' }) => {
   const root = useRef(null);
 
   useGSAP(
     () => {
-      const tl = gsap.timeline({
-        scrollTrigger: { trigger: root.current, start: 'top 82%' },
-      });
+      const trigger = { trigger: root.current, start: 'top 84%' };
 
-      tl.from(root.current.querySelector('.sh-eyebrow'), {
+      gsap.from(root.current.querySelector('.sh-label'), {
         autoAlpha: 0,
-        y: 14,
+        y: 12,
         duration: 0.8,
+        scrollTrigger: trigger,
       });
 
-      // El tween del titular es independiente del timeline y lleva su propio
-      // ScrollTrigger: onSplit se vuelve a ejecutar cuando cargan las fuentes
-      // o cambia el ancho, y un tween añadido a un timeline ya consumido se
-      // quedaría congelado en su estado inicial, con el texto fuera de la
-      // máscara.
+      // El tween del titular es independiente y lleva su propio ScrollTrigger:
+      // onSplit se reejecuta al cargar las fuentes o cambiar el ancho, y uno
+      // colgado de un timeline ya consumido se quedaría congelado.
       SplitText.create(root.current.querySelector('.sh-title'), {
         type: 'lines',
         mask: 'lines',
         autoSplit: true,
         onSplit(self) {
           return gsap.from(self.lines, {
-            yPercent: 106,
-            duration: 1.25,
-            stagger: 0.1,
+            yPercent: 108,
+            duration: 1.3,
+            stagger: 0.08,
             ease: 'expo.out',
-            scrollTrigger: { trigger: root.current, start: 'top 82%' },
+            scrollTrigger: trigger,
           });
         },
       });
 
       const ledeEl = root.current.querySelector('.sh-lede');
       if (ledeEl) {
-        tl.from(ledeEl, { autoAlpha: 0, y: 18, duration: 0.9 }, 0.45);
+        gsap.from(ledeEl, {
+          autoAlpha: 0,
+          y: 16,
+          duration: 0.9,
+          delay: 0.25,
+          scrollTrigger: trigger,
+        });
       }
     },
     { scope: root }
@@ -53,15 +55,10 @@ const SectionHeading = ({ eyebrow, title, lede, align = 'center' }) => {
 
   return (
     <header className={`sh sh--${align}`} ref={root}>
-      {eyebrow && <span className="eyebrow sh-eyebrow">{eyebrow}</span>}
-      {/* El degradado va en el span interno, no en el h2. SplitText mueve el
-          texto a divs por línea, y esos divs heredan
-          -webkit-text-fill-color: transparent del padre: el texto quedaría
-          invisible y el background-clip del h2 sin nada que recortar. En un
-          hijo, cada fragmento de línea conserva su propio degradado. */}
-      <h2 className="headline sh-title">
-        <span className="grad-text">{title}</span>
-      </h2>
+      {label && <span className="label sh-label">{label}</span>}
+      {/* El titular no lleva degradado: SplitText mueve el texto a divs por
+          línea, y esos heredarían el text-fill transparente del padre. */}
+      <h2 className="heading sh-title">{title}</h2>
       {lede && <p className="lede sh-lede">{lede}</p>}
     </header>
   );

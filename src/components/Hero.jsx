@@ -1,25 +1,55 @@
 import { useRef } from 'react';
-import { ArrowRight, Sparkles, Play } from 'lucide-react';
+import { ArrowRight, Play } from 'lucide-react';
 import { gsap, SplitText, useGSAP } from '../lib/gsap';
+import { INTRO_DELAY } from '../lib/timing';
+import Button from './Button';
 import './Hero.css';
+
+const COL_A = [
+  'WhatsApp Business',
+  'HubSpot',
+  'Shopify',
+  'Notion',
+  'Slack',
+  'Gmail',
+  'Stripe',
+  'Instagram',
+];
+
+const COL_B = [
+  'Agentes de voz',
+  'Cualificación',
+  'CRM omnicanal',
+  'Flujos',
+  'Analítica',
+  'Integraciones',
+  'Soporte 24/7',
+  'Telegram',
+];
 
 const Hero = () => {
   const root = useRef(null);
 
   useGSAP(
     () => {
-      const tl = gsap.timeline({ delay: 0.35 });
+      // --- Columnas de fondo -------------------------------------------------
+      // Cada columna lleva la lista dos veces; moverla un 50% devuelve el
+      // segundo juego al sitio del primero, así que el reinicio es invisible.
+      gsap.utils.toArray('.hero-col-inner').forEach((col, i) => {
+        gsap.fromTo(
+          col,
+          { yPercent: i === 0 ? 0 : -50 },
+          { yPercent: i === 0 ? -50 : 0, duration: 26, ease: 'none', repeat: -1 }
+        );
+      });
 
-      // El titular se parte en líneas y cada línea sube desde detrás de su
-      // propia máscara. mask: 'lines' crea el contenedor con overflow oculto,
-      // que es lo que produce el efecto de "asomar" en vez de solo aparecer.
-      // autoSplit vuelve a partir el texto cuando cargan las fuentes o cambia
-      // el ancho, así que las líneas nunca quedan cortadas donde no toca.
-      //
-      // La animación se crea DENTRO de onSplit y es independiente: onSplit se
-      // vuelve a ejecutar en cada re-partición, y si el tween se colgara del
-      // timeline de arriba, al re-partir se añadiría a un timeline ya
-      // terminado y las líneas se quedarían congeladas fuera de la máscara.
+      // --- Entrada -----------------------------------------------------------
+      const tl = gsap.timeline({ delay: INTRO_DELAY });
+
+      // El titular se parte en líneas y cada una asoma desde detrás de su
+      // máscara. La animación se crea DENTRO de onSplit: autoSplit vuelve a
+      // partir el texto cuando cargan las fuentes, y un tween colgado de un
+      // timeline ya consumido dejaría las líneas congeladas fuera de vista.
       SplitText.create('.hero-title', {
         type: 'lines',
         mask: 'lines',
@@ -27,101 +57,66 @@ const Hero = () => {
         linesClass: 'hero-line',
         onSplit(self) {
           return gsap.from(self.lines, {
-            yPercent: 108,
+            yPercent: 110,
             duration: 1.5,
-            stagger: 0.11,
+            stagger: 0.09,
             ease: 'expo.out',
-            delay: 0.35,
+            delay: INTRO_DELAY,
           });
         },
       });
 
-      tl.from('.hero-badge', { autoAlpha: 0, y: 18, duration: 0.9 }, 0.1)
-        .from('.hero-lede', { autoAlpha: 0, y: 22, duration: 1 }, 0.75)
-        .from('.hero-actions > *', { autoAlpha: 0, y: 20, stagger: 0.1, duration: 0.9 }, 0.9)
-        .from('.hero-proof > *', { autoAlpha: 0, y: 14, stagger: 0.07, duration: 0.8 }, 1.05)
-        .from('.hero-cue', { autoAlpha: 0, duration: 0.8 }, 1.3)
-        // El panel llega desde abajo, inclinado, y se endereza.
-        .from(
-          '.hero-panel',
-          { autoAlpha: 0, y: 120, rotateX: 22, scale: 0.94, duration: 1.8, ease: 'expo.out' },
-          0.6
-        );
+      tl.from('.hero-subject', { autoAlpha: 0, scale: 1.06, duration: 1.8, ease: 'expo.out' }, 0.15)
+        .from('.hero-label', { autoAlpha: 0, y: 12, duration: 0.8 }, 0.5)
+        .from('.hero-lede', { autoAlpha: 0, y: 16, duration: 0.9 }, 0.7)
+        .from('.hero-actions > *', { autoAlpha: 0, y: 14, stagger: 0.08, duration: 0.8 }, 0.8)
+        .from('.hero-cue', { autoAlpha: 0, duration: 0.8 }, 1);
 
-      // Respiración infinita de las esferas. Duraciones desacompasadas para
-      // que el bucle nunca se vea repetir.
-      gsap.to('.hero-orb--indigo', {
-        x: 90,
-        y: -60,
-        scale: 1.16,
-        duration: 15,
+      // --- Parallax ----------------------------------------------------------
+      // Tres velocidades: las columnas apenas se mueven, el sujeto se hunde y
+      // el texto se va. Es lo que crea la profundidad al salir del hero.
+      gsap.to('.hero-cols', {
+        yPercent: 12,
+        ease: 'none',
+        scrollTrigger: { trigger: root.current, start: 'top top', end: 'bottom top', scrub: true },
+      });
+
+      gsap.to('.hero-subject', {
+        yPercent: 14,
+        ease: 'none',
+        scrollTrigger: { trigger: root.current, start: 'top top', end: 'bottom top', scrub: true },
+      });
+
+      // El texto se retira tarde y despacio. Desvanecerlo antes dejaba un hueco
+      // negro entre el final del hero y la banda siguiente, porque el contenido
+      // del hero está alineado abajo y arriba no queda nada que mirar.
+      gsap.to('.hero-text', {
+        yPercent: -10,
+        autoAlpha: 0,
+        ease: 'none',
+        scrollTrigger: { trigger: root.current, start: '25% top', end: 'bottom top', scrub: true },
+      });
+
+      // Deriva lenta de la luz ambiental. Duraciones distintas para que el
+      // bucle no se perciba.
+      gsap.to('.hero-glow-a', {
+        x: 70,
+        y: -50,
+        scale: 1.15,
+        duration: 18,
         repeat: -1,
         yoyo: true,
         ease: 'sine.inOut',
       });
-      gsap.to('.hero-orb--cyan', {
-        x: -70,
-        y: 70,
+      gsap.to('.hero-glow-b', {
+        x: -60,
+        y: 60,
         scale: 1.1,
-        duration: 19,
-        repeat: -1,
-        yoyo: true,
-        ease: 'sine.inOut',
-      });
-      gsap.to('.hero-orb--violet', {
-        x: 60,
-        y: 50,
-        scale: 1.22,
         duration: 23,
         repeat: -1,
         yoyo: true,
         ease: 'sine.inOut',
       });
-
-      // Parallax al hacer scroll: el fondo se queda atrás, el texto se
-      // desvanece y el panel se hunde. Tres velocidades distintas dan la
-      // sensación de profundidad.
-      gsap.to('.hero-aurora', {
-        yPercent: 24,
-        scale: 1.12,
-        ease: 'none',
-        scrollTrigger: { trigger: root.current, start: 'top top', end: 'bottom top', scrub: true },
-      });
-
-      gsap.to('.hero-copy', {
-        yPercent: -14,
-        autoAlpha: 0,
-        ease: 'none',
-        scrollTrigger: { trigger: root.current, start: 'top top', end: '65% top', scrub: true },
-      });
-
-      gsap.to('.hero-panel', {
-        yPercent: -8,
-        ease: 'none',
-        scrollTrigger: { trigger: '.hero-panel', start: 'top bottom', end: 'bottom top', scrub: 1 },
-      });
-
-      // Inclinación del panel siguiendo el cursor. quickTo mantiene una única
-      // interpolación viva por propiedad en lugar de crear un tween nuevo por
-      // cada evento de ratón, que serían decenas por segundo.
-      const panel = root.current.querySelector('.hero-panel-inner');
-      const rotY = gsap.quickTo(panel, 'rotateY', { duration: 0.7, ease: 'power3.out' });
-      const rotX = gsap.quickTo(panel, 'rotateX', { duration: 0.7, ease: 'power3.out' });
-
-      const onMove = (e) => {
-        const { innerWidth: w, innerHeight: h } = window;
-        rotY(gsap.utils.mapRange(0, w, -7, 7, e.clientX));
-        rotX(gsap.utils.mapRange(0, h, 5, -5, e.clientY));
-      };
-
-      // Solo con ratón: en táctil no hay cursor que seguir y el listener
-      // sobraría en cada gesto.
-      const canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-      if (canHover) window.addEventListener('pointermove', onMove);
-
-      return () => {
-        if (canHover) window.removeEventListener('pointermove', onMove);
-      };
     },
     { scope: root }
   );
@@ -129,64 +124,63 @@ const Hero = () => {
   return (
     <section className="hero" id="inicio" ref={root}>
       <div className="hero-bg" aria-hidden="true">
-        <img className="hero-aurora" src="/images/aurora.svg" alt="" />
-        <span className="orb hero-orb hero-orb--indigo" />
-        <span className="orb hero-orb hero-orb--cyan" />
-        <span className="orb hero-orb hero-orb--violet" />
+        <span className="ambient hero-glow-a" />
+        <span className="ambient hero-glow-b" />
+
+        <div className="hero-cols">
+          {[COL_A, COL_B].map((list, i) => (
+            <div className="hero-col" key={i}>
+              <div className="hero-col-inner">
+                {[0, 1].map((pass) => (
+                  <ul key={pass}>
+                    {list.map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ul>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
 
-      <div className="shell hero-copy">
-        <span className="chip hero-badge">
-          <Sparkles size={14} className="grad-accent" />
-          La nueva era de la automatización
-        </span>
+      <div className="hero-subject">
+        <img
+          src="/images/panel-assistant.svg"
+          alt="Asistente de IA respondiendo a un cliente en tiempo real"
+          width="900"
+          height="620"
+        />
+      </div>
 
+      <div className="shell hero-text">
         <h1 className="display hero-title">
-          <span className="grad-text">Sistemas de IA</span>{' '}
-          <span className="grad-text">que transforman</span>{' '}
-          <span className="grad-accent">tu negocio.</span>
+          Sistemas de IA que transforman <span className="text-accent">tu negocio</span>
         </h1>
 
-        <p className="lede hero-lede">
-          Asistentes virtuales, automatizaciones avanzadas y CRM omnicanal. Diseñados con precisión
-          quirúrgica para que tu equipo deje de repetir tareas y vuelva a vender.
-        </p>
+        <div className="hero-foot">
+          <div className="hero-copy">
+            <span className="label hero-label">Automatización · Madrid</span>
+            <p className="lede hero-lede">
+              Asistentes virtuales, automatizaciones y CRM omnicanal. Sobre las herramientas que ya
+              usas, en producción en catorce días.
+            </p>
+          </div>
 
-        <div className="hero-actions">
-          <a href="#servicios" className="btn btn--primary btn--lg">
-            Descubrir soluciones <ArrowRight size={18} />
-          </a>
-          <a href="#contacto" className="btn btn--lg">
-            <Play size={16} /> Agendar demo
-          </a>
+          <div className="hero-actions">
+            <Button href="#servicios" variant="accent">
+              Descubrir soluciones
+            </Button>
+            <Button href="#contacto" icon={Play}>
+              Agendar demo
+            </Button>
+          </div>
         </div>
-
-        <div className="hero-proof">
-          <span>Implantación en 14 días</span>
-          <i aria-hidden="true" />
-          <span>Sin cambiar de herramientas</span>
-          <i aria-hidden="true" />
-          <span>Soporte en español</span>
-        </div>
-      </div>
-
-      <div className="hero-panel">
-        <div className="hero-panel-inner glass">
-          <img
-            src="/images/panel-assistant.svg"
-            alt="Panel de un asistente de IA respondiendo a un cliente en tiempo real"
-            width="900"
-            height="620"
-          />
-        </div>
-        <span className="hero-panel-glow" aria-hidden="true" />
       </div>
 
       <a href="#servicios" className="hero-cue" aria-label="Ir a servicios">
-        <span className="hero-cue-track">
-          <span className="hero-cue-dot" />
-        </span>
-        Desplázate
+        <span className="hero-cue-line" aria-hidden="true" />
+        <ArrowRight size={13} strokeWidth={2.2} className="hero-cue-arrow" aria-hidden="true" />
       </a>
     </section>
   );

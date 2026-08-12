@@ -1,8 +1,12 @@
 .sh {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  margin-bottom: clamp(3rem, 7vw, 5rem);
+  gap: 1.1rem;
+  margin-bottom: clamp(2.5rem, 6vw, 4.5rem);
+}
+
+.sh-title {
+  max-width: 24ch;
 }
 
 .sh--center {
@@ -14,15 +18,22 @@
   text-align: center;
 }
 
-.sh--left {
-  align-items: flex-start;
-  text-align: left;
-}
+/* Titular a la izquierda y texto de apoyo a la derecha, en la misma línea
+   base. Es la disposición editorial de la referencia y evita la columna
+   centrada, que resulta más genérica. */
+@media (min-width: 900px) {
+  .sh--split {
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    align-items: end;
+    gap: 3rem;
+  }
 
-.sh-title {
-  max-width: 22ch;
-}
+  .sh--split .sh-label {
+    grid-column: 1 / -1;
+  }
 
-.sh--left .sh-title {
-  max-width: 26ch;
+  .sh--split .sh-lede {
+    padding-bottom: 0.4rem;
+  }
 }

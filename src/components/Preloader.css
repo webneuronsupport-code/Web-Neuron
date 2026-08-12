@@ -1,0 +1,75 @@
+.pre {
+  position: fixed;
+  inset: 0;
+  z-index: 500;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: clamp(2rem, 5vh, 3.5rem);
+  background-color: var(--bg-deep);
+  overflow: hidden;
+  will-change: transform;
+}
+
+.pre-cols {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(1.5rem, 6vw, 6rem);
+  padding-inline: var(--gutter);
+}
+
+.pre-col {
+  position: relative;
+  overflow: hidden;
+  /* Las listas se desvanecen arriba y abajo: sin esto los nombres se cortan
+     contra el borde de la pantalla y parece un error de recorte. */
+  mask-image: linear-gradient(180deg, transparent, #000 22%, #000 78%, transparent);
+  -webkit-mask-image: linear-gradient(180deg, transparent, #000 22%, #000 78%, transparent);
+}
+
+.pre-col:first-child {
+  text-align: right;
+}
+
+.pre-col-inner {
+  will-change: transform;
+}
+
+.pre-col ul {
+  padding: 0;
+}
+
+.pre-col li {
+  font-size: clamp(1.25rem, 2.2vw, 2.25rem);
+  font-weight: 500;
+  /* Interlineado 1: los nombres forman una columna densa, sin aire entre
+     ellos, igual que en la referencia. */
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--display);
+  opacity: 0.22;
+  white-space: nowrap;
+  padding-block: 0.14em;
+}
+
+.pre-count {
+  position: relative;
+  font-size: clamp(3rem, 7vw, 5.5rem);
+  font-weight: 500;
+  line-height: 0.85;
+  letter-spacing: -0.04em;
+  color: var(--display);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Solo para lectores de pantalla: el contador visual no comunica nada. */
+.pre-status {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}

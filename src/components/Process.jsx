@@ -140,7 +140,8 @@ const Process = () => {
     <section className="section process" id="proceso" ref={root}>
       <div className="shell">
         <SectionHeading
-          eyebrow="Proceso"
+          align="split"
+          label="Proceso"
           title="De la primera llamada a producción en tres pasos"
           lede="Sin proyectos eternos ni consultoría que no acaba en nada funcionando."
         />
@@ -150,7 +151,7 @@ const Process = () => {
             <div className="proc-visual-stack">
               {STEPS.map((s, i) => (
                 <div
-                  className="proc-visual-item glass"
+                  className="proc-visual-item"
                   key={s.n}
                   style={{ opacity: i === 0 ? undefined : 0 }}
                 >
@@ -168,8 +169,8 @@ const Process = () => {
 
             {STEPS.map((s) => (
               <li className="proc-step" key={s.n}>
-                <span className="proc-step-n grad-accent">{s.n}</span>
-                <h3 className="proc-step-title">{s.title}</h3>
+                <span className="proc-step-n">{s.n}</span>
+                <h3 className="heading-sm proc-step-title">{s.title}</h3>
                 <p className="proc-step-text text-muted">{s.text}</p>
               </li>
             ))}

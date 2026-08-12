@@ -1,6 +1,7 @@
 import { useRef } from 'react';
-import { ArrowUpRight, Mail, BrainCircuit } from 'lucide-react';
+import { Mail, BrainCircuit, ArrowUpRight } from 'lucide-react';
 import { gsap, SplitText, useGSAP } from '../lib/gsap';
+import Button from './Button';
 import './Contact.css';
 
 const SOCIAL = [
@@ -14,56 +15,52 @@ const Contact = () => {
 
   useGSAP(
     () => {
-      const tl = gsap.timeline({
-        scrollTrigger: { trigger: '.cta-card', start: 'top 78%' },
-      });
+      const trigger = { trigger: '.cta', start: 'top 80%' };
 
-      tl.from('.cta-card', { autoAlpha: 0, y: 60, scale: 0.97, duration: 1.3 });
-
-      // Independiente del timeline, por el mismo motivo que en SectionHeading:
-      // onSplit se reejecuta al re-partir y no puede depender de un timeline
-      // que ya se haya consumido.
+      // Independiente del timeline: onSplit se reejecuta al re-partir el texto
+      // y no puede depender de un timeline ya consumido.
       SplitText.create('.cta-title', {
         type: 'lines',
         mask: 'lines',
         autoSplit: true,
         onSplit(self) {
           return gsap.from(self.lines, {
-            yPercent: 106,
-            duration: 1.2,
-            stagger: 0.09,
+            yPercent: 108,
+            duration: 1.3,
+            stagger: 0.08,
             ease: 'expo.out',
-            scrollTrigger: { trigger: '.cta-card', start: 'top 78%' },
+            scrollTrigger: trigger,
           });
         },
       });
 
-      tl.from('.cta-lede', { autoAlpha: 0, y: 20, duration: 0.9 }, 0.5)
-        .from('.cta-actions > *', { autoAlpha: 0, y: 18, stagger: 0.1, duration: 0.9 }, 0.62);
+      gsap.from('.cta-side > *', {
+        autoAlpha: 0,
+        y: 18,
+        stagger: 0.08,
+        duration: 0.9,
+        delay: 0.3,
+        scrollTrigger: trigger,
+      });
 
-      // La textura del fondo se mueve más despacio que la tarjeta: parallax
-      // clásico, y lo que hace que el bloque final no parezca plano.
+      // La textura se mueve más despacio que la sección: parallax clásico, y lo
+      // que evita que el bloque de cierre se vea plano.
       gsap.fromTo(
         '.cta-texture',
-        { yPercent: -12 },
+        { yPercent: -10 },
         {
-          yPercent: 12,
+          yPercent: 10,
           ease: 'none',
-          scrollTrigger: {
-            trigger: '.cta-card',
-            start: 'top bottom',
-            end: 'bottom top',
-            scrub: true,
-          },
+          scrollTrigger: { trigger: '.cta', start: 'top bottom', end: 'bottom top', scrub: true },
         }
       );
 
       gsap.from('.foot-row > *', {
         autoAlpha: 0,
-        y: 16,
-        stagger: 0.08,
-        duration: 0.9,
-        scrollTrigger: { trigger: '.foot', start: 'top 92%' },
+        y: 14,
+        stagger: 0.07,
+        duration: 0.85,
+        scrollTrigger: { trigger: '.foot', start: 'top 94%' },
       });
     },
     { scope: root }
@@ -71,57 +68,54 @@ const Contact = () => {
 
   return (
     <footer className="contact" id="contacto" ref={root}>
-      <div className="shell">
-        <section className="cta-card glass">
-          <div className="cta-texture" aria-hidden="true">
-            <img src="/abstract-bg.jpg" alt="" loading="lazy" />
-          </div>
+      <section className="cta">
+        <div className="cta-texture" aria-hidden="true">
+          <img src="/abstract-bg.jpg" alt="" loading="lazy" />
+        </div>
 
-          <div className="cta-body">
-            <h2 className="headline cta-title">
-              <span className="grad-text">¿Listo para</span>{' '}
-              <span className="grad-accent">evolucionar?</span>
-            </h2>
+        <div className="shell cta-inner">
+          <h2 className="display cta-title">
+            ¿Listo para <span className="text-accent">evolucionar?</span>
+          </h2>
 
-            <p className="lede cta-lede">
+          <div className="cta-side">
+            <p className="lede">
               Cuéntanos qué parte de tu operación te está frenando. Te decimos en una llamada si se
               puede automatizar y cuánto costaría.
             </p>
 
             <div className="cta-actions">
-              <a href="mailto:webneuronsupport@gmail.com" className="btn btn--primary btn--lg">
-                <Mail size={18} /> Contactar ventas
-              </a>
-              <a href="#servicios" className="btn btn--lg">
-                Ver soluciones <ArrowUpRight size={18} />
-              </a>
+              <Button href="mailto:webneuronsupport@gmail.com" variant="accent" icon={Mail}>
+                Contactar ventas
+              </Button>
+              <Button href="#servicios" icon={ArrowUpRight}>
+                Ver soluciones
+              </Button>
             </div>
           </div>
-        </section>
+        </div>
+      </section>
 
-        <div className="foot">
-          <hr className="hairline" />
+      <div className="shell foot">
+        <hr className="rule" />
 
-          <div className="foot-row">
-            <a href="#inicio" className="foot-logo">
-              <span className="foot-logo-mark">
-                <BrainCircuit size={18} strokeWidth={1.8} />
-              </span>
-              <span className="grad-text">Web Neuron</span>
-            </a>
+        <div className="foot-row">
+          <a href="#inicio" className="foot-logo">
+            <BrainCircuit size={20} strokeWidth={1.6} />
+            Web Neuron
+          </a>
 
-            <p className="foot-legal">
-              © {new Date().getFullYear()} Web Neuron. Todos los derechos reservados.
-            </p>
+          <p className="foot-legal">
+            © {new Date().getFullYear()} Web Neuron. Todos los derechos reservados.
+          </p>
 
-            <nav className="foot-social" aria-label="Redes sociales">
-              {SOCIAL.map((s) => (
-                <a key={s.label} href={s.href} target="_blank" rel="noreferrer noopener">
-                  {s.label}
-                </a>
-              ))}
-            </nav>
-          </div>
+          <nav className="foot-social" aria-label="Redes sociales">
+            {SOCIAL.map((s) => (
+              <a key={s.label} href={s.href} target="_blank" rel="noreferrer noopener">
+                {s.label}
+              </a>
+            ))}
+          </nav>
         </div>
       </div>
     </footer>

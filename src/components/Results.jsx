@@ -60,23 +60,24 @@ const Results = () => {
 
       <div className="shell">
         <SectionHeading
-          eyebrow="Resultados"
+          align="split"
+          label="Resultados"
           title="Números de implantaciones reales"
           lede="Medias de los sistemas que hemos puesto en marcha durante el último año."
         />
 
         <div className="res-grid">
           {STATS.map((s) => (
-            <article className="res-card glass" key={s.label}>
+            <article className="res-card" key={s.label}>
               <p className="res-num">
                 <span
-                  className="res-num-value grad-accent"
+                  className="res-num-value"
                   data-value={s.value}
                   data-decimals={s.decimals}
                 >
                   0
                 </span>
-                <span className="res-num-suffix grad-accent">{s.suffix}</span>
+                <span className="res-num-suffix">{s.suffix}</span>
               </p>
               <p className="res-label text-muted">{s.label}</p>
             </article>

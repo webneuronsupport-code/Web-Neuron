@@ -1,35 +1,41 @@
 import { useRef } from 'react';
-import { Bot, Zap, Network, Code2, ArrowUpRight } from 'lucide-react';
+import { Bot, Zap, Network, Code2 } from 'lucide-react';
 import { gsap, ScrollTrigger, useGSAP } from '../lib/gsap';
 import SectionHeading from './SectionHeading';
 import './Services.css';
 
 const SERVICES = [
   {
+    n: '01',
     Icon: Bot,
     title: 'Asistentes de IA',
     text: 'Agentes conversacionales que atienden, cualifican y agendan 24/7 con el tono de tu marca.',
     tags: ['WhatsApp', 'Web', 'Voz'],
-    span: 'wide',
+    image: '/images/panel-assistant.svg',
   },
   {
+    n: '02',
     Icon: Zap,
     title: 'Automatizaciones',
     text: 'Conectamos tus herramientas para que el trabajo repetitivo se haga solo, sin supervisión.',
     tags: ['Flujos', 'API'],
+    image: '/images/panel-automation.svg',
   },
   {
+    n: '03',
     Icon: Network,
     title: 'CRM omnicanal',
-    text: 'Todas tus conversaciones en una bandeja: WhatsApp, email y redes, con el historial completo.',
+    text: 'Todas tus conversaciones en una bandeja, con el historial completo de cada cliente.',
     tags: ['Bandeja única', 'Métricas'],
+    image: '/images/panel-crm.svg',
   },
   {
+    n: '04',
     Icon: Code2,
     title: 'Desarrollo web',
     text: 'Experiencias rápidas, medibles y optimizadas para convertir. Como la que estás viendo.',
     tags: ['React', 'Rendimiento', 'SEO'],
-    span: 'wide',
+    image: '/images/panel-automation.svg',
   },
 ];
 
@@ -38,58 +44,41 @@ const Services = () => {
 
   useGSAP(
     () => {
-      // batch agrupa las tarjetas que entran en pantalla en el mismo instante
-      // y las anima juntas con stagger. Con un ScrollTrigger por tarjeta las
-      // que entran a la vez arrancarían por separado y el ritmo se perdería.
+      // batch agrupa las tarjetas que entran en pantalla en el mismo instante y
+      // las anima juntas. Con un ScrollTrigger por tarjeta, las que entran a la
+      // vez arrancarían por separado y se perdería el ritmo del stagger.
       ScrollTrigger.batch('.svc-card', {
-        start: 'top 88%',
+        start: 'top 90%',
         once: true,
         onEnter: (batch) =>
           gsap.from(batch, {
             autoAlpha: 0,
-            y: 64,
-            duration: 1.15,
-            stagger: 0.12,
+            y: 56,
+            duration: 1.1,
+            stagger: 0.1,
             ease: 'power3.out',
             overwrite: true,
           }),
       });
 
-      // Foco de luz que sigue al cursor dentro de cada tarjeta. Se escribe en
-      // dos variables CSS y el degradado de ::after las lee: así el navegador
-      // solo repinta el fondo de esa tarjeta.
-      const cards = gsap.utils.toArray('.svc-card');
-      const canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-      const cleanups = [];
-
-      if (canHover) {
-        cards.forEach((card) => {
-          const glow = gsap.quickTo(card, '--glow', { duration: 0.5, ease: 'power2.out' });
-
-          // La posición se escribe directamente: es un valor que salta con el
-          // cursor, no algo que haya que interpolar. Solo la intensidad del
-          // halo se anima, para que entre y salga con suavidad.
-          const move = (e) => {
-            const r = card.getBoundingClientRect();
-            card.style.setProperty('--mx', `${e.clientX - r.left}px`);
-            card.style.setProperty('--my', `${e.clientY - r.top}px`);
-          };
-          const enter = () => glow(1);
-          const leave = () => glow(0);
-
-          card.addEventListener('pointermove', move);
-          card.addEventListener('pointerenter', enter);
-          card.addEventListener('pointerleave', leave);
-
-          cleanups.push(() => {
-            card.removeEventListener('pointermove', move);
-            card.removeEventListener('pointerenter', enter);
-            card.removeEventListener('pointerleave', leave);
-          });
-        });
-      }
-
-      return () => cleanups.forEach((fn) => fn());
+      // Parallax suave de las imágenes dentro de su marco: la foto se mueve
+      // menos que la tarjeta y el recorte gana profundidad.
+      gsap.utils.toArray('.svc-media img').forEach((img) => {
+        gsap.fromTo(
+          img,
+          { yPercent: -6 },
+          {
+            yPercent: 6,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: img.closest('.svc-card'),
+              start: 'top bottom',
+              end: 'bottom top',
+              scrub: true,
+            },
+          }
+        );
+      });
     },
     { scope: root }
   );
@@ -98,35 +87,34 @@ const Services = () => {
     <section className="section services" id="servicios" ref={root}>
       <div className="shell">
         <SectionHeading
-          eyebrow="Ecosistema"
+          align="split"
+          label="Servicios"
           title="Cuatro piezas que trabajan como una sola"
           lede="Cada servicio funciona por separado, pero juntos comparten datos y contexto. Ahí está la diferencia."
         />
 
         <div className="svc-grid">
-          {SERVICES.map(({ Icon, title, text, tags, span }) => (
-            <article
-              key={title}
-              className={`svc-card glass${span === 'wide' ? ' svc-card--wide' : ''}`}
-            >
-              <span className="svc-icon" aria-hidden="true">
-                <Icon size={22} strokeWidth={1.7} />
-              </span>
-
-              <div className="svc-body">
-                <h3 className="svc-title">{title}</h3>
-                <p className="svc-text text-muted">{text}</p>
+          {SERVICES.map(({ n, Icon, title, text, tags, image }) => (
+            <article className="svc-card" key={n}>
+              <div className="svc-media">
+                <img src={image} alt="" width="900" height="620" loading="lazy" />
+                <span className="svc-n">{n}</span>
               </div>
 
-              <ul className="svc-tags">
-                {tags.map((t) => (
-                  <li key={t}>{t}</li>
-                ))}
-              </ul>
-
-              <span className="svc-arrow" aria-hidden="true">
-                <ArrowUpRight size={18} />
-              </span>
+              <div className="svc-body">
+                <h3 className="heading-sm svc-title">
+                  <Icon size={18} strokeWidth={1.8} className="svc-icon" aria-hidden="true" />
+                  {title}
+                </h3>
+                <p className="svc-text text-muted">{text}</p>
+                <ul className="svc-tags">
+                  {tags.map((t) => (
+                    <li className="tag" key={t}>
+                      {t}
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </article>
           ))}
         </div>

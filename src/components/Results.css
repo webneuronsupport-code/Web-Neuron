@@ -4,66 +4,83 @@
 }
 
 .res-orb {
-  width: 60vw;
-  height: 60vw;
-  max-width: 780px;
-  max-height: 780px;
-  top: 10%;
+  width: 55vw;
+  height: 55vw;
+  max-width: 700px;
+  max-height: 700px;
+  top: 18%;
   left: 50%;
   transform: translateX(-50%);
-  background: radial-gradient(circle, rgba(168, 85, 247, 0.3), transparent 68%);
-  opacity: 0.7;
+  background: radial-gradient(circle, rgba(94, 92, 230, 0.16), transparent 72%);
 }
 
+/* Los cuatro datos se separan con filetes en lugar de tarjetas: menos cajas,
+   más aire, y el número queda como único protagonista. */
 .res-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: clamp(0.85rem, 1.6vw, 1.35rem);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .res-card {
   display: flex;
   flex-direction: column;
-  gap: 0.85rem;
-  padding: clamp(1.5rem, 2.6vw, 2.15rem);
-  border-radius: var(--r-lg);
+  gap: 0.75rem;
+  padding: clamp(1.5rem, 3vw, 2.5rem) clamp(1rem, 2vw, 1.75rem);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.res-card + .res-card {
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .res-num {
   display: flex;
   align-items: baseline;
-  font-size: clamp(2.4rem, 4.4vw, 3.5rem);
-  font-weight: 700;
-  letter-spacing: -0.05em;
-  line-height: 1;
+  font-size: clamp(2.5rem, 5vw, 4.25rem);
+  font-weight: 500;
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+  color: var(--display);
   /* Evita que el ancho del número baile mientras cuenta. */
   font-variant-numeric: tabular-nums;
 }
 
 .res-num-suffix {
-  font-size: 0.52em;
-  font-weight: 600;
-  letter-spacing: -0.02em;
-  /* pre conserva el espacio inicial de sufijos como " días". Sin esto, HTML
-     lo colapsa y el texto queda pegado al número. */
+  font-size: 0.42em;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: var(--accent-light);
+  /* pre conserva el espacio inicial de sufijos como " días"; sin esto HTML lo
+     colapsa y el texto queda pegado al número. */
   white-space: pre;
 }
 
 .res-label {
-  font-size: 0.925rem;
-  line-height: 1.5;
-  max-width: 24ch;
+  font-size: 0.9rem;
+  line-height: 1.45;
+  max-width: 22ch;
 }
 
 @media (max-width: 900px) {
   .res-grid {
     grid-template-columns: repeat(2, 1fr);
   }
+
+  /* Con dos columnas, el filete izquierdo solo debe salir en la segunda de
+     cada fila. */
+  .res-card:nth-child(odd) {
+    border-left: 0;
+  }
 }
 
-@media (max-width: 520px) {
+@media (max-width: 540px) {
   .res-grid {
     grid-template-columns: 1fr;
+  }
+
+  .res-card {
+    border-left: 0 !important;
   }
 
   .res-label {
