@@ -1,0 +1,105 @@
+.hero-section {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding-top: 100px;
+  overflow: hidden;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  border-radius: 20px;
+  margin-bottom: 1rem;
+}
+
+.hero-title {
+  font-size: clamp(3rem, 8vw, 5.5rem);
+  line-height: 1.05;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+}
+
+.hero-title span {
+  display: inline-block; /* Requerido para transformaciones GSAP precisas */
+}
+
+.hero-subtitle {
+  font-size: clamp(1.1rem, 2vw, 1.3rem);
+  max-width: 600px;
+  color: var(--text-muted);
+  line-height: 1.5;
+  margin-bottom: 2rem;
+}
+
+.hero-cta {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+/* Efectos visuales de fondo (esferas de luz tipo Apple) */
+.hero-visual {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.glow-sphere {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+  opacity: 0.5;
+  animation: float 10s infinite ease-in-out alternate;
+}
+
+.main-sphere {
+  width: 500px;
+  height: 500px;
+  background: var(--accent-color);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.secondary-sphere {
+  width: 400px;
+  height: 400px;
+  background: #3296fa;
+  top: 40%;
+  left: 60%;
+  animation-delay: -5s;
+}
+
+@keyframes float {
+  0% { transform: translate(-50%, -50%) scale(1); }
+  100% { transform: translate(-45%, -55%) scale(1.1); }
+}
+
+@media (max-width: 768px) {
+  .hero-cta {
+    flex-direction: column;
+    width: 100%;
+    max-width: 300px;
+  }
+}

@@ -1,0 +1,65 @@
+.navbar-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 1.5rem 2rem;
+  z-index: 100;
+  display: flex;
+  justify-content: center;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 1000px;
+  padding: 0.75rem 1.5rem;
+  /* El resto hereda de .glass global */
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.logo-icon {
+  color: var(--text-color);
+}
+
+.logo-text {
+  font-weight: 700;
+  font-size: 1.25rem;
+  letter-spacing: -0.03em;
+}
+
+.nav-links {
+  display: flex;
+  gap: 2rem;
+  list-style: none;
+}
+
+.nav-links a {
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.nav-links a:hover {
+  color: var(--text-color);
+}
+
+.btn-sm {
+  padding: 8px 20px;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
+  .nav-links {
+    display: none;
+  }
+}

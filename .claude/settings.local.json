@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(Get-ChildItem \"$env:USERPROFILE\\\\.claude\" -Force | Select-Object Mode,Name; if \\(Test-Path \"$env:USERPROFILE\\\\.claude\\\\plugins\"\\) { Get-ChildItem \"$env:USERPROFILE\\\\.claude\\\\plugins\" -Recurse -Depth 2 | Select-Object FullName })",
+      "PowerShell(Get-ChildItem \"$env:USERPROFILE\\\\.claude\\\\skills\" -Force | Select Name; Write-Output \"--- plugins ---\"; Get-ChildItem \"$env:USERPROFILE\\\\.claude\\\\plugins\" -Force -Recurse -Depth 1 | Select FullName; Write-Output \"--- git ---\"; git --version)",
+      "PowerShell($sp=\"C:\\\\Users\\\\javie\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\C--Users-javie-Desktop-n\\\\c3b0e58c-c672-426d-baed-9392cfc5656a\\\\scratchpad\\\\gsap-skills\"; Get-ChildItem \"$sp\\\\skills\" -Recurse | ForEach-Object { $_.FullName.Substring\\($sp.Length+1\\) })",
+      "PowerShell($sp=\"C:\\\\Users\\\\javie\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\C--Users-javie-Desktop-n\\\\c3b0e58c-c672-426d-baed-9392cfc5656a\\\\scratchpad\\\\gsap-skills\"; Get-ChildItem \"$sp\\\\skills\" -Directory | ForEach-Object { $n=$_.Name; $a=\\(Get-FileHash \"$sp\\\\skills\\\\$n\\\\SKILL.md\"\\).Hash; $p=\"$env:USERPROFILE\\\\.claude\\\\skills\\\\$n\\\\SKILL.md\"; $b=if\\(Test-Path $p\\){\\(Get-FileHash $p\\).Hash}else{\"MISSING\"}; \"{0,-20} {1}\" -f $n, $\\(if\\($a -eq $b\\){\"same\"}else{\"DIFFERENT \\($b\\)\"}\\) })"
+    ]
+  }
+}
