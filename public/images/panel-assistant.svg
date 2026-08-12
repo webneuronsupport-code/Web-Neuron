@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 620" width="900" height="620">
+  <defs>
+    <linearGradient id="pa-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#101018"/>
+      <stop offset="100%" stop-color="#07070c"/>
+    </linearGradient>
+    <linearGradient id="pa-accent" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#a7a6f9"/>
+      <stop offset="100%" stop-color="#5e5ce6"/>
+    </linearGradient>
+    <linearGradient id="pa-glow" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#5e5ce6" stop-opacity=".35"/>
+      <stop offset="100%" stop-color="#5e5ce6" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="pa-stroke" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity=".22"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity=".04"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="900" height="620" rx="28" fill="url(#pa-bg)"/>
+  <rect x="0" y="0" width="900" height="220" rx="28" fill="url(#pa-glow)"/>
+  <rect x=".75" y=".75" width="898.5" height="618.5" rx="27" fill="none" stroke="url(#pa-stroke)" stroke-width="1.5"/>
+
+  <!-- title bar -->
+  <circle cx="40" cy="40" r="6" fill="#ffffff" opacity=".18"/>
+  <circle cx="60" cy="40" r="6" fill="#ffffff" opacity=".12"/>
+  <circle cx="80" cy="40" r="6" fill="#ffffff" opacity=".08"/>
+  <rect x="360" y="32" width="180" height="16" rx="8" fill="#ffffff" opacity=".07"/>
+
+  <!-- assistant header -->
+  <circle cx="60" cy="118" r="22" fill="url(#pa-accent)" opacity=".9"/>
+  <path d="M52 118h16M60 110v16" stroke="#07070c" stroke-width="2.5" stroke-linecap="round"/>
+  <rect x="94" y="106" width="150" height="12" rx="6" fill="#f5f5f7" opacity=".85"/>
+  <rect x="94" y="126" width="96" height="10" rx="5" fill="#86868b" opacity=".7"/>
+  <circle cx="836" cy="118" r="5" fill="#4ade80"/>
+  <rect x="750" y="112" width="70" height="11" rx="5.5" fill="#4ade80" opacity=".35"/>
+
+  <line x1="24" y1="166" x2="876" y2="166" stroke="#ffffff" stroke-opacity=".07" stroke-width="1"/>
+
+  <!-- incoming message -->
+  <rect x="24" y="196" width="420" height="86" rx="20" fill="#ffffff" fill-opacity=".05" stroke="#ffffff" stroke-opacity=".08"/>
+  <rect x="48" y="222" width="330" height="11" rx="5.5" fill="#f5f5f7" opacity=".55"/>
+  <rect x="48" y="247" width="240" height="11" rx="5.5" fill="#f5f5f7" opacity=".35"/>
+
+  <!-- outgoing message -->
+  <rect x="380" y="304" width="496" height="112" rx="20" fill="#5e5ce6" fill-opacity=".16" stroke="#5e5ce6" stroke-opacity=".38"/>
+  <rect x="406" y="330" width="440" height="11" rx="5.5" fill="#c7c6fb"/>
+  <rect x="406" y="355" width="404" height="11" rx="5.5" fill="#c7c6fb" opacity=".75"/>
+  <rect x="406" y="380" width="270" height="11" rx="5.5" fill="#c7c6fb" opacity=".5"/>
+
+  <!-- typing indicator -->
+  <rect x="24" y="438" width="120" height="46" rx="23" fill="#ffffff" fill-opacity=".05" stroke="#ffffff" stroke-opacity=".08"/>
+  <circle cx="58" cy="461" r="5" fill="#86868b"/>
+  <circle cx="84" cy="461" r="5" fill="#86868b" opacity=".6"/>
+  <circle cx="110" cy="461" r="5" fill="#86868b" opacity=".3"/>
+
+  <!-- composer -->
+  <rect x="24" y="524" width="770" height="60" rx="30" fill="#ffffff" fill-opacity=".04" stroke="#ffffff" stroke-opacity=".1"/>
+  <rect x="56" y="548" width="260" height="12" rx="6" fill="#86868b" opacity=".5"/>
+  <circle cx="846" cy="554" r="30" fill="url(#pa-accent)"/>
+  <path d="M836 554h20m-8-8 8 8-8 8" stroke="#07070c" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+</svg>

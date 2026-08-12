@@ -1,134 +1,407 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+/* ==========================================================================
+   Web Neuron — sistema de diseño
+   Oscuro, degradados, cristal. Referencia estética: Apple.
+   ========================================================================== */
 
 :root {
-  --bg-color: #050505;
-  --text-color: #f5f5f7;
-  --text-muted: #86868b;
-  --accent-color: #5e5ce6;
-  --accent-glow: rgba(94, 92, 230, 0.4);
-  --glass-bg: rgba(255, 255, 255, 0.03);
-  --glass-border: rgba(255, 255, 255, 0.08);
-  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
-  --font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  /* Base */
+  --bg: #06060a;
+  --bg-elevated: #0b0b12;
+  --text: #f5f5f7;
+  --text-muted: #8b8b95;
+  --text-dim: #5c5c66;
+
+  /* Acentos */
+  --indigo: #5e5ce6;
+  --indigo-light: #a7a6f9;
+  --violet: #a855f7;
+  --cyan: #22d3ee;
+  --pink: #f472b6;
+
+  /* Degradados */
+  --grad-text: linear-gradient(180deg, #fff 0%, #fff 40%, #9a9aa8 100%);
+  --grad-accent: linear-gradient(135deg, var(--indigo-light) 0%, var(--indigo) 55%, var(--violet) 100%);
+  --grad-spectrum: linear-gradient(90deg, var(--cyan), var(--indigo), var(--violet), var(--pink));
+
+  /* Cristal */
+  --glass-bg: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.075) 0%,
+    rgba(255, 255, 255, 0.028) 45%,
+    rgba(255, 255, 255, 0.012) 100%
+  );
+  --glass-blur: blur(28px) saturate(175%);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  /* Reflejo especular: luz arriba, sombra de contacto abajo. Es lo que da
+     la sensación de vidrio real en vez de un rectángulo translúcido. */
+  --glass-specular:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.24),
+    inset 0 -1px 0 0 rgba(0, 0, 0, 0.28),
+    inset 0 0 24px 0 rgba(255, 255, 255, 0.035);
+  --glass-drop: 0 16px 48px -12px rgba(0, 0, 0, 0.7);
+
+  /* Radios y ritmo */
+  --r-sm: 14px;
+  --r-md: 22px;
+  --r-lg: 32px;
+  --r-pill: 999px;
+  --shell: 1180px;
+  --gutter: clamp(1.25rem, 4vw, 2.5rem);
+
+  /* Curvas de Apple */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
+
+  --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }
 
-* {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
+html {
+  /* Lenis controla el scroll; el nativo debe quedarse fuera. */
+  scroll-behavior: auto;
+  -webkit-text-size-adjust: 100%;
+}
+
 body {
-  font-family: var(--font-family);
-  background-color: var(--bg-color);
-  color: var(--text-color);
+  font-family: var(--font);
+  background-color: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+  overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
-  /* Degradados sutiles de fondo */
-  background-image: 
-    radial-gradient(circle at 15% 30%, rgba(94, 92, 230, 0.08), transparent 30%),
-    radial-gradient(circle at 85% 70%, rgba(50, 150, 250, 0.06), transparent 30%);
-  background-attachment: fixed;
 }
 
-/* Glassmorphism utilities */
-.glass {
-  background: var(--glass-bg);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid var(--glass-border);
-  box-shadow: var(--glass-shadow);
-  border-radius: 24px;
+/* Grano de película sobre todo el sitio. Rompe el banding de los
+   degradados grandes y quita el aspecto plano y digital. */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  background-image: url('/images/grain.svg');
+  background-size: 180px 180px;
+  opacity: 0.032;
+  mix-blend-mode: overlay;
 }
 
-.glass-btn {
-  background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 30px;
-  padding: 12px 28px;
-  color: var(--text-color);
-  font-family: var(--font-family);
-  font-weight: 500;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
+::selection {
+  background: rgba(94, 92, 230, 0.45);
+  color: #fff;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
   text-decoration: none;
 }
 
-.glass-btn:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.3);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(0,0,0,0.2), 0 0 15px rgba(255,255,255,0.1);
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+  cursor: pointer;
 }
 
-.glass-btn.primary {
-  background: rgba(94, 92, 230, 0.15);
-  border-color: rgba(94, 92, 230, 0.4);
+:focus-visible {
+  outline: 2px solid var(--indigo-light);
+  outline-offset: 3px;
+  border-radius: 4px;
 }
 
-.glass-btn.primary:hover {
-  background: rgba(94, 92, 230, 0.25);
-  border-color: rgba(94, 92, 230, 0.6);
-  box-shadow: 0 8px 25px rgba(94, 92, 230, 0.3), 0 0 20px var(--accent-glow);
-}
+/* --------------------------------------------------------------------------
+   Tipografía
+   -------------------------------------------------------------------------- */
 
-/* Text Gradient */
-.text-gradient {
-  background: linear-gradient(135deg, #fff 0%, #a5a5a5 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.text-gradient-accent {
-  background: linear-gradient(135deg, #a7a6f9 0%, #5e5ce6 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-h1, h2, h3, h4, h5, h6 {
-  letter-spacing: -0.02em;
+h1,
+h2,
+h3,
+h4 {
   font-weight: 600;
+  letter-spacing: -0.035em;
+  line-height: 1.06;
+  text-wrap: balance;
 }
 
-/* Sections */
-section {
-  padding: 8rem 2rem;
-  max-width: 1200px;
-  margin: 0 auto;
-  position: relative;
+.display {
+  font-size: clamp(2.9rem, 8.2vw, 6.4rem);
+  font-weight: 700;
+  letter-spacing: -0.045em;
 }
 
-/* Container */
-.container {
+.headline {
+  font-size: clamp(2.2rem, 5.2vw, 3.9rem);
+  font-weight: 650;
+}
+
+.eyebrow {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.lede {
+  font-size: clamp(1.05rem, 1.6vw, 1.3rem);
+  color: var(--text-muted);
+  line-height: 1.6;
+  max-width: 58ch;
+  text-wrap: pretty;
+}
+
+.text-muted {
+  color: var(--text-muted);
+}
+
+/* Degradados sobre texto. background-clip necesita que el color de
+   relleno sea transparente. */
+.grad-text,
+.grad-accent {
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+.grad-text {
+  background-image: var(--grad-text);
+}
+
+.grad-accent {
+  background-image: var(--grad-accent);
+}
+
+/* --------------------------------------------------------------------------
+   Layout
+   -------------------------------------------------------------------------- */
+
+.shell {
   width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
+  max-width: var(--shell);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
 }
 
-/* Lenis Smooth Scroll */
-html.lenis, html.lenis body {
+.section {
+  position: relative;
+  padding-block: clamp(5rem, 12vw, 10rem);
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* --------------------------------------------------------------------------
+   Cristal
+   -------------------------------------------------------------------------- */
+
+.glass {
+  position: relative;
+  background-image: var(--glass-bg);
+  background-color: rgba(255, 255, 255, 0.012);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--r-md);
+  box-shadow: var(--glass-specular), var(--glass-drop);
+}
+
+/* --------------------------------------------------------------------------
+   Botones cristal
+   Cuatro capas: vidrio de fondo, reflejo interior, halo exterior y un
+   destello que barre la superficie al pasar el cursor.
+   -------------------------------------------------------------------------- */
+
+.btn {
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  padding: 0.92rem 1.7rem;
+  border-radius: var(--r-pill);
+  font-size: 0.975rem;
+  font-weight: 550;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  cursor: pointer;
+  overflow: hidden;
+  background-image: var(--glass-bg);
+  background-color: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(22px) saturate(180%);
+  -webkit-backdrop-filter: blur(22px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.3),
+    inset 0 -1px 0 0 rgba(0, 0, 0, 0.25),
+    0 8px 24px -8px rgba(0, 0, 0, 0.6);
+  transition:
+    transform 0.45s var(--ease-out),
+    border-color 0.45s var(--ease-out),
+    box-shadow 0.45s var(--ease-out);
+}
+
+/* Destello especular. Vive fuera del botón y entra al hacer hover. */
+.btn::before {
+  content: '';
+  position: absolute;
+  inset: -60% -20%;
+  z-index: -1;
+  background: linear-gradient(
+    104deg,
+    transparent 38%,
+    rgba(255, 255, 255, 0.42) 50%,
+    transparent 62%
+  );
+  transform: translateX(-105%);
+  transition: transform 0.85s var(--ease-out);
+  pointer-events: none;
+}
+
+.btn:hover::before {
+  transform: translateX(105%);
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.3);
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.42),
+    inset 0 -1px 0 0 rgba(0, 0, 0, 0.25),
+    0 16px 40px -10px rgba(0, 0, 0, 0.7),
+    0 0 24px -4px rgba(255, 255, 255, 0.14);
+}
+
+.btn:active {
+  transform: translateY(0) scale(0.985);
+  transition-duration: 0.12s;
+}
+
+/* Variante primaria: el mismo vidrio, teñido de índigo. */
+.btn--primary {
+  background-image: linear-gradient(
+    180deg,
+    rgba(167, 166, 249, 0.28) 0%,
+    rgba(94, 92, 230, 0.22) 50%,
+    rgba(94, 92, 230, 0.14) 100%
+  );
+  border-color: rgba(140, 138, 245, 0.45);
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.38),
+    inset 0 -1px 0 0 rgba(0, 0, 0, 0.22),
+    0 8px 28px -8px rgba(94, 92, 230, 0.55);
+}
+
+.btn--primary:hover {
+  border-color: rgba(167, 166, 249, 0.7);
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.5),
+    inset 0 -1px 0 0 rgba(0, 0, 0, 0.22),
+    0 18px 44px -10px rgba(94, 92, 230, 0.7),
+    0 0 30px -2px rgba(94, 92, 230, 0.45);
+}
+
+.btn--sm {
+  padding: 0.6rem 1.25rem;
+  font-size: 0.875rem;
+}
+
+.btn--lg {
+  padding: 1.1rem 2.2rem;
+  font-size: 1.05rem;
+}
+
+/* Chip de cristal, para badges y etiquetas de canal. */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.95rem;
+  border-radius: var(--r-pill);
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--text);
+  background-image: var(--glass-bg);
+  backdrop-filter: blur(20px) saturate(170%);
+  -webkit-backdrop-filter: blur(20px) saturate(170%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.22);
+}
+
+/* --------------------------------------------------------------------------
+   Luces de fondo
+   -------------------------------------------------------------------------- */
+
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  pointer-events: none;
+  will-change: transform;
+}
+
+/* Línea divisoria que se desvanece en los extremos. */
+.hairline {
+  height: 1px;
+  border: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.14) 20%,
+    rgba(255, 255, 255, 0.14) 80%,
+    transparent
+  );
+}
+
+/* --------------------------------------------------------------------------
+   Estado inicial de las animaciones
+   Deliberadamente NO se oculta nada desde CSS. Los reveals usan gsap.from(),
+   que aplica su estado inicial en el mismo tick en que se crea (useGSAP corre
+   en useLayoutEffect, antes del primer pintado), así que no hay parpadeo. Si
+   ocultásemos aquí con opacity: 0, gsap.from() leería ese 0 como estado final
+   y el contenido no volvería a aparecer nunca — y si el JavaScript fallara,
+   la página quedaría en blanco.
+   -------------------------------------------------------------------------- */
+
+/* --------------------------------------------------------------------------
+   Accesibilidad
+   -------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Lenis */
+html.lenis,
+html.lenis body {
   height: auto;
 }
-.lenis.lenis-smooth {
-  scroll-behavior: auto !important;
-}
-.lenis.lenis-smooth [data-lenis-prevent] {
-  overscroll-behavior: contain;
-}
+
 .lenis.lenis-stopped {
   overflow: hidden;
-}
-.lenis.lenis-smooth iframe {
-  pointer-events: none;
 }

@@ -1,46 +1,42 @@
 import { useEffect } from 'react';
-import Lenis from 'lenis';
+import { ScrollTrigger } from './lib/gsap';
+import { useSmoothScroll } from './hooks/useSmoothScroll';
+import ScrollProgress from './components/ScrollProgress';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
+import Marquee from './components/Marquee';
 import Services from './components/Services';
+import Process from './components/Process';
+import Results from './components/Results';
 import Contact from './components/Contact';
-import './index.css';
 
 function App() {
+  useSmoothScroll();
+
   useEffect(() => {
-    // Inicializar Lenis para smooth scroll
-    const lenis = new Lenis({
-      duration: 1.2,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Easing tipo Apple
-      direction: 'vertical',
-      gestureDirection: 'vertical',
-      smooth: true,
-      mouseMultiplier: 1,
-      smoothTouch: false,
-      touchMultiplier: 2,
-      infinite: false,
-    });
+    // Las fuentes y las imágenes cambian la altura de la página después del
+    // primer render. Sin este refresh, los ScrollTrigger se quedan calculados
+    // sobre un layout que ya no existe y disparan en el sitio equivocado.
+    const refresh = () => ScrollTrigger.refresh();
 
-    function raf(time) {
-      lenis.raf(time);
-      requestAnimationFrame(raf);
-    }
+    document.fonts?.ready.then(refresh);
+    window.addEventListener('load', refresh);
 
-    requestAnimationFrame(raf);
-
-    return () => {
-      lenis.destroy();
-    };
+    return () => window.removeEventListener('load', refresh);
   }, []);
 
   return (
     <>
+      <ScrollProgress />
       <Navbar />
       <main>
         <Hero />
+        <Marquee />
         <Services />
-        <Contact />
+        <Process />
+        <Results />
       </main>
+      <Contact />
     </>
   );
 }
