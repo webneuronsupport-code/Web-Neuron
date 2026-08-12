@@ -3,7 +3,6 @@ import { ScrollTrigger } from './lib/gsap';
 import { useSmoothScroll } from './hooks/useSmoothScroll';
 import Preloader from './components/Preloader';
 import ScrollProgress from './components/ScrollProgress';
-import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import Marquee from './components/Marquee';
 import Services from './components/Services';
@@ -30,7 +29,6 @@ function App() {
     <>
       <Preloader />
       <ScrollProgress />
-      <Navbar />
       <main>
         <Hero />
         <Marquee />

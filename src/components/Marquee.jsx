@@ -3,16 +3,23 @@ import { gsap, ScrollTrigger, useGSAP } from '../lib/gsap';
 import './Marquee.css';
 
 const ITEMS = [
-  'WhatsApp Business',
-  'Instagram',
-  'Telegram',
-  'Gmail',
-  'HubSpot',
-  'Notion',
-  'Shopify',
-  'Slack',
-  'Google Calendar',
-  'Stripe',
+  { name: 'Meta', icon: 'meta' },
+  { name: 'GitHub', icon: 'github', color: 'white' },
+  { name: 'Docker', icon: 'docker' },
+  { name: 'Claude', icon: 'claude' },
+  { name: 'Cloudflare', icon: 'cloudflare' },
+  { name: 'AWS', customSrc: '/aws-white.svg' },
+  { name: 'Google Cloud', icon: 'googlecloud' },
+  { name: 'WhatsApp', icon: 'whatsapp' },
+  { name: 'Chatwoot', icon: 'chatwoot' },
+  { name: 'Instagram', icon: 'instagram' },
+  { name: 'Google Calendar', icon: 'googlecalendar' },
+  { name: 'Anthropic', icon: 'anthropic', color: 'white' },
+  { name: 'OpenAI', customSrc: '/openai-white.svg' },
+  { name: 'Redis', icon: 'redis' },
+  { name: 'GSAP', icon: 'gsap' },
+  { name: 'n8n', icon: 'n8n' },
+  { name: 'ElevenLabs', icon: 'elevenlabs', color: 'white' },
 ];
 
 const Marquee = () => {
@@ -65,9 +72,16 @@ const Marquee = () => {
           {[0, 1].map((pass) => (
             <ul className="marquee-group" key={pass} aria-hidden={pass === 1 || undefined}>
               {ITEMS.map((item) => (
-                <li key={item}>
+                <li key={item.name} className="marquee-item">
                   <span className="marquee-dot" aria-hidden="true" />
-                  {item}
+                  <img
+                    src={item.customSrc || `https://cdn.simpleicons.org/${item.icon}${item.color ? `/${item.color}` : ''}`}
+                    alt={`${item.name} logo`}
+                    className="marquee-icon"
+                    width="16"
+                    height="16"
+                  />
+                  {item.name}
                 </li>
               ))}
             </ul>

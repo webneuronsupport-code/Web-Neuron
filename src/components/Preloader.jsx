@@ -7,7 +7,9 @@ import './Preloader.css';
 // herramientas que Web Neuron integra: dice qué hace la empresa antes de que
 // se haya pintado una sola sección.
 const LEFT = [
-  'WhatsApp Business',
+  // Nombres cortos a propósito: la columna mide 128 px en un móvil de 320 y
+  // «WhatsApp Business» necesitaba 170, así que se cortaba a media palabra.
+  'WhatsApp',
   'HubSpot',
   'Shopify',
   'Notion',

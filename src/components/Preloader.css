@@ -64,6 +64,18 @@
   font-variant-numeric: tabular-nums;
 }
 
+/* En móvil las dos columnas se quedan en ~128 px cada una: el cuerpo baja para
+   que los nombres largos entren completos en lugar de recortarse. */
+@media (max-width: 600px) {
+  .pre-cols {
+    gap: 1rem;
+  }
+
+  .pre-col li {
+    font-size: 1.05rem;
+  }
+}
+
 /* Solo para lectores de pantalla: el contador visual no comunica nada. */
 .pre-status {
   position: absolute;

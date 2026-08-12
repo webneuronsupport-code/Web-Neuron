@@ -41,4 +41,16 @@
   height: 4px;
   border-radius: 50%;
   background-color: var(--accent);
+  margin-right: 0.8rem;
+}
+
+.marquee-icon {
+  width: 1.1em;
+  height: 1.1em;
+  opacity: 0.7;
+  transition: opacity 0.3s ease;
+}
+
+.marquee-item:hover .marquee-icon {
+  opacity: 1;
 }
