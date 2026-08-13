@@ -1,9 +1,9 @@
 /* ==========================================================================
-   Servicios — tarjeta de dos caras que gira con el scroll
-   Anatomía tomada de fame-estate.com: contenedor con perspective, interior con
-   transform-style: preserve-3d, y dos caras apiladas con backface-visibility
-   oculta — la trasera pregirada 180°. Girar el interior media vuelta cambia la
-   cara visible, y a 90° no se ve ninguna: ese es el instante del relevo.
+   Servicios — flujo continuo con una tarjeta que gira
+   Medido en fame-estate.com: la tarjeta es 242×327 (ratio 0,740), sin radio de
+   esquina, centrada al 75% del ancho y al 50% del alto, con perspective 1000px
+   en el contenedor y preserve-3d en el interior. Y sobre todo: las secciones
+   corren con normalidad — lo ÚNICO anclado es la tarjeta.
    ========================================================================== */
 
 .svc {
@@ -11,72 +11,48 @@
 }
 
 /* --------------------------------------------------------------------------
-   Pista y escena
+   Flujo
+   Sin escena anclada. La columna izquierda es contenido normal del documento y
+   la derecha es el carril por el que la tarjeta acompaña la lectura. Anclar la
+   sección entera es lo que producía la sensación de bloque de página.
    -------------------------------------------------------------------------- */
 
-/* La altura sale de la duración del timeline: una sola cifra en el componente
-   y aquí solo la multiplicación. */
-.svc-track {
+.svc-flow {
   position: relative;
-  height: calc(var(--svc-mult, 1) * 100vh);
-}
-
-@media (max-width: 900px) {
-  .svc-track {
-    /* Menos recorrido en móvil: la misma animación con menos dedo. */
-    height: calc(var(--svc-mult, 1) * 62vh);
-  }
-}
-
-/* sticky y no el pin de ScrollTrigger: no inyecta espaciadores ni puede
-   descuadrar el resto de la página. Es también lo que usa la referencia. */
-.svc-stage {
-  position: sticky;
-  top: 0;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  align-items: center;
-  height: 100dvh;
-  overflow: hidden;
+  align-items: start;
 }
 
 /* --------------------------------------------------------------------------
-   Columna izquierda — descripciones apiladas
-   Todas ocupan la misma celda, así que el bloque no cambia de alto al pasar de
-   un producto a otro.
+   Columna izquierda — fichas en flujo
    -------------------------------------------------------------------------- */
 
-.svc-copy {
-  position: relative;
-  display: grid;
-  align-content: center;
-  height: 100%;
-  padding: clamp(2rem, 5vw, 5rem) clamp(1.5rem, 4vw, 4.5rem);
-}
-
-.svc-panel {
-  grid-area: 1 / 1;
+.svc-item {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  justify-content: center;
   gap: 1.05rem;
-  /* Estado de reposo en CSS y no en gsap.set(): sobrevive al revert del doble
-     montaje de StrictMode y evita un fotograma con las cuatro fichas encima
-     antes de que corra el script. */
-  opacity: 0;
-  pointer-events: none;
-}
-
-.svc-panel:first-child {
-  opacity: 1;
-  pointer-events: auto;
+  /* Una pantalla por ficha: es lo que sincroniza la lectura con los giros. */
+  min-height: 100vh;
+  padding: clamp(2rem, 5vw, 5rem) clamp(1.5rem, 4vw, 4.5rem);
 }
 
 .svc-n {
-  font-size: 0.75rem;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.35rem;
+  font-size: 0.78rem;
   font-weight: 500;
   letter-spacing: 0.1em;
   color: var(--accent-light);
+  font-variant-numeric: tabular-nums;
+}
+
+.svc-n i {
+  font-style: normal;
+  color: var(--text-dim);
 }
 
 .svc-title {
@@ -128,60 +104,46 @@
   gap: 0.6rem;
 }
 
-/* Contador. Fuera del apilado, para que no se desvanezca con las fichas. */
-.svc-counter {
-  position: absolute;
-  bottom: clamp(1.5rem, 4vw, 3rem);
-  left: clamp(1.5rem, 4vw, 4.5rem);
-  display: flex;
-  align-items: baseline;
-  gap: 0.35rem;
-  font-size: 0.8rem;
-  font-weight: 500;
-  letter-spacing: 0.08em;
-  font-variant-numeric: tabular-nums;
-}
-
-.svc-counter-now {
-  color: var(--text);
-}
-
-.svc-counter-total {
-  color: var(--text-dim);
+/* Imagen por ficha: solo se usa en una columna, donde no hay carril. */
+.svc-item-media {
+  display: none;
 }
 
 /* --------------------------------------------------------------------------
-   Columna derecha — la tarjeta
+   Columna derecha — carril y tarjeta
    -------------------------------------------------------------------------- */
 
-.svc-flip {
-  display: grid;
-  place-items: center;
+/* Tan alto como la lista, con un hijo sticky dentro: eso mantiene la tarjeta
+   en pantalla durante las cuatro fichas sin anclar nada más. */
+.svc-rail {
+  position: relative;
   height: 100%;
-  padding: clamp(1.5rem, 4vw, 4rem);
-  /* La perspectiva vive en el contenedor, no en el elemento que gira: es lo que
-     convierte el giro en una rotación 3D real y no en un achatamiento. 1000px
-     es el valor de la referencia. */
-  perspective: 1000px;
   border-left: 1px solid rgba(255, 255, 255, 0.1);
 }
 
+.svc-sticky {
+  position: sticky;
+  top: 0;
+  display: grid;
+  place-items: center;
+  height: 100dvh;
+}
+
 .svc-card {
-  width: 100%;
-  max-width: 600px;
-  margin: 0;
-  /* Horizontal, no vertical. La tarjeta de la referencia es 242×327 porque su
-     contenido es fotografía de retrato; las nuestras son maquetas de interfaz
-     de 900×620 y recortarlas a vertical las destrozaría. Si algún día hay
-     imágenes verticales, esto es lo único que cambia. */
-  aspect-ratio: 900 / 620;
+  /* Vertical, como en la referencia: 242 / 327 = 0,740. Y 19vw de ancho, que
+     es la proporción que ocupa allí (242 px sobre 1280). */
+  width: clamp(190px, 19vw, 330px);
+  aspect-ratio: 242 / 327;
+  /* La perspectiva vive en el contenedor y no en el elemento que gira: es lo
+     que convierte el giro en rotación 3D real y no en un achatamiento. */
+  perspective: 1000px;
 }
 
 .svc-card-wrap {
   position: relative;
   width: 100%;
   height: 100%;
-  /* Sin esto las caras se aplanan al girar y la trasera nunca se ve. */
+  /* Sin esto las caras se aplanan y la trasera nunca se ve. */
   transform-style: preserve-3d;
   will-change: transform;
 }
@@ -190,17 +152,17 @@
   position: absolute;
   inset: 0;
   overflow: hidden;
-  border-radius: var(--r-lg);
   background-color: var(--bg-raised);
   box-shadow: 0 40px 80px -40px rgba(0, 0, 0, 0.9);
-  /* La clave del truco: cada cara desaparece cuando le da la espalda al
-     observador, así que solo una es visible en cada momento y a 90° ninguna. */
+  /* Sin border-radius: la referencia no lo lleva. */
+  /* Cada cara desaparece cuando da la espalda, así que solo una es visible y a
+     90° ninguna: ese es el instante del relevo de imágenes. */
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
 }
 
-/* La cara trasera nace pregirada media vuelta: cuando el contenedor llega a
-   180°, esta queda de frente y sin reflejar. */
+/* La trasera nace pregirada media vuelta: al llegar el contenedor a 180° queda
+   de frente y sin reflejar. */
 .svc-card-face--back {
   transform: rotateY(180deg);
 }
@@ -211,97 +173,76 @@
   object-fit: cover;
 }
 
-/* Lista solo para lectores de pantalla: las caras cambian de src por
-   JavaScript, así que su contenido no queda de forma estable en el documento. */
-.svc-sr {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip-path: inset(50%);
-  white-space: nowrap;
-}
-
 /* --------------------------------------------------------------------------
    Una columna
+   El carril desaparece y cada ficha lleva su propia imagen. La tarjeta que
+   viaja es una comodidad de escritorio: en un móvil no hay mitad derecha donde
+   ponerla sin robarle la pantalla al texto.
    -------------------------------------------------------------------------- */
 
 @media (max-width: 900px) {
-  .svc-stage {
+  .svc-flow {
     grid-template-columns: 1fr;
-    grid-template-rows: auto 1fr;
-    align-items: start;
-    gap: clamp(1.25rem, 4vw, 2rem);
-    padding-top: clamp(1.5rem, 5vh, 3rem);
   }
 
-  /* La tarjeta arriba: en una columna, entrar por la imagen engancha más que
-     entrar por un párrafo. */
-  .svc-flip {
+  .svc-rail {
+    display: none;
+  }
+
+  .svc-item {
+    min-height: 0;
+    padding: clamp(2rem, 7vw, 3rem) var(--gutter);
+  }
+
+  .svc-item-media {
+    display: block;
     order: -1;
-    height: auto;
-    padding: 0 var(--gutter);
-    border-left: 0;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    margin-bottom: 0.5rem;
+    overflow: hidden;
+    background-color: var(--bg-raised);
   }
 
-  .svc-copy {
-    height: auto;
-    padding: 0 var(--gutter) clamp(3.5rem, 12vw, 5rem);
+  .svc-item-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 
   .svc-desc {
     max-width: 100%;
   }
-
-  .svc-counter {
-    left: var(--gutter);
-    bottom: clamp(1rem, 4vw, 2rem);
-  }
 }
 
 /* --------------------------------------------------------------------------
    Movimiento reducido
-   Sin secuestro de scroll ni giros: las cuatro fichas en columna y la pista con
-   su altura natural.
+   Sin giros: se oculta el carril y cada ficha muestra su imagen en línea, que
+   es la misma solución que en una columna.
    -------------------------------------------------------------------------- */
 
-.svc.is-static .svc-track {
-  height: auto;
+.svc.is-static .svc-flow {
+  grid-template-columns: 1fr;
 }
 
-.svc.is-static .svc-stage {
-  position: static;
-  display: block;
-  height: auto;
-  overflow: visible;
-}
-
-.svc.is-static .svc-copy,
-.svc.is-static .svc-flip {
-  display: block;
-  height: auto;
-  padding-inline: var(--gutter);
-  border-left: 0;
-  perspective: none;
-}
-
-.svc.is-static .svc-panel {
-  grid-area: auto;
-  opacity: 1;
-  pointer-events: auto;
-  margin-bottom: 2.5rem;
-}
-
-.svc.is-static .svc-card-wrap {
-  transform-style: flat;
-}
-
-/* Con movimiento reducido solo se muestra la cara frontal: sin giro, la trasera
-   sería una imagen boca abajo. */
-.svc.is-static .svc-card-face--back {
+.svc.is-static .svc-rail {
   display: none;
 }
 
-.svc.is-static .svc-counter {
-  display: none;
+.svc.is-static .svc-item {
+  min-height: 0;
+}
+
+.svc.is-static .svc-item-media {
+  display: block;
+  order: -1;
+  width: min(100%, 620px);
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+}
+
+.svc.is-static .svc-item-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
