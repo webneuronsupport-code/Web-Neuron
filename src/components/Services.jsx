@@ -17,7 +17,7 @@ const SERVICES = [
     title: 'Asistentes de IA',
     text: 'Agentes conversacionales que atienden, cualifican y agendan 24/7 con el tono de tu marca. Contestan en segundos a cualquier hora y solo te pasan lo que merece tu tiempo.',
     tags: ['WhatsApp', 'Web', 'Voz'],
-    image: '/hero-2.jpg',
+    image: `${import.meta.env.BASE_URL}hero-2.jpg`,
     alt: 'Equipo trabajando en una oficina moderna con vistas a la ciudad',
     link: '/asistentes-virtuales',
     actionText: 'Saber más'
@@ -27,7 +27,7 @@ const SERVICES = [
     title: 'Automatizaciones',
     text: 'Conectamos tus herramientas para que el trabajo repetitivo se haga solo, sin supervisión. Cada flujo queda documentado y medido, así que sabes qué se ejecuta y cuándo.',
     tags: ['Flujos', 'API', 'Integraciones'],
-    image: '/hero-3.jpg',
+    image: `${import.meta.env.BASE_URL}hero-3.jpg`,
     alt: 'Manos sobre un portátil mostrando un flujo de trabajo automatizado',
   },
   {
@@ -35,7 +35,7 @@ const SERVICES = [
     title: 'CRM omnicanal',
     text: 'Todas tus conversaciones en una bandeja, con el historial completo de cada cliente. WhatsApp, email y redes en el mismo sitio, sin saltar entre pestañas.',
     tags: ['Bandeja única', 'Métricas'],
-    image: '/hero-4.jpg',
+    image: `${import.meta.env.BASE_URL}hero-4.jpg`,
     alt: 'Puesto de trabajo con varias pantallas de seguimiento de clientes',
   },
   {
@@ -43,7 +43,7 @@ const SERVICES = [
     title: 'Desarrollo web',
     text: 'Experiencias rápidas, medibles y optimizadas para convertir. Como la que estás viendo: cada animación existe para dirigir la atención, no para decorar.',
     tags: ['React', 'Rendimiento', 'SEO'],
-    image: '/abstract-bg.jpg',
+    image: `${import.meta.env.BASE_URL}abstract-bg.jpg`,
     alt: 'Composición abstracta de luz y superficies',
   },
 ];
