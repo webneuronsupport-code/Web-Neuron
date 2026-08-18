@@ -73,7 +73,9 @@
 
 .fame-top-brand {
   position: absolute;
-  top: clamp(2rem, 4vh, 3rem);
+  /* Por debajo de la cabecera global. Antes ocupaba y 32-80 y cruzaba su banda
+     de 64 px, así que marca y enlaces se pisaban en todos los anchos. */
+  top: calc(var(--header-h, 64px) + 1rem);
   left: 50%;
   transform: translateX(-50%);
   z-index: 15;
@@ -501,10 +503,15 @@
    La navegación NO se oculta: es el único acceso a las secciones que tiene el
    sitio, así que esconderla en móvil dejaría la página sin menú. */
 @media (max-width: 1024px) {
-  .fame-nav {
-    top: 1.15rem;
-    left: 1rem;
-    transform: none;
+  /* La cabecera global ocupa la banda superior y ya lleva la navegación del
+     sitio. El cromo propio del hero es de cuando esa cabecera no existía: aquí
+     se aparta en lugar de amontonarse encima.
+
+     La marca se oculta porque a estos anchos los enlaces de la cabecera llenan
+     la banda entera y no queda hueco donde ponerla. */
+  .fame-nav,
+  .fame-top-brand {
+    display: none;
   }
 
   /* En escritorio la lista va absoluta para no empujar la cabecera al
@@ -518,8 +525,11 @@
     gap: 0;
   }
 
+  /* Abajo a la derecha y no arriba: la banda superior es de la cabecera global.
+     El logo del hero va centrado abajo, así que no se estorban. */
   .fame-cta {
-    top: 1.15rem;
+    top: auto;
+    bottom: 1.15rem;
     right: 1rem;
     transform: none;
   }

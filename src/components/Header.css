@@ -1,3 +1,10 @@
+/* La altura vive en una variable porque el hero necesita apartar su propio
+   cromo de esta banda. Duplicar el 64 en dos archivos garantiza que algún día
+   se desincronicen. */
+:root {
+  --header-h: 64px;
+}
+
 .global-header {
   position: fixed;
   top: 0;
@@ -13,7 +20,7 @@
   max-width: var(--shell);
   margin: 0 auto;
   padding: 0 var(--gutter);
-  height: 64px;
+  height: var(--header-h);
   display: flex;
   align-items: center;
   justify-content: flex-end; /* Alinear enlaces a la derecha */
