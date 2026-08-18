@@ -160,24 +160,24 @@ const Hero = () => {
 
           {/* Capa media: el chip 3D (fotografía) */}
           <div className="apple-macro-object" style={{ transformStyle: 'preserve-3d', zIndex: 5 }}>
-            <img src={`\${import.meta.env.BASE_URL}hero-core.png`} alt="Núcleo de Inteligencia Artificial" className="macro-img" />
+            <img src={`${import.meta.env.BASE_URL}hero-core.png`} alt="Núcleo de Inteligencia Artificial" className="macro-img" />
           </div>
 
           {/* Nueva Escena PIP Inception (4 Niveles) */}
           <div className="pip-scene" aria-hidden="true">
             {/* Nivel 1 */}
             <div className="pip-frame pip-level-1">
-              <img src={`\${import.meta.env.BASE_URL}54847224.jpg`} alt="Frame 1" />
+              <img src={`${import.meta.env.BASE_URL}54847224.jpg`} alt="Frame 1" />
             </div>
             
             {/* Nivel 2 */}
             <div className="pip-frame pip-level-2">
-              <img src={`\${import.meta.env.BASE_URL}va-hero-saved.jpg`} alt="Frame 2" />
+              <img src={`${import.meta.env.BASE_URL}va-hero-saved.jpg`} alt="Frame 2" />
             </div>
 
             {/* Nivel 3 */}
             <div className="pip-frame pip-level-3">
-              <img src={`\${import.meta.env.BASE_URL}ChatGPT Image 18 ago 2026, 12_09_21 a.m..png`} alt="Frame 3" />
+              <img src={`${import.meta.env.BASE_URL}ChatGPT Image 18 ago 2026, 12_09_21 a.m..png`} alt="Frame 3" />
             </div>
 
             {/* Nivel 4: El bloque sólido rojo */}

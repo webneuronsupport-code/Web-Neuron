@@ -70,7 +70,7 @@ const Contact = () => {
     <footer className="contact" id="contacto" ref={root}>
       <section className="cta">
         <div className="cta-texture" aria-hidden="true">
-          <img src={`\${import.meta.env.BASE_URL}abstract-bg.jpg`} alt="" loading="lazy" />
+          <img src={`${import.meta.env.BASE_URL}abstract-bg.jpg`} alt="" loading="lazy" />
         </div>
 
         <div className="shell cta-inner">
