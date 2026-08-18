@@ -8,6 +8,7 @@
 
 .svc {
   position: relative;
+  z-index: 10; /* Crea un contexto de apilamiento superior al wipe fijo */
 }
 
 /* --------------------------------------------------------------------------
@@ -130,9 +131,13 @@
 }
 
 .svc-card {
-  /* Vertical, como en la referencia: 242 / 327 = 0,740. Y 19vw de ancho, que
-     es la proporción que ocupa allí (242 px sobre 1280). */
-  width: clamp(190px, 19vw, 330px);
+  /* Vertical, con el ratio de la referencia: 242 / 327 = 0,740. Pero bastante
+     más grande que allí (donde son 19vw), a peticion expresa.
+     El ancho se limita por dos vías a la vez: 30vw manda en pantallas normales
+     y 57dvh toma el relevo en las bajas — como el alto es el ancho por 1,35,
+     ese tope lo deja en un 77% de la pantalla y la tarjeta nunca desborda la
+     zona anclada. Limitar con max-height en su lugar rompería el ratio. */
+  width: clamp(240px, min(30vw, 57dvh), 520px);
   aspect-ratio: 242 / 327;
   /* La perspectiva vive en el contenedor y no en el elemento que gira: es lo
      que convierte el giro en rotación 3D real y no en un achatamiento. */

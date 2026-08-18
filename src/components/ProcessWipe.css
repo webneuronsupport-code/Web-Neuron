@@ -1,0 +1,52 @@
+/* --------------------------------------------------------------------------
+   ProcessWipe.css
+   -------------------------------------------------------------------------- */
+
+.pwipe {
+  position: relative;
+  /* Altura extra larga para que tome tiempo scrolear por ella */
+  height: 200vh;
+  z-index: 1; /* Detrás de Services (10) y detrás de Process (20) */
+}
+
+.pwipe-stage {
+  /* Al usar sticky, el bloque sube naturalmente y luego se congela en la pantalla
+     mientras el usuario termina de scrolear los 200vh */
+  position: sticky;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+}
+
+.pwipe-red-block {
+  position: absolute;
+  inset: 0;
+  background-color: #940600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pwipe-content {
+  text-align: center;
+  color: #ffffff;
+}
+
+.pwipe-label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: clamp(0.75rem, 1vw, 0.875rem);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  opacity: 0.6;
+  margin-bottom: 1rem;
+}
+
+.pwipe-text {
+  font-size: clamp(2rem, 4vw, 4.5rem);
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}

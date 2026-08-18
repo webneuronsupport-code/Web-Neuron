@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { ArrowUpRight } from 'lucide-react';
 import { gsap, useGSAP } from '../lib/gsap';
 import SectionHeading from './SectionHeading';
@@ -18,6 +19,8 @@ const SERVICES = [
     tags: ['WhatsApp', 'Web', 'Voz'],
     image: '/hero-2.jpg',
     alt: 'Equipo trabajando en una oficina moderna con vistas a la ciudad',
+    link: '/asistentes-virtuales',
+    actionText: 'Saber más'
   },
   {
     n: '02',
@@ -57,7 +60,8 @@ const Services = () => {
   const root = useRef(null);
   const flow = useRef(null);
   const wrap = useRef(null);
-  const faceImgs = useRef([]); // [imagen de la cara frontal, imagen de la trasera]
+  const faceImgs = useRef([]);
+  const wipeIncoming = useRef(null); // [imagen de la cara frontal, imagen de la trasera]
 
   const [reduced] = useState(
     () =>
@@ -154,7 +158,7 @@ const Services = () => {
             anclado ni desvaneciéndose: el bloque se recorre como cualquier otra
             parte de la página. */}
         <div className="svc-list">
-          {SERVICES.map(({ n, title, text, tags, image, alt }) => (
+          {SERVICES.map(({ n, title, text, tags, image, alt, link, actionText }) => (
             <article className="svc-item" key={n}>
               {/* Solo visible en una columna y con movimiento reducido, donde no
                   hay carril: ahí cada ficha necesita su propia imagen. */}
@@ -172,9 +176,21 @@ const Services = () => {
                   <li key={t}>{t}</li>
                 ))}
               </ul>
-              <a className="svc-link" href="#contacto">
-                Hablar de esto <ArrowUpRight size={15} strokeWidth={2.2} />
-              </a>
+              {link ? (
+                link.startsWith('/') ? (
+                  <Link className="svc-link" to={link}>
+                    {actionText || 'Saber más'} <ArrowUpRight size={15} strokeWidth={2.2} />
+                  </Link>
+                ) : (
+                  <a className="svc-link" href={link}>
+                    {actionText || 'Hablar de esto'} <ArrowUpRight size={15} strokeWidth={2.2} />
+                  </a>
+                )
+              ) : (
+                <a className="svc-link" href="#contacto">
+                  Hablar de esto <ArrowUpRight size={15} strokeWidth={2.2} />
+                </a>
+              )}
             </article>
           ))}
         </div>

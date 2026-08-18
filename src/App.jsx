@@ -1,17 +1,19 @@
 import { useEffect } from 'react';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import { ScrollTrigger } from './lib/gsap';
 import { useSmoothScroll } from './hooks/useSmoothScroll';
 import Preloader from './components/Preloader';
 import ScrollProgress from './components/ScrollProgress';
-import Hero from './components/Hero';
-import Marquee from './components/Marquee';
-import Services from './components/Services';
-import Process from './components/Process';
-import Results from './components/Results';
-import Contact from './components/Contact';
+import Header from './components/Header';
+import GlobalChrome from './components/GlobalChrome';
+import Home from './pages/Home';
+import VirtualAssistants from './pages/VirtualAssistants';
+
+import CrmOmnicanal from './pages/CrmOmnicanal';
 
 function App() {
   useSmoothScroll();
+  const location = useLocation();
 
   useEffect(() => {
     // Las fuentes y las imágenes cambian la altura de la página después del
@@ -25,18 +27,22 @@ function App() {
     return () => window.removeEventListener('load', refresh);
   }, []);
 
+  // Hacer scroll al principio cada vez que cambiamos de ruta
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
+
   return (
     <>
       <Preloader />
       <ScrollProgress />
-      <main>
-        <Hero />
-        <Marquee />
-        <Services />
-        <Process />
-        <Results />
-      </main>
-      <Contact />
+      <GlobalChrome />
+      <Header />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/asistentes-virtuales" element={<VirtualAssistants />} />
+        <Route path="/crm-omnicanal" element={<CrmOmnicanal />} />
+      </Routes>
     </>
   );
 }

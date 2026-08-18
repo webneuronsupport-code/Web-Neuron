@@ -8,27 +8,28 @@ const STEPS = [
     n: '01',
     title: 'Diagnóstico',
     text: 'Mapeamos tus flujos reales y medimos dónde se pierden las horas. Sin suposiciones: datos.',
-    image: '/images/panel-automation.svg',
-    alt: 'Diagrama de un flujo de trabajo automatizado con nodos conectados',
+    image: '/images/process_img_1.jpg',
+    alt: 'Platos de cerámica apilados',
   },
   {
     n: '02',
     title: 'Diseño del sistema',
     text: 'Construimos los agentes y las automatizaciones sobre las herramientas que ya usas.',
-    image: '/images/panel-assistant.svg',
-    alt: 'Conversación de un asistente de IA con un cliente',
+    image: '/images/process_img_2.jpg',
+    alt: 'Recipiente de corcho con stickers',
   },
   {
     n: '03',
     title: 'Puesta en marcha',
     text: 'Lo desplegamos, entrenamos a tu equipo y vigilamos las métricas durante los primeros meses.',
-    image: '/images/panel-crm.svg',
-    alt: 'Panel de CRM con métricas de conversaciones por canal',
+    image: '/images/process_img_3.jpg',
+    alt: 'Paisaje montañoso nocturno con taza de camping',
   },
 ];
 
 const Process = () => {
   const root = useRef(null);
+  const trackRef = useRef(null);
 
   useGSAP(
     () => {
@@ -43,89 +44,48 @@ const Process = () => {
         (context) => {
           const { isDesktop, reduce } = context.conditions;
 
-          // Con movimiento reducido no hay pin ni scrub: se muestra todo
-          // estático y legible, que es exactamente lo que pide el usuario.
           if (reduce) {
-            gsap.set('.proc-visual-item', { autoAlpha: 1 });
-            gsap.set('.proc-step', { autoAlpha: 1 });
             return;
           }
 
           if (isDesktop) {
-            // El visual se queda quieto con position: sticky (ver CSS) y aquí
-            // solo se orquesta el cruce entre pantallas. Se evita pin a
-            // propósito: fijar una columna dentro de un grid obliga a
-            // pinSpacing, que inyecta un espaciador y descuadra la rejilla.
-            // El timeline no lleva duraciones reales — con scrub, el scroll
-            // es el que marca el tiempo.
-            const tl = gsap.timeline({
-              // Duración explícita y corta: los cruces se colocan en
-              // posiciones separadas 1 unidad, así que con la duración global
-              // del proyecto (1.05) se solaparían y la pantalla intermedia
-              // nunca llegaría a verse entera. 0.5 deja además un tramo de
-              // reposo en el que cada pantalla se queda quieta y legible.
-              defaults: { ease: 'none', duration: 0.5 },
+            // Configurar el slider horizontal
+            const track = trackRef.current;
+            
+            // Calculamos exactamente la distancia a mover: ancho total del track menos el ancho de la ventana
+            const getScrollAmount = () => -(track.scrollWidth - window.innerWidth);
+
+            gsap.to(track, {
+              x: getScrollAmount,
+              ease: 'none',
               scrollTrigger: {
-                trigger: '.proc-layout',
-                start: 'top 22%',
-                end: 'bottom 78%',
-                scrub: 0.8,
+                trigger: root.current,
+                pin: true,
+                scrub: 1,
+                // Refrescamos el cálculo si cambia el tamaño de la ventana
                 invalidateOnRefresh: true,
+                // El tiempo de scroll es proporcional al tamaño del track
+                end: () => `+=${track.scrollWidth - window.innerWidth}`,
               },
             });
-
-            const items = gsap.utils.toArray('.proc-visual-item');
-            const steps = gsap.utils.toArray('.proc-step');
-
-            gsap.set(items[0], { autoAlpha: 1, scale: 1 });
-            gsap.set(steps[0], { autoAlpha: 1 });
-
-            // Cada transición: la pantalla saliente se encoge y se va, la
-            // entrante llega desde algo más grande. Se solapan, así que nunca
-            // hay un hueco vacío entre las dos.
-            items.forEach((item, i) => {
-              if (i === 0) return;
-
-              tl.to(items[i - 1], { autoAlpha: 0, scale: 0.94, yPercent: -4 }, i - 1 + 0.35)
-                .fromTo(
-                  item,
-                  { autoAlpha: 0, scale: 1.06, yPercent: 4 },
-                  { autoAlpha: 1, scale: 1, yPercent: 0 },
-                  i - 1 + 0.45
-                )
-                .to(steps[i - 1], { autoAlpha: 0.32 }, i - 1 + 0.35)
-                .fromTo(steps[i], { autoAlpha: 0.32 }, { autoAlpha: 1 }, i - 1 + 0.45);
-            });
-
-            // Barra de avance del bloque completo.
-            gsap.fromTo(
-              '.proc-rail-fill',
-              { scaleY: 0 },
-              {
-                scaleY: 1,
-                ease: 'none',
-                scrollTrigger: {
-                  trigger: '.proc-layout',
-                  start: 'top 22%',
-                  end: 'bottom 78%',
-                  scrub: 0.8,
-                  invalidateOnRefresh: true,
-                },
-              }
-            );
           } else {
-            // En móvil no se puede fijar nada sin robar toda la pantalla:
-            // cada paso se revela con su propia imagen al entrar. El paso de
-            // apilado a columna lo hace el CSS.
-            gsap.set('.proc-visual-item', { autoAlpha: 1 });
-
-            gsap.utils.toArray('.proc-step').forEach((step) => {
-              gsap.from(step, {
-                autoAlpha: 0,
-                y: 42,
-                duration: 1,
-                scrollTrigger: { trigger: step, start: 'top 85%' },
-              });
+            // En móvil, revelamos cada paso al hacer scroll hacia abajo
+            gsap.utils.toArray('.proc-panel').forEach((panel) => {
+              gsap.fromTo(
+                panel,
+                { opacity: 0.2, scale: 0.95 },
+                {
+                  opacity: 1,
+                  scale: 1,
+                  duration: 0.8,
+                  scrollTrigger: {
+                    trigger: panel,
+                    start: 'top 80%',
+                    end: 'top 20%',
+                    scrub: true,
+                  },
+                }
+              );
             });
           }
         }
@@ -138,44 +98,36 @@ const Process = () => {
 
   return (
     <section className="section process" id="proceso" ref={root}>
-      <div className="shell">
-        <SectionHeading
-          align="split"
-          label="Proceso"
-          title="De la primera llamada a producción en tres pasos"
-          lede="Sin proyectos eternos ni consultoría que no acaba en nada funcionando."
-        />
-
-        <div className="proc-layout">
-          <div className="proc-visual">
-            <div className="proc-visual-stack">
-              {STEPS.map((s, i) => (
-                <div
-                  className="proc-visual-item"
-                  key={s.n}
-                  style={{ opacity: i === 0 ? undefined : 0 }}
-                >
-                  <img src={s.image} alt={s.alt} width="900" height="620" loading="lazy" />
-                </div>
-              ))}
-            </div>
-            <span className="proc-visual-glow" aria-hidden="true" />
+      <div className="proc-track" ref={trackRef}>
+        
+        {/* Panel 1: Introducción */}
+        <div className="proc-panel proc-intro-panel">
+          <div className="proc-intro-content">
+            <SectionHeading
+              align="left"
+              label="Proceso"
+              title="De la primera llamada a producción en tres pasos"
+              lede="Sin proyectos eternos ni consultoría que no acaba en nada funcionando."
+            />
           </div>
-
-          <ol className="proc-steps">
-            <span className="proc-rail" aria-hidden="true">
-              <span className="proc-rail-fill" />
-            </span>
-
-            {STEPS.map((s) => (
-              <li className="proc-step" key={s.n}>
-                <span className="proc-step-n">{s.n}</span>
-                <h3 className="heading-sm proc-step-title">{s.title}</h3>
-                <p className="proc-step-text text-muted">{s.text}</p>
-              </li>
-            ))}
-          </ol>
         </div>
+
+        {/* Paneles 2, 3, 4: Pasos */}
+        {STEPS.map((s) => (
+          <div className="proc-panel proc-step-panel" key={s.n}>
+            <div className="proc-step-bg-wrapper">
+              <img src={s.image} alt={s.alt} className="proc-step-bg" loading="lazy" />
+              <div className="proc-step-overlay"></div>
+            </div>
+            
+            <div className="proc-step-content">
+              <span className="proc-step-n">{s.n}</span>
+              <h3 className="heading-md proc-step-title">{s.title}</h3>
+              <p className="proc-step-text text-muted">{s.text}</p>
+            </div>
+          </div>
+        ))}
+
       </div>
     </section>
   );

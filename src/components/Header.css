@@ -1,0 +1,86 @@
+.global-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  /* Fondo transparente sin bordes */
+  background: transparent;
+  pointer-events: none; /* Permite clickear los elementos de abajo si la barra no tiene fondo */
+}
+
+.header-container {
+  max-width: var(--shell);
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end; /* Alinear enlaces a la derecha */
+  pointer-events: auto; /* Reactivar clicks solo dentro del contenedor */
+}
+
+.header-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  color: var(--text);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  font-size: 0.9rem;
+  transition: opacity 0.2s var(--ease-soft);
+}
+
+.header-brand:hover {
+  opacity: 0.8;
+}
+
+.header-logo {
+  height: 28px;
+  width: auto;
+}
+
+.header-nav {
+  display: flex;
+  gap: 24px;
+}
+
+.header-link {
+  text-decoration: none;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: color 0.2s var(--ease-soft);
+  position: relative;
+}
+
+.header-link:hover {
+  color: var(--text);
+}
+
+.header-link.is-active {
+  color: var(--text);
+}
+
+/* Indicador sutil de página activa */
+.header-link.is-active::after {
+  content: '';
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 4px;
+  background-color: var(--accent);
+  border-radius: 50%;
+}
+
+@media (max-width: 768px) {
+  .header-nav {
+    gap: 16px;
+  }
+  .header-brand span {
+    display: none; /* Ocultar texto del logo en móvil para ahorrar espacio */
+  }
+}

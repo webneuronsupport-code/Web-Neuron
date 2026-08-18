@@ -1,0 +1,609 @@
+/* ==========================================================================
+   Virtual Assistants Page Styles
+   ========================================================================== */
+
+.va-page {
+  background-color: var(--bg);
+  min-height: 100vh;
+}
+
+/* ==========================================================================
+   Hero Section
+   ========================================================================== */
+.va-hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding-bottom: 10vh;
+  overflow: hidden;
+}
+
+.va-hero-image-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 110%; /* Extra height para parallax */
+  z-index: 0;
+}
+
+.va-hero-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.va-hero-gradient {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, var(--bg) 0%, rgba(18,18,18,0.3) 50%, rgba(18,18,18,0.1) 100%);
+}
+
+.va-hero-content {
+  position: relative;
+  z-index: 1;
+  max-width: var(--shell);
+  margin: 0 auto;
+  width: 100%;
+  padding: 0 var(--gutter);
+}
+
+.va-title {
+  font-size: clamp(2.5rem, 5vw, 4.5rem); /* Reducido desde (3rem, 7vw, 6rem) */
+  font-weight: 700; /* Más grueso para mayor presencia */
+  letter-spacing: -0.02em; /* Menos compresión horizontal */
+  line-height: 1.1; /* Mayor interlineado para evitar que choquen las tildes y las letras */
+  color: #ffffff;
+  margin-bottom: 2rem;
+  /* Sombra pesada para crear separación perfecta contra la onda brillante */
+  text-shadow: 
+    0 10px 40px rgba(0, 0, 0, 1), 
+    0 2px 10px rgba(0, 0, 0, 0.8),
+    0 -2px 20px rgba(0, 0, 0, 0.5);
+  position: relative;
+  z-index: 10;
+}
+
+.va-subtitle {
+  font-size: clamp(1.125rem, 2vw, 1.5rem);
+  color: #f0f0f5;
+  max-width: 600px;
+  line-height: 1.5;
+  font-weight: 500;
+  text-shadow: 
+    0 4px 20px rgba(0,0,0,1), 
+    0 2px 10px rgba(0,0,0,0.8);
+  position: relative;
+  z-index: 10;
+}
+
+/* ==========================================================================
+   Context Section
+   ========================================================================== */
+.va-context {
+  position: relative;
+  padding: 200px 0;
+  background: var(--bg);
+  overflow: hidden;
+  text-align: center;
+}
+
+.va-context-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 800px;
+  height: 800px;
+  background: radial-gradient(circle, rgba(255, 50, 50, 0.05) 0%, transparent 60%);
+  transform: translate(-50%, -50%);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.va-context-inner {
+  position: relative;
+  z-index: 1;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.va-context-headline {
+  font-size: clamp(2.5rem, 5vw, 4.5rem);
+  font-weight: 600;
+  letter-spacing: -0.04em;
+  color: var(--text);
+  line-height: 1.1;
+  margin-bottom: 2.5rem;
+  perspective: 1000px; /* Para la rotación 3D de las letras */
+}
+
+.va-dead-text-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.va-dead-text {
+  display: inline-block;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.va-strike-line {
+  position: absolute;
+  left: -5%;
+  top: 50%;
+  width: 0%; /* Empieza oculto, GSAP lo anima a 110% */
+  height: 8px;
+  background: #ff3333;
+  transform: translateY(-50%) rotate(-4deg);
+  box-shadow: 0 0 20px rgba(255, 50, 50, 0.8);
+  border-radius: 4px;
+}
+
+.va-context-paragraph {
+  font-size: clamp(1.25rem, 2.5vw, 1.75rem); /* Ligeramente más grande */
+  color: var(--text-muted);
+  line-height: 1.6;
+  max-width: 1000px; /* Expandido para usar mejor el ancho de la página */
+  margin: 0 auto;
+  text-wrap: balance;
+  opacity: 0.9;
+}
+
+/* ==========================================================================
+   Bento Grid Section
+   ========================================================================== */
+.va-bento-section {
+  padding: 80px 0 160px;
+}
+
+.va-bento-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-auto-rows: minmax(400px, auto); /* Permite que la fila se expanda si hay una tarjeta más alta como la card-large */
+  gap: 24px;
+  margin-top: 64px;
+}
+
+.va-bento-card {
+  position: relative;
+  border-radius: var(--r-xl);
+  overflow: hidden;
+  background: var(--bg-raised);
+  border: 1px solid var(--glass-subtle);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 40px;
+}
+
+.card-large {
+  grid-column: span 2;
+  min-height: 500px;
+}
+
+.bento-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+  transition: transform 0.6s var(--ease-out);
+}
+
+.va-bento-card:hover .bento-bg {
+  transform: scale(1.05);
+}
+
+.va-bento-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.2) 60%, transparent 100%);
+  z-index: 1;
+}
+
+.bento-content {
+  position: relative;
+  z-index: 2;
+  max-width: 600px;
+}
+
+.bento-content h3 {
+  color: var(--text);
+  font-size: clamp(1.5rem, 2vw, 2.5rem);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  margin-bottom: 12px;
+}
+
+.bento-content p {
+  color: var(--display);
+  font-size: 1.125rem;
+  line-height: 1.5;
+}
+
+@media (max-width: 768px) {
+  .va-bento-grid {
+    grid-template-columns: 1fr;
+    grid-auto-rows: minmax(350px, auto);
+  }
+  .card-large {
+    grid-column: span 1;
+    min-height: 400px; /* Reducido en móvil para mantener proporción */
+  }
+}
+
+/* ==========================================================================
+   Chat Interface Animation (Hero)
+   ========================================================================== */
+.va-hero-scene-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.va-chat-scene {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  max-width: var(--shell);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: var(--gutter);
+  z-index: 1;
+}
+
+.va-smartphone-frame {
+  position: relative;
+  width: 360px;
+  height: 720px;
+  background: #000;
+  border-radius: 48px;
+  padding: 12px; /* El grosor del borde o 'bezel' */
+  box-shadow: 
+    inset 0 0 4px 1px rgba(255, 255, 255, 0.3),
+    inset 0 0 0 6px #1a1a24,
+    0 40px 80px rgba(0, 0, 0, 0.6),
+    20px 20px 60px rgba(0, 0, 0, 0.4),
+    -10px -10px 30px rgba(255, 255, 255, 0.05);
+  transform: perspective(1000px) rotateY(-8deg) rotateX(2deg);
+  transform-style: preserve-3d;
+  z-index: 10;
+  will-change: transform, opacity;
+}
+
+.va-smartphone-notch {
+  position: absolute;
+  top: 22px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120px;
+  height: 30px;
+  background: #000;
+  border-radius: 20px;
+  z-index: 20;
+  box-shadow: inset 0 -2px 5px rgba(255,255,255,0.05);
+}
+
+.va-smartphone-button {
+  position: absolute;
+  background: #2a2a36;
+  border-radius: 4px;
+  z-index: 5;
+}
+.va-smartphone-button.left.top { top: 140px; left: -3px; width: 3px; height: 40px; }
+.va-smartphone-button.left.bottom { top: 200px; left: -3px; width: 3px; height: 50px; }
+.va-smartphone-button.right { top: 160px; right: -3px; width: 3px; height: 70px; }
+
+.va-chat-interface {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  right: 15px;
+  bottom: 15px;
+  background: rgba(20, 20, 25, 0.85);
+  backdrop-filter: blur(20px);
+  border-radius: 36px; /* Para emparejar el notch y marco interior */
+  padding: 60px 15px 20px 15px; /* Espacio para el notch */
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
+}
+
+.va-chat-sequence {
+  position: absolute;
+  top: 60px;
+  left: 15px;
+  right: 15px;
+  bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.scroll-area {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.va-chat-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  padding-bottom: 12px;
+}
+
+.va-chat-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #00C6FF, #0072FF);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.va-chat-avatar svg {
+  color: white;
+  width: 20px;
+  height: 20px;
+}
+
+.va-chat-title-text {
+  color: white;
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.va-chat-status {
+  color: #00C6FF;
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.va-chat-status::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #00C6FF;
+  box-shadow: 0 0 10px #00C6FF;
+}
+
+.va-chat-bubble {
+  padding: 12px 16px;
+  border-radius: 18px;
+  max-width: 85%;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  opacity: 0;
+  transform: translateY(15px);
+  will-change: transform, opacity;
+}
+
+.va-chat-user {
+  align-self: flex-end;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border-bottom-right-radius: 4px;
+}
+
+.va-chat-ai {
+  align-self: flex-start;
+  background: linear-gradient(135deg, rgba(0, 198, 255, 0.15), rgba(0, 114, 255, 0.15));
+  border: 1px solid rgba(0, 198, 255, 0.2);
+  color: white;
+  border-bottom-left-radius: 4px;
+}
+
+/* Themes for Specific Channels */
+
+/* WhatsApp Theme */
+.seq-whatsapp .va-chat-user {
+  background: #005c4b;
+  color: #e9edef;
+  border: none;
+}
+.seq-whatsapp .va-chat-ai {
+  background: #202c33;
+  color: #e9edef;
+  border: none;
+}
+
+/* Instagram Theme */
+.seq-instagram .va-chat-user {
+  background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045);
+  border: none;
+}
+.seq-instagram .va-chat-ai {
+  background: #262626;
+  border: none;
+}
+
+/* Messenger Theme */
+.seq-messenger .va-chat-user {
+  background: #0084ff;
+  border: none;
+}
+.seq-messenger .va-chat-ai {
+  background: #3e4042;
+  border: none;
+}
+
+.va-chat-typing {
+  display: flex;
+  gap: 4px;
+  padding: 16px;
+  align-self: flex-start;
+  background: rgba(255,255,255,0.05);
+  border-radius: 18px;
+  border-bottom-left-radius: 4px;
+  opacity: 0;
+}
+
+.va-typing-dot {
+  width: 6px;
+  height: 6px;
+  background: rgba(255,255,255,0.5);
+  border-radius: 50%;
+}
+
+.va-calendar-widget {
+  background: white;
+  border-radius: 16px;
+  padding: 16px;
+  color: #333;
+  width: 90%;
+  align-self: flex-start;
+  margin-top: 8px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  opacity: 0;
+  transform: scale(0.9) translateY(20px);
+  position: relative;
+  overflow: hidden;
+  will-change: transform, opacity;
+}
+
+.va-calendar-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+  font-weight: 600;
+  color: #1a73e8;
+}
+
+.va-calendar-details {
+  background: #f8f9fa;
+  padding: 12px;
+  border-radius: 8px;
+  border-left: 4px solid #1a73e8;
+}
+
+.va-calendar-title {
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.va-calendar-time {
+  color: #5f6368;
+  font-size: 0.85rem;
+}
+
+.va-calendar-check {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: #34a853;
+  color: white;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: scale(0);
+}
+
+/* Orbiting Icons */
+.va-orbit-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  max-width: var(--shell);
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.va-orbit-icon {
+  position: absolute;
+  width: 54px;
+  height: 54px;
+  background: rgba(18, 18, 24, 0.8);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+  opacity: 0;
+  transform: scale(0);
+  backdrop-filter: blur(10px);
+}
+
+.va-orbit-icon img {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+}
+
+/* Posiciones de los iconos (esparcidos por la derecha) */
+.va-orbit-icon-1 { top: 15%; right: 5%; }
+.va-orbit-icon-2 { top: 25%; right: 35%; }
+.va-orbit-icon-3 { top: 45%; right: 2%; }
+.va-orbit-icon-4 { bottom: 30%; right: 38%; }
+.va-orbit-icon-5 { bottom: 15%; right: 10%; }
+.va-orbit-icon-6 { top: 5%; right: 20%; }
+.va-orbit-icon-7 { bottom: 5%; right: 28%; }
+
+@media (max-width: 1024px) {
+  .va-hero {
+    align-items: center;
+    padding-top: 120px;
+    justify-content: flex-start;
+  }
+  .va-chat-scene {
+    position: relative;
+    top: auto;
+    left: auto;
+    transform: none;
+    justify-content: center;
+    padding-right: 0;
+    margin-top: 60px;
+  }
+  .va-orbit-container {
+    display: none; /* Ocultar órbitas en móvil para no saturar */
+  }
+}
+
+@media (max-width: 768px) {
+  .va-context {
+    padding: 100px 0 60px; /* Reducir de 200px */
+  }
+  .va-bento-section {
+    padding: 40px 0 80px; /* Reducir espaciado muerto inferior */
+  }
+  .va-bento-card {
+    padding: 32px 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .va-chat-scene {
+    transform: scale(0.85); /* Encoger toda la escena del teléfono para que no cause scroll horizontal */
+    transform-origin: top center;
+    margin-top: 20px;
+  }
+}

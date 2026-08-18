@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { ArrowUpRight } from 'lucide-react';
 import { gsap, ScrollTrigger, SplitText, useGSAP } from '../lib/gsap';
 import { INTRO_DELAY } from '../lib/timing';
@@ -13,9 +14,9 @@ const NAV = [
 ];
 
 const CARD_LINKS = [
-  { href: '#servicios', label: 'Asistentes IA' },
+  { href: '/asistentes-virtuales', label: 'Asistentes IA', isInternal: true },
   { href: '#servicios', label: 'Automatizaciones' },
-  { href: '#servicios', label: 'CRM omnicanal' },
+  { href: '/crm-omnicanal', label: 'CRM omnicanal', isInternal: true },
   { href: '#servicios', label: 'Desarrollo web' },
 ];
 
@@ -49,9 +50,9 @@ const ZOOM_DUR = 1.4;
 // lo que producía la sensación de que las imágenes se esperan.
 const ZOOM_STEP = 0.6;
 
-// La primera capa asoma antes de que el panel termine de abrirse, igual que en
-// la referencia: el rojo aún no cubre del todo y la imagen pequeña ya está.
-const ZOOM_START = BAR_GROW + PANEL_OPEN - 0.35;
+// Las imágenes empiezan a entrar mientras el panel rojo apenas va abriendo
+// a la mitad de su recorrido (45%), creando un efecto de anticipación profunda.
+const ZOOM_START = BAR_GROW + (PANEL_OPEN * 0.45);
 const TOTAL = ZOOM_START + (ZOOM.length - 1) * ZOOM_STEP + ZOOM_DUR;
 
 const Hero = () => {
@@ -82,12 +83,7 @@ const Hero = () => {
       // abajo. Meterlo en este timeline además chocaría con la inclinación,
       // porque ambos escribirían en su transform.
       intro
-        .from('.fame-nav', { autoAlpha: 0, x: -24, duration: 1.1 }, 0.15)
-        .from('.fame-cta', { autoAlpha: 0, x: 24, duration: 1.1 }, 0.15)
-        .from('.fame-logo', { autoAlpha: 0, y: 18, duration: 1 }, 0.3)
-        .from('.fame-dot', { autoAlpha: 0, duration: 0.8 }, 0.3)
-        .from('.fame-mark', { autoAlpha: 0, duration: 1 }, 0.4)
-        .from('.fame-card', { autoAlpha: 0, y: 40, duration: 1.1 }, 0.45);
+        .from('.fame-title-wrap', { autoAlpha: 0, duration: 1 }, 0.15); // Added a fallback since we removed the chrome animations
 
       if (reduced) return;
 
@@ -95,7 +91,7 @@ const Hero = () => {
       // Tres capas de efecto sobre el mismo texto: revelado por caracteres,
       // onda de brasa que lo recorre en bucle, e inclinación 3D con el cursor.
       const TITLE_BASE = '#f7f2ee'; // marfil, el color propio del titular
-      const TITLE_EMBER = '#ff6a4d'; // brasa, emparentada con el rojo del panel
+      const TITLE_EMBER = '#ff6a4d'; // Naranja original
 
       SplitText.create('.fame-title', {
         type: 'chars,words,lines',
@@ -219,8 +215,7 @@ const Hero = () => {
         BAR_GROW
       );
 
-      // La tarjeta blanca solo vive en el primer fotograma.
-      tl.to('.fame-card', { autoAlpha: 0, duration: 0.4 }, BAR_GROW * 0.6);
+
 
       // Fase 3: el túnel. Cada capa se hace visible justo cuando le toca
       // escalar; si estuvieran visibles desde el principio se verían como
@@ -273,7 +268,7 @@ const Hero = () => {
           <img src="/hero-1.png" alt="Profesional elegante usando un asistente de IA en su smartphone, estilo Apple" />
         </div>
 
-        <div className="fame-top-brand">WEB NEURON</div>
+
         {/* El envoltorio centra; el h1 queda libre para que GSAP lo incline. */}
         <div className="fame-title-wrap">
           <h1 className="fame-title">
@@ -318,76 +313,7 @@ const Hero = () => {
           </div>
         ))}
 
-        {/* Cromo fijo. Vive una sola vez y por encima de todas las capas, así
-            sigue legible sobre la foto y sobre el panel rojo. En la referencia
-            nunca desaparece durante la secuencia. */}
-        <div className="fame-chrome">
-          <span className="fame-dot" aria-hidden="true" />
 
-          <nav
-            className={`fame-nav${navOpen ? ' is-open' : ''}`}
-            aria-label="Navegación principal"
-          >
-            <div className="fame-nav-head">
-              {/* Conmutador real, como el [+] de la referencia. En móvil la
-                  lista arranca plegada: desplegada de continuo ocupa 240 px y
-                  se solapaba con el titular en cualquier pantalla corta. */}
-              <button
-                type="button"
-                className="fame-nav-toggle"
-                onClick={() => setNavOpen((v) => !v)}
-                aria-expanded={navOpen}
-                aria-controls="fame-nav-list"
-              >
-                <span aria-hidden="true">[{navOpen ? '−' : '+'}]</span> Navegación
-              </button>
-              <span className="fame-lang">ES</span>
-            </div>
-            <ol className="fame-nav-list" id="fame-nav-list">
-              {NAV.map((l, i) => (
-                <li key={l.href}>
-                  <a href={l.href}>
-                    <span>[{i + 1}]</span> {l.label}
-                  </a>
-                </li>
-              ))}
-            </ol>
-          </nav>
-
-          <a href="#contacto" className="fame-cta">
-            Agendar demo <ArrowUpRight size={13} strokeWidth={3} />
-          </a>
-
-          <a href="#inicio" className="fame-logo" aria-label="Web Neuron, inicio">
-            WN
-          </a>
-
-          <div className="fame-mark" aria-hidden="true">
-            <span className="fame-mark-dot" />
-            <span className="fame-mark-glyph">WN</span>
-          </div>
-        </div>
-
-        <aside className="fame-card">
-          <span className="fame-card-glyph" aria-hidden="true">
-            WN
-          </span>
-          <div className="fame-card-inner">
-            <p className="fame-card-text">
-              Soluciones integrales de automatización
-              <br />e inteligencia artificial
-            </p>
-            <ul className="fame-card-links">
-              {CARD_LINKS.map((l) => (
-                <li key={l.label}>
-                  <a href={l.href}>
-                    {l.label} <ArrowUpRight size={12} strokeWidth={3.5} />
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </aside>
       </div>
     </section>
   );
