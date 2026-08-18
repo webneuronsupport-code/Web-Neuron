@@ -1,319 +1,199 @@
 import { useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { ArrowUpRight } from 'lucide-react';
-import { gsap, ScrollTrigger, SplitText, useGSAP } from '../lib/gsap';
-import { INTRO_DELAY } from '../lib/timing';
+import { gsap, useGSAP } from '../lib/gsap';
 import './Hero.css';
 
-const NAV = [
-  { href: '#inicio', label: 'Inicio' },
-  { href: '#servicios', label: 'Servicios' },
-  { href: '#proceso', label: 'Proceso' },
-  { href: '#resultados', label: 'Resultados' },
-  { href: '#contacto', label: 'Contacto' },
-];
-
-const CARD_LINKS = [
-  { href: '/asistentes-virtuales', label: 'Asistentes IA', isInternal: true },
-  { href: '#servicios', label: 'Automatizaciones' },
-  { href: '/crm-omnicanal', label: 'CRM omnicanal', isInternal: true },
-  { href: '#servicios', label: 'Desarrollo web' },
-];
-
-/**
- * Capas del túnel, en orden de aparición. Cada una escala de 0.28 a 1 sobre la
- * anterior, que ya cubre la pantalla: eso produce el zoom recursivo.
- *
- * La referencia usa dos imágenes entre el panel y el manifiesto. Para añadir
- * una tercera basta con meter otra entrada aquí — el timeline se construye a
- * partir de este array y la altura de scroll se calcula sola.
- */
-const ZOOM = [
-  { kind: 'image', src: '/hero-2.jpg', alt: 'Profesionales colaborando en una oficina moderna y luminosa' },
-  { kind: 'image', src: '/hero-3.jpg', alt: 'Manos tecleando en laptop con taza de café artesanal al lado' },
-  { kind: 'statement' },
-];
-
-// --- Partitura del scroll, en unidades de timeline -------------------------
-const BAR_GROW = 0.75; // la barra crece en altura desde cero
-const PANEL_OPEN = 1.1; // lo que tarda el panel en abrirse a lo ancho
-
-// Escala a la que nace cada capa. Muy pequeña a propósito: si nace al 20% ya
-// es un rectángulo con forma reconocible, y al hacerse visible se percibe como
-// que aparece de golpe. Naciendo al 9% emerge desde un punto.
-const ZOOM_FROM = 0.09;
-const ZOOM_DUR = 1.4;
-// El paso es MUY inferior a la duración: cada capa arranca cuando la anterior
-// va por el 43% de su recorrido, de modo que siempre hay dos o tres niveles
-// anidados en pantalla. La referencia enseña tres a la vez (89%, 66% y 30% del
-// alto). Con un solape corto, cada capa crecía sola y con nada dentro: eso es
-// lo que producía la sensación de que las imágenes se esperan.
-const ZOOM_STEP = 0.6;
-
-// Las imágenes empiezan a entrar mientras el panel rojo apenas va abriendo
-// a la mitad de su recorrido (45%), creando un efecto de anticipación profunda.
-const ZOOM_START = BAR_GROW + (PANEL_OPEN * 0.45);
-const TOTAL = ZOOM_START + (ZOOM.length - 1) * ZOOM_STEP + ZOOM_DUR;
+// --- Partitura del zoom recursivo, en unidades de timeline -----------------
+// ZOOM es cuánto crece cada marco entre un salto y el siguiente. Es también el
+// inverso de la escala a la que nace cada marco: con ZOOM = 5, uno nuevo
+// aparece al 20 % justo cuando el anterior llega a pantalla completa. Los dos
+// números tienen que ser inversos o la ilusión se rompe — se vería un salto de
+// tamaño en cada relevo.
+// Valores medidos directamente en fame-estate.com, no estimados a ojo: la
+// imagen de cada capa nace a scale(0.35) y su marco lleva
+// clip-path: polygon(50% 50%, ...) — es decir, una ventana de área cero en el
+// centro. BIRTH y ZOOM son inversos, así que en cada relevo el entrante mide
+// exactamente lo que medía el saliente al empezar.
+const BIRTH = 0.35;
+const ZOOM = 1 / BIRTH; // 2.857
+const STEP = 1; // separación entre saltos
+const PIP_START = 1; // el túnel arranca cuando el chip ya casi ha pasado
+const HOLD = 1.2; // reposo en el destino antes de ceder el paso
 
 const Hero = () => {
   const root = useRef(null);
-  const panel = useRef(null);
-  const layers = useRef([]);
 
-  // Con movimiento reducido no se secuestra el scroll durante seis pantallas:
-  // el hero se queda como una sola pantalla estática y legible.
   const [reduced] = useState(
     () =>
       typeof window !== 'undefined' &&
       window.matchMedia('(prefers-reduced-motion: reduce)').matches
   );
 
-  // La lista de navegación. En escritorio el CSS la muestra siempre; en
-  // pantallas pequeñas o bajas solo se ve con este estado activo.
-  const [navOpen, setNavOpen] = useState(false);
-
   useGSAP(
     () => {
-      // --- Entrada ---------------------------------------------------------
-      // Espera a que el telón del preloader se haya retirado; si no, toda la
-      // animación se reproduce detrás de él y el usuario no ve nada.
-      const intro = gsap.timeline({ delay: INTRO_DELAY });
+      // 1. Entrada, independiente del scroll
+      const intro = gsap.timeline({ delay: 0.2 });
 
-      // El titular no entra aquí: tiene su propio revelado por caracteres más
-      // abajo. Meterlo en este timeline además chocaría con la inclinación,
-      // porque ambos escribirían en su transform.
       intro
-        .from('.fame-title-wrap', { autoAlpha: 0, duration: 1 }, 0.15); // Added a fallback since we removed the chrome animations
+        .fromTo(
+          '.apple-giant-text-bg h1',
+          { y: 50, opacity: 0 },
+          { y: 0, opacity: 1, duration: 1.2, ease: 'power3.out' }
+        )
+        .fromTo(
+          '.macro-img',
+          { scale: 0.8, opacity: 0, y: 30 },
+          { scale: 1, opacity: 1, y: 0, duration: 1.5, ease: 'power3.out' },
+          '-=0.8'
+        );
 
+      // Con movimiento reducido no se secuestran cuatro pantallas de scroll: la
+      // sección se queda como una sola pantalla, y CSS (.is-static) decide qué
+      // se ve — el interior del núcleo ya resuelto, sin el mecanismo del zoom.
       if (reduced) return;
 
-      // --- Titular ---------------------------------------------------------
-      // Tres capas de efecto sobre el mismo texto: revelado por caracteres,
-      // onda de brasa que lo recorre en bucle, e inclinación 3D con el cursor.
-      const TITLE_BASE = '#f7f2ee'; // marfil, el color propio del titular
-      const TITLE_EMBER = '#ff6a4d'; // Naranja original
+      const mm = gsap.matchMedia(root);
 
-      SplitText.create('.fame-title', {
-        type: 'chars,words,lines',
-        // La máscara por líneas es lo que permite que los caracteres asomen
-        // desde detrás del renglón en vez de aparecer flotando.
-        mask: 'lines',
-        autoSplit: true,
-        charsClass: 'fame-char',
-        // La animación se crea DENTRO de onSplit y de forma independiente:
-        // autoSplit vuelve a partir el texto al cargar las fuentes o cambiar el
-        // ancho, y un tween colgado de un timeline ya consumido dejaría las
-        // letras congeladas fuera de la máscara.
-        onSplit(self) {
-          const reveal = gsap.timeline({ delay: INTRO_DELAY });
-
-          // Los caracteres suben girando sobre su eje horizontal. El stagger
-          // sale del centro hacia los extremos, que es lo que hace que el
-          // titular se "abra" en lugar de barrerse de izquierda a derecha.
-          reveal.from(self.chars, {
-            yPercent: 120,
-            rotationX: -80,
-            transformPerspective: 600,
-            transformOrigin: '50% 100%',
-            autoAlpha: 0,
-            duration: 1.15,
-            ease: 'expo.out',
-            stagger: { each: 0.022, from: 'center' },
-          });
-
-          // Onda de brasa. El stagger lleva su propio repeat, que es la forma
-          // de conseguir que la onda circule sin fin: cada carácter repite su
-          // ciclo desfasado del anterior. Con el repeat en el tween en lugar
-          // del stagger, todas las letras parpadearían a la vez.
-          const ember = gsap.fromTo(
-            self.chars,
-            { color: TITLE_BASE },
-            {
-              color: TITLE_EMBER,
-              duration: 0.5,
-              ease: 'sine.inOut',
-              delay: INTRO_DELAY + 1,
-              stagger: {
-                each: 0.045,
-                from: 'start',
-                repeat: -1,
-                yoyo: true,
-                repeatDelay: 2.6,
-              },
-            }
-          );
-
-          // Fuera de pantalla se pausa: son ~40 tweens de color vivos para
-          // siempre, y no tiene sentido pagarlos mientras nadie los ve.
-          ScrollTrigger.create({
+      mm.add('(min-width: 100px)', () => {
+        const tl = gsap.timeline({
+          defaults: { ease: 'none' },
+          scrollTrigger: {
             trigger: root.current,
-            start: 'top bottom',
-            end: 'bottom top',
-            onToggle: (st) => (st.isActive ? ember.play() : ember.pause()),
-          });
+            start: 'top top',
+            end: 'bottom bottom',
+            scrub: 0.6,
+            invalidateOnRefresh: true,
+          },
+        });
 
-          return reveal;
-        },
+        // --- Fase 1: atravesamos el chip -------------------------------------
+        tl.to('.apple-giant-text-bg h1', { scale: 8, opacity: 0, duration: 1 }, 0)
+          .to('.apple-macro-object', { scale: 6, opacity: 0, duration: 1.2 }, 0)
+          .to('.apple-hero-glow', { opacity: 0.8, scale: 1.2, duration: 1.2 }, 0.2);
+
+        // --- Fase 2: zoom recursivo (Inception) ------------------------------
+        tl.fromTo('.pip-scene', { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.4 }, PIP_START - 0.4);
+
+        const frames = gsap.utils.toArray('.pip-frame');
+        const last = frames.length - 1;
+
+        frames.forEach((el, i) => {
+          // El contenido escala; el marco NO — el marco solo abre su ventana.
+          const inner = el.querySelector('img, .pip-content');
+
+          // Cada capa termina de abrirse en su propio instante, separados por
+          // STEP. Incluida la primera: el efecto arranca con la imagen pequeña
+          // en el centro del rojo, no con una capa ya desplegada.
+          const tFull = PIP_START + (i + 1) * STEP;
+          const tStart = tFull - STEP;
+
+          // La capa aparece de golpe a su tamaño de nacimiento. No hay fundido:
+          // en la referencia el rectángulo entra ya opaco.
+          tl.set(el, { autoAlpha: 1 }, tStart);
+
+          // Segundo tramo: la imagen sigue creciendo de 1 a ZOOM ya con la
+          // ventana abierta del todo, y desborda la pantalla. Sin él el túnel
+          // se queda plano. El último marco es el destino y se detiene en 1.
+          const eEnd = i === last ? 0 : 1;
+
+          // ZOOM^e con e lineal, no escala lineal: lo que el ojo percibe como
+          // velocidad es el CAMBIO RELATIVO de tamaño, no el absoluto. Con una
+          // rampa lineal el arranque va disparado y el final se arrastra.
+          const proxy = { e: -1 };
+          tl.to(
+            proxy,
+            {
+              e: eEnd,
+              duration: (eEnd + 1) * STEP,
+              ease: 'none',
+              onUpdate: () => {
+                const s = Math.pow(ZOOM, proxy.e);
+                // La ventana y la imagen crecen JUNTAS y con el mismo número.
+                // Así el rectángulo visible nace midiendo el 35 % de la
+                // pantalla — el tamaño mínimo que se ve en la referencia — en
+                // vez de abrirse desde un punto. Abriéndola por separado, la
+                // ventana pasaba la mayor parte del recorrido siendo un sello
+                // diminuto con un trozo de foto dentro.
+                //
+                // Y como ambos son del tamaño del viewport y llevan la misma
+                // escala, la imagen encaja con el borde de la ventana al pixel:
+                // no se ve recortada, se ve entera y pequeña.
+                gsap.set(inner, { scale: s });
+                const inset = s < 1 ? ((1 - s) / 2) * 100 : 0;
+                gsap.set(el, { clipPath: `inset(${inset}%)` });
+              },
+            },
+            tStart
+          );
+        });
+
+        // --- Fase 3: reposo y salida ------------------------------------------
+        // El destino se queda quieto y legible antes de ceder el paso.
+        const tEnd = PIP_START + (last + 1) * STEP;
+        tl.to('.apple-hero-container', { opacity: 0, duration: 0.8 }, tEnd + HOLD);
       });
-
-      // Inclinación 3D siguiendo el cursor. quickTo mantiene una sola
-      // interpolación viva por propiedad en lugar de crear un tween por cada
-      // evento de ratón, que serían decenas por segundo.
-      const canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-      let onMove;
-
-      if (canHover) {
-        const titleEl = root.current.querySelector('.fame-title');
-        gsap.set(titleEl, { transformPerspective: 900 });
-
-        const rotY = gsap.quickTo(titleEl, 'rotationY', { duration: 0.9, ease: 'power3.out' });
-        const rotX = gsap.quickTo(titleEl, 'rotationX', { duration: 0.9, ease: 'power3.out' });
-
-        onMove = (e) => {
-          rotY(gsap.utils.mapRange(0, window.innerWidth, -9, 9, e.clientX));
-          rotX(gsap.utils.mapRange(0, window.innerHeight, 6, -6, e.clientY));
-        };
-
-        window.addEventListener('pointermove', onMove);
-      }
-
-      // El panel no se toca en la intro: nace a altura cero desde el CSS y su
-      // escala es competencia exclusiva del scroll. Así no hay dos animaciones
-      // tirando de la misma propiedad si alguien hace scroll durante la intro.
-
-      // Cuánto hay que escalar los 6 px de la barra para cubrir el ancho de la
-      // ventana. Va como función para que invalidateOnRefresh lo recalcule al
-      // redimensionar en lugar de quedarse con el ancho de la primera carga.
-      const panelScaleX = () => window.innerWidth / 6 + 2;
-
-      // --- Secuencia de scroll ---------------------------------------------
-      const tl = gsap.timeline({
-        defaults: { ease: 'none' },
-        scrollTrigger: {
-          trigger: root.current,
-          start: 'top top',
-          end: 'bottom bottom',
-          scrub: 0.6,
-          invalidateOnRefresh: true,
-        },
-      });
-
-      // Fase 1: la barra crece en altura desde cero en cuanto empieza el scroll.
-      tl.fromTo(panel.current, { scaleY: 0 }, { scaleY: 1, duration: BAR_GROW }, 0);
-
-      // Fase 2: la misma barra se abre a lo ancho hasta cubrir la pantalla.
-      // Es un único elemento en dos fases, no una barra más un panel: por eso
-      // en la referencia comparten exactamente el mismo rojo.
-      //
-      // immediateRender: false es obligatorio aquí. Son dos fromTo sobre el
-      // mismo elemento, y sin esto el segundo aplicaría su estado inicial al
-      // crearse y pisaría el resultado del primero.
-      tl.fromTo(
-        panel.current,
-        { scaleX: 1 },
-        { scaleX: panelScaleX, duration: PANEL_OPEN, immediateRender: false },
-        BAR_GROW
-      );
-
-
-
-      // Fase 3: el túnel. Cada capa se hace visible justo cuando le toca
-      // escalar; si estuvieran visibles desde el principio se verían como
-      // rectángulos pequeños flotando sobre la fotografía inicial.
-      //
-      // El ease es 'power1.in' y no lineal: en un zoom real el objeto se
-      // acerca de forma exponencial, así que arranca lento y se acelera. Con
-      // escala lineal el avance se percibe frenando justo al final, que es
-      // parte de lo que hacía que las capas pareciesen quedarse esperando.
-      layers.current.filter(Boolean).forEach((el, i) => {
-        const at = ZOOM_START + i * ZOOM_STEP;
-
-        // La opacidad se anima en lugar de conmutarse. Con un set() la capa
-        // aparecía entera de golpe: eso era el salto de la primera imagen. Al
-        // fundirla mientras ya está creciendo, emerge en vez de aparecer.
-        tl.fromTo(
-          el,
-          { autoAlpha: 0 },
-          { autoAlpha: 1, duration: ZOOM_DUR * 0.3, immediateRender: false },
-          at
-        );
-
-        tl.fromTo(
-          el,
-          { scale: ZOOM_FROM },
-          { scale: 1, duration: ZOOM_DUR, ease: 'power1.in', immediateRender: false },
-          at
-        );
-      });
-
-      // useGSAP revierte tweens y ScrollTriggers por su cuenta, pero un
-      // listener de window no es cosa suya: hay que quitarlo a mano.
-      return () => {
-        if (onMove) window.removeEventListener('pointermove', onMove);
-      };
     },
     { scope: root, dependencies: [reduced] }
   );
 
   return (
     <section
-      className={`fame-hero${reduced ? ' is-static' : ''}`}
+      className={`apple-hero-section ${reduced ? 'is-static' : ''}`}
       id="inicio"
       ref={root}
-      style={reduced ? undefined : { '--scroll-mult': TOTAL + 1 }}
+      style={reduced ? undefined : { '--scroll-mult': 7 }}
     >
-      <div className="fame-stage">
-        {/* Escena base. No se mueve en ningún momento: el panel la tapa. */}
-        <div className="fame-scene">
-          <img src="/hero-1.png" alt="Profesional elegante usando un asistente de IA en su smartphone, estilo Apple" />
-        </div>
+      <div className="apple-hero-stage" style={{ perspective: '1000px' }}>
+        <div className="apple-hero-container">
+          {/* Fondo: aurora de color y brillo ambiental. Familia ámbar-naranja,
+              coherente con el metal y el brillo del chip — no un arcoíris que
+              rompa con la estética ya establecida del Hero. */}
+          <div className="apple-hero-glow" aria-hidden="true" />
 
-
-        {/* El envoltorio centra; el h1 queda libre para que GSAP lo incline. */}
-        <div className="fame-title-wrap">
-          <h1 className="fame-title">
-            SISTEMAS DE IA
-            <br />
-            QUE TRANSFORMAN TU NEGOCIO
-          </h1>
-        </div>
-
-        {/* Barra y panel son el mismo elemento. */}
-        <div className="fame-panel" ref={panel} aria-hidden="true" />
-
-        {ZOOM.map((layer, i) => (
-          <div
-            className={`fame-layer fame-layer--${layer.kind}`}
-            key={layer.src || layer.kind}
-            // Llaves, no expresión: un callback de ref que devuelve un valor
-            // hace que React 19 lo interprete como función de limpieza.
-            ref={(el) => {
-              layers.current[i] = el;
-            }}
-            style={{ zIndex: 10 + i }}
-          >
-            {layer.kind === 'image' ? (
-              // Sin lazy: estas imágenes forman parte de la secuencia del hero
-              // y su capa arranca en visibility:hidden, así que el navegador
-              // nunca las pediría y aparecerían en blanco al llegar su turno.
-              <img src={layer.src} alt={layer.alt} decoding="async" />
-            ) : (
-              <div className="fame-statement">
-                <h2>
-                  Creamos sistemas de IA que evocan eficiencia.
-                  <br />
-                  Damos un nuevo sentido a tu negocio
-                </h2>
-                <p>
-                  Agencia especializada en automatización e inteligencia artificial. Conectamos
-                  tecnología con elegancia, rendimiento y resultados medibles.
-                </p>
-              </div>
-            )}
+          {/* Capa trasera: tipografía colosal */}
+          <div className="apple-giant-text-bg">
+            <h1>
+              WEB
+              <br />
+              NEURON
+            </h1>
           </div>
-        ))}
 
+          {/* Capa media: el chip 3D (fotografía) */}
+          <div className="apple-macro-object" style={{ transformStyle: 'preserve-3d', zIndex: 5 }}>
+            <img src="/hero-core.png" alt="Núcleo de Inteligencia Artificial" className="macro-img" />
+          </div>
 
+          {/* Nueva Escena PIP Inception (4 Niveles) */}
+          <div className="pip-scene" aria-hidden="true">
+            {/* Nivel 1 */}
+            <div className="pip-frame pip-level-1">
+              <img src="/54847224.jpg" alt="Frame 1" />
+            </div>
+            
+            {/* Nivel 2 */}
+            <div className="pip-frame pip-level-2">
+              <img src="/va-hero-saved.jpg" alt="Frame 2" />
+            </div>
+
+            {/* Nivel 3 */}
+            <div className="pip-frame pip-level-3">
+              <img src="/ChatGPT Image 18 ago 2026, 12_09_21 a.m..png" alt="Frame 3" />
+            </div>
+
+            {/* Nivel 4: El bloque sólido rojo */}
+            <div className="pip-frame pip-level-4">
+              <div className="pip-content">
+                <div className="pip-content-box">
+                  <h2>CREAMOS SISTEMAS DE IA<br/>QUE TRANSFORMAN TU NEGOCIO.<br/>RENDIMIENTO ABSOLUTO.</h2>
+                  <p className="pip-small-text">
+                    EXCLUSIVAS SOLUCIONES CON UN DISEÑO QUE CONECTA CON TUS OBJETIVOS, 
+                    DÁNDOTE UN NUEVO SENTIDO DEL ÉXITO Y LA PRODUCTIVIDAD.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   );

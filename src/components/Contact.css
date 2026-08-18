@@ -108,6 +108,23 @@
   color: var(--text);
 }
 
+/* Zona pulsable en dispositivos táctiles. Los enlaces sociales medían 20 px de
+   alto y el de «X» solo 8 px de ancho: prácticamente imposible de acertar. Se
+   acota por tipo de puntero, que es la condición real. */
+@media (pointer: coarse) {
+  .foot-social a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .foot-logo {
+    min-height: 44px;
+  }
+}
+
 @media (min-width: 900px) {
   .cta-inner {
     grid-template-columns: 1.1fr 0.9fr;

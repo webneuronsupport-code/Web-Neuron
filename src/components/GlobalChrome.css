@@ -265,10 +265,30 @@
    -------------------------------------------------------------------------- */
 
 @media (max-width: 1024px) {
+  /* El cromo se apila por debajo de la cabecera global usando --header-h como
+     origen, en lugar de repartirse por las esquinas como en pantalla grande.
+     Antes se amontonaba sobre la cabecera, y por eso estuvo oculto: ahora que
+     los enlaces del sitio viven tras el botón «Menú», hay sitio para enseñar lo
+     mismo que en escritorio. */
+  .fame-top-brand {
+    top: calc(var(--header-h, 64px) + 0.85rem);
+  }
+
   .fame-nav {
-    top: 1.15rem;
-    left: 1rem;
+    /* Por debajo de la marca, que ocupa hasta unos 126 px. */
+    top: calc(var(--header-h, 64px) + 5.25rem);
+    left: var(--gutter);
     transform: none;
+  }
+
+  /* El CTA se sube al lado libre de la banda de la cabecera: el botón «Menú»
+     ocupa la izquierda y la derecha queda vacía. Abajo chocaría con la
+     tarjeta. */
+  .fame-cta {
+    top: calc(var(--header-h, 64px) / 2);
+    bottom: auto;
+    right: var(--gutter);
+    transform: translateY(-50%);
   }
 
   .fame-nav-list {
@@ -295,9 +315,49 @@
     align-items: center;
   }
 
+  /* Rediseño de la tarjeta en móvil: De un bloque rígido gigante a una "isla" flotante compacta */
+  .fame-card {
+    left: 1rem;
+    right: 1rem;
+    bottom: 1.5rem;
+    width: auto;
+    border-radius: 24px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+    /* Se remueve la altura fija para que sea lo más compacta posible */
+    --hero-card-h: auto;
+  }
+
+  .fame-card-inner {
+    padding: 1rem 1.2rem;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .fame-card-text,
+  .fame-card-glyph {
+    display: none; /* Ocultamos el texto gigante y el logo decorativo para ahorrar espacio */
+  }
+
+  .fame-card-links {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 0.8rem 1.2rem;
+    width: 100%;
+  }
+
+  .fame-stage {
+    --hero-card-h: 200px;
+  }
+
+  /* El monograma y el logo inferior caen justo donde ahora está la tarjeta, y
+     el punto queda dentro de la banda de la cabecera. Son decorativos, y la
+     marca ya aparece arriba. */
   .fame-dot,
   .fame-mark,
-  .fame-card {
+  .fame-logo {
     display: none;
   }
 }

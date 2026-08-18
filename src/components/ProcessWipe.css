@@ -9,6 +9,14 @@
   z-index: 1; /* Detrás de Services (10) y detrás de Process (20) */
 }
 
+/* Misma razón que en el héroe: en móvil sobra recorrido. La cortina roja se
+   abre igual, solo que en menos deslizamientos. */
+@media (max-width: 768px) {
+  .pwipe {
+    height: 130vh;
+  }
+}
+
 .pwipe-stage {
   /* Al usar sticky, el bloque sube naturalmente y luego se congela en la pantalla
      mientras el usuario termina de scrolear los 200vh */

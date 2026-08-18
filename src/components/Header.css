@@ -83,11 +83,120 @@
   border-radius: 50%;
 }
 
-@media (max-width: 768px) {
-  .header-nav {
-    gap: 16px;
+/* Zona pulsable en dispositivos táctiles.
+   Los enlaces medían 20 px de alto: con el dedo es imposible acertar sin fallar
+   al de al lado. Se acota por tipo de puntero y no por ancho, que es la
+   condición real — una tablet ancha también se toca con el dedo. */
+@media (pointer: coarse) {
+  .header-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    /* min-width además del alto: etiquetas cortas como «Inicio» se quedaban en
+       31 px de ancho aunque la caja ya midiera 44 de alto. */
+    min-width: 44px;
+    min-height: 44px;
   }
-  .header-brand span {
-    display: none; /* Ocultar texto del logo en móvil para ahorrar espacio */
+
+  /* El punto de página activa se ancla al texto y no al borde de la caja: al
+     crecer esta a 44 px se quedaba flotando muy por debajo. */
+  .header-link.is-active::after {
+    bottom: 6px;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Botón de menú
+   Solo existe por debajo de 768 px. Ahí los tres enlaces en fila suman 291 px
+   de contenido más 40 de márgenes, y al ir la barra alineada a la derecha el
+   sobrante se cortaba fuera de la pantalla sin dejar rastro visible.
+   -------------------------------------------------------------------------- */
+
+.header-burger {
+  display: none;
+  align-items: center;
+  gap: 0.55rem;
+  min-height: 44px;
+  padding-inline: 0;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.header-burger-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 16px;
+}
+
+.header-burger-bars i {
+  display: block;
+  height: 1.5px;
+  background-color: currentColor;
+  transition: width 0.35s var(--ease-out);
+}
+
+.header-burger-bars i:first-child {
+  width: 100%;
+}
+
+.header-burger-bars i:last-child {
+  width: 62%;
+}
+
+.global-header.is-open .header-burger-bars i:last-child {
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .header-container {
+    /* El botón a la izquierda; el panel se despliega debajo. */
+    justify-content: flex-start;
+  }
+
+  .header-burger {
+    display: inline-flex;
+  }
+
+  .header-nav {
+    position: absolute;
+    top: var(--header-h);
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    gap: 0;
+    padding: 0.5rem var(--gutter) 1.25rem;
+    /* Fondo propio y desenfoque: el panel se superpone a la página y sin esto
+       los dos textos se pisan y no se lee ninguno. */
+    background-color: rgba(10, 10, 10, 0.92);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    /* Plegado por defecto. Se anima la altura máxima en lugar de display para
+       que la transición sea posible. */
+    max-height: 0;
+    overflow: hidden;
+    visibility: hidden;
+    transition: max-height 0.4s var(--ease-out), visibility 0.4s;
+  }
+
+  .global-header.is-open .header-nav {
+    max-height: 60vh;
+    visibility: visible;
+  }
+
+  .header-link {
+    justify-content: flex-start;
+    min-height: 52px;
+    font-size: 1rem;
+  }
+
+  /* En columna, el punto de página activa estorba debajo del texto: pasa a la
+     izquierda, como viñeta. */
+  .header-link.is-active::after {
+    bottom: auto;
+    top: 50%;
+    left: -0.75rem;
+    transform: translateY(-50%);
   }
 }

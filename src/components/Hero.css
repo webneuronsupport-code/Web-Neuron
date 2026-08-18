@@ -1,638 +1,516 @@
 /* ==========================================================================
-   Hero — secuencia de zoom recursivo anclada al scroll
-   Referencia: fame-real-estate. Un panel crece desde el centro y tapa la
-   escena; después las capas escalan una dentro de otra hasta el manifiesto.
+   Hero — Estilo Apple 17 Pro
+   Tipografía colosal superpuesta con imagen macro 3D transparente. El scroll
+   atraviesa el chip y revela un núcleo vectorial: anillos, radios y un die
+   central, sobre una aurora ámbar-naranja.
    ========================================================================== */
 
-.fame-hero {
+.apple-hero-section {
   position: relative;
   width: 100%;
-  /* La altura la fija el componente (vía variable --scroll-mult) a partir 
-     de la duración del timeline para que GSAP tenga espacio de scroll. */
-  height: calc(var(--scroll-mult, 1) * 100vh);
+  /* 4 pantallas de altura para que GSAP tenga espacio de scroll */
+  height: calc(var(--scroll-mult, 4) * 100vh);
+  background-color: #000; /* Fondo negro puro */
 }
 
+.apple-hero-section.is-static {
+  height: 100vh;
+}
+
+/* En móvil el presupuesto de scroll se recorta casi a la mitad. Un pulgar
+   recorre bastante menos que una rueda, así que 7 pantallas son unos diez
+   deslizamientos solo para pasar el héroe — de ahí la sensación de que la
+   página no avanza.
+
+   Se toca la altura y no la variable a propósito: --scroll-mult viaja en un
+   style inline desde el JSX, y una declaración inline gana a cualquier hoja de
+   estilos. La altura, en cambio, solo se declara aquí.
+
+   El timeline no se rompe: el ScrollTrigger va de 'top top' a 'bottom bottom',
+   o sea que se reparte sobre la altura que tenga la sección. Al acortarla, la
+   animación se comprime; no se corta. */
 @media (max-width: 768px) {
-  .fame-hero {
-    /* En móviles aceleramos el scroll reduciendo el espacio físico que hay
-       que deslizar para completar la animación de GSAP. */
-    height: calc(var(--scroll-mult, 1) * 50vh);
+  .apple-hero-section:not(.is-static) {
+    height: calc(4 * 100vh);
   }
 }
 
-/* Con movimiento reducido no hay secuencia: una sola pantalla. */
-.fame-hero.is-static {
-  height: 100dvh;
-}
-
-/* sticky en lugar del pin de ScrollTrigger: no inyecta espaciadores ni
-   necesita anticipatePin, y no puede descuadrar el resto de la página.
-
-   dvh y no vh: en móvil, 100vh incluye la barra del navegador, así que la
-   escena quedaba recortada por abajo y el logo inferior fuera de pantalla. */
-.fame-stage {
+.apple-hero-stage {
   position: sticky;
   top: 0;
-  height: 100dvh;
+  height: 100vh;
+  width: 100%;
   overflow: hidden;
-  background-color: #050505;
-  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.apple-hero-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
 }
 
 /* --------------------------------------------------------------------------
-   Escena base
+   Capa Trasera: Texto Gigante
    -------------------------------------------------------------------------- */
-
-.fame-scene {
+.apple-giant-text-bg {
   position: absolute;
-  inset: 0;
+  top: 45%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  text-align: center;
+  z-index: 1; /* Detrás de la imagen */
+  pointer-events: none;
+}
+
+.apple-giant-text-bg h1 {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", sans-serif;
+  font-size: 16vw;
+  font-weight: 800;
+  line-height: 0.8;
+  letter-spacing: -0.06em;
+  margin: 0;
+  color: #fff;
+  text-align: center;
+  will-change: transform, opacity;
+
+  /* Degradado sutil para el texto */
+  background: linear-gradient(180deg, #ffffff 0%, #808080 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+
+  text-transform: uppercase;
+}
+
+/* --------------------------------------------------------------------------
+   Capa Media: Imagen Macro (El Hardware)
+   -------------------------------------------------------------------------- */
+.apple-macro-object {
+  position: absolute;
+  top: 55%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 45%;
+  max-width: 600px;
+  z-index: 5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+.macro-img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  /* El drop-shadow se eliminó porque crasheaba el GPU al escalar la imagen */
+}
+
+/* ==========================================================================
+   Fondo Aurora (ámbar-naranja, a sangre completa)
+   ========================================================================== */
+
+.apple-aurora-bg {
+  position: absolute;
+  /* A sangre completa. .apple-hero-container topa en max-width:1400px, y con
+     inset:0 la aurora se quedaba encerrada en esos 1400px — en pantallas más
+     anchas dejaba una franja negra a cada lado. Se rompe el ancho del padre en
+     vez de mover la aurora de sitio, que obligaría a recolocar todo el
+     apilamiento z. El recorte lo hace .apple-hero-stage, que ya tiene
+     overflow: hidden. */
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 100vw;
+  margin-left: -50vw;
+  z-index: 1;
+  opacity: 0; /* Aparece por GSAP */
+  pointer-events: none;
+  isolation: isolate;
+  overflow: hidden;
+  background: #0a0604;
+}
+
+.aurora-blob {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 70vmax;
+  height: 70vmax;
+  margin: -35vmax 0 0 -35vmax;
+  border-radius: 50%;
+  /* screen suma luz: donde dos manchas se cruzan aparece un tono más caliente
+     que ninguna de las dos tiene por separado. */
+  mix-blend-mode: screen;
+  filter: blur(80px);
+  will-change: transform;
+}
+
+.aurora-blob-1 {
+  background: radial-gradient(circle, rgba(255, 140, 0, 0.55) 0%, transparent 62%);
+  animation: core-float-1 25s infinite alternate ease-in-out;
+}
+
+.aurora-blob-2 {
+  background: radial-gradient(circle, rgba(255, 60, 0, 0.4) 0%, transparent 62%);
+  animation: core-float-2 30s infinite alternate ease-in-out;
+}
+
+.aurora-blob-3 {
+  background: radial-gradient(circle, rgba(200, 20, 10, 0.32) 0%, transparent 65%);
+  animation: core-float-3 21s infinite alternate ease-in-out;
+}
+
+@keyframes core-float-1 {
+  0% {
+    transform: translate(-10%, -20%) scale(1);
+  }
+  100% {
+    transform: translate(15%, 20%) scale(1.15);
+  }
+}
+
+@keyframes core-float-2 {
+  0% {
+    transform: translate(20%, -10%) scale(1.1);
+  }
+  100% {
+    transform: translate(-20%, 15%) scale(1);
+  }
+}
+
+@keyframes core-float-3 {
+  0% {
+    transform: translate(-16%, 14%) scale(1.05);
+  }
+  100% {
+    transform: translate(18%, -16%) scale(1.2);
+  }
+}
+
+/* ==========================================================================
+   Hero Ambiental Glow (brillo base, centrado)
+   ========================================================================== */
+
+.apple-hero-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 50vmax;
+  height: 50vmax;
+  margin: -25vmax 0 0 -25vmax;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 140, 0, 0.18) 0%, transparent 70%);
+  mix-blend-mode: screen;
+  filter: blur(60px);
+  pointer-events: none;
+  opacity: 0.4;
   z-index: 1;
 }
 
-.fame-scene img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
+/* ==========================================================================
+   Interior: Picture-in-Picture Zoom (PIP)
+   ========================================================================== */
 
-/* Velo para que el titular blanco tenga contraste sobre el cielo claro. */
-.fame-scrim {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    180deg,
-    rgba(0, 0, 0, 0.35) 0%,
-    rgba(0, 0, 0, 0.18) 45%,
-    rgba(0, 0, 0, 0.45) 100%
-  );
-}
-
-/* --------------------------------------------------------------------------
-   Titular
-   -------------------------------------------------------------------------- */
-
-.fame-top-brand {
-  position: absolute;
-  /* Por debajo de la cabecera global. Antes ocupaba y 32-80 y cruzaba su banda
-     de 64 px, así que marca y enlaces se pisaban en todos los anchos. */
-  top: calc(var(--header-h, 64px) + 1rem);
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 15;
-  font-size: clamp(1rem, 1.5vw, 1.25rem);
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: #fff;
-  white-space: nowrap;
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-/* --------------------------------------------------------------------------
-   Titular
-   -------------------------------------------------------------------------- */
-
-/* El centrado vive en el envoltorio y la inclinación en el h1.
-   Hacen falta dos elementos: GSAP reescribe la propiedad transform entera al
-   animar rotationX/rotationY (y además anula translate/rotate/scale), así que
-   el titular no puede llevar su propio translate(-50%,-50%) — saltaría a la
-   esquina en cuanto se moviera el cursor. Centrarlo con grid tampoco valía:
-   convertía cada palabra en un ítem de grid, el texto se apilaba en vertical y
-   SplitText dejaba de detectar las líneas. */
-.fame-title-wrap {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  z-index: 5;
-  width: 100%;
-  transform: translate(-50%, -50%);
-  padding-inline: 2rem;
-  pointer-events: none;
-}
-
-.fame-title {
-  text-align: center;
-  text-transform: uppercase;
-  /* Escala fluida con base fija + vw. Con clamp(1.2rem, 3.2vw, ...) el tramo
-     medio se hundía: a 768 px daba 24,6 px, MENOS que los 25,6 px del override
-     de móvil, así que el titular encogía al agrandar la pantalla. Sumando una
-     base en rem el crecimiento es monótono: ~26 px a 375, ~39 a 768, ~55 a
-     1280 y ~76 a 1920. */
-  font-size: clamp(1.6rem, 0.87rem + 3.24vw, 4.75rem);
-  font-weight: 700;
-  line-height: 0.95;
-  letter-spacing: -0.02em;
-  /* Blanco cálido en lugar de #fff puro: sobre una fotografía cálida el blanco
-     absoluto se ve azulado y despegado del fondo. Este marfil es el color
-     propio del titular, y la onda de brasa lo recorre desde aquí. */
-  color: #f7f2ee;
-  will-change: transform;
-}
-
-/* Cada carácter lo crea SplitText. La sombra los separa de la fotografía sin
-   necesidad de un velo que apague la imagen entera. */
-.fame-char {
-  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.55);
-}
-
-/* Escritorio: el cromo vuelve al centro vertical, a los costados del titular,
-   así que hay que reservarle esos pasillos. A 1100 px el titular se solapaba
-   5 px con la cabecera de navegación. Por debajo de 1025 el cromo está arriba y
-   el titular puede ocupar todo el ancho. */
-@media (min-width: 1025px) {
-  .fame-title-wrap {
-    padding-inline: clamp(185px, 15vw, 240px);
-  }
-}
-
-/* --------------------------------------------------------------------------
-   Panel
-   Un único elemento en dos fases: primero crece en altura (es la barra del
-   primer fotograma) y después se abre a lo ancho hasta cubrir la pantalla.
-   -------------------------------------------------------------------------- */
-
-/* El estado inicial lo define el CSS — no JavaScript. Ponerlo con gsap.set()
-   lo dejaba a merced del revert del doble montaje de StrictMode, y además
-   provocaría un fotograma con el panel a tamaño completo antes de que corriese
-   el script.
-
-   Altura cero en reposo: la barra no debe verse hasta que se empieza a hacer
-   scroll. Con una altura de partida quedaba una raya roja sobre la fotografía
-   que se lee como un defecto, no como el arranque de una transición. */
-.fame-panel {
+.pip-scene {
   position: absolute;
   top: 0;
   left: 50%;
-  z-index: 8;
-  width: 6px;
-  height: 100dvh;
-  margin-left: -3px;
-  background-color: #940600;
-  /* El crecimiento sale del centro en los dos ejes. */
-  transform: scaleY(0);
-  transform-origin: center center;
-  will-change: transform;
-}
-
-/* --------------------------------------------------------------------------
-   Capas del túnel
-   -------------------------------------------------------------------------- */
-
-/* Igual que el panel: el estado de partida vive en el CSS, no en un gsap.set
-   que el revert de StrictMode pueda dejar sin aplicar. */
-.fame-layer {
-  position: absolute;
-  inset: 0;
-  /* Debe coincidir con ZOOM_FROM en Hero.jsx. */
-  transform: scale(0.09);
-  transform-origin: center center;
+  width: 100vw;
+  margin-left: -50vw;
+  height: 100vh;
+  margin-top: 0;
+  z-index: 10;
   opacity: 0;
-  visibility: hidden;
-  will-change: transform, opacity;
-  overflow: hidden;
-}
-
-.fame-layer img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.fame-layer--statement {
-  background-color: #940600;
-}
-
-/* --------------------------------------------------------------------------
-   Manifiesto
-   -------------------------------------------------------------------------- */
-
-.fame-statement {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  padding: clamp(1.5rem, 4vw, 4rem);
-}
-
-.fame-statement h2 {
-  max-width: 20ch;
-  text-align: center;
-  text-transform: uppercase;
-  /* Misma corrección de monotonía que en el titular. */
-  font-size: clamp(1.35rem, 0.8rem + 3vw, 4rem);
-  font-weight: 700;
-  line-height: 0.94;
-  letter-spacing: -0.035em;
-  /* Negro sobre rojo, como en la referencia: el contraste es más duro y más
-     gráfico que el blanco. */
-  color: #000;
-}
-
-.fame-statement p {
-  position: absolute;
-  left: clamp(1.5rem, 4vw, 4rem);
-  bottom: clamp(1.5rem, 4vw, 4rem);
-  max-width: 46ch;
-  text-transform: uppercase;
-  font-size: 0.68rem;
-  font-weight: 700;
-  line-height: 1.45;
-  letter-spacing: 0.045em;
-  color: #000;
-}
-
-/* --------------------------------------------------------------------------
-   Cromo fijo
-   Una sola instancia, por encima de todas las capas. Antes vivía duplicada
-   dentro de cada mitad de cada capa, lo que multiplicaba los enlaces del
-   documento y hacía que los selectores de GSAP tocasen varios nodos a la vez.
-   -------------------------------------------------------------------------- */
-
-.fame-chrome {
-  position: absolute;
-  inset: 0;
-  z-index: 50;
   pointer-events: none;
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-}
-
-.fame-chrome a,
-.fame-chrome nav {
-  pointer-events: auto;
-}
-
-.fame-dot {
-  position: absolute;
-  top: 14px;
-  left: 50%;
-  width: 4px;
-  height: 4px;
-  margin-left: -2px;
-  border-radius: 50%;
-  background-color: #fff;
-}
-
-/* Nav y CTA se alinean al centro vertical, como en la referencia. */
-.fame-nav {
-  position: absolute;
-  top: 50%;
-  left: clamp(1rem, 2vw, 2rem);
-  transform: translateY(-50%);
-}
-
-.fame-nav-head {
   display: flex;
+  justify-content: center;
   align-items: center;
-  gap: 2.2rem;
-  white-space: nowrap;
+  overflow: hidden;
+  background-color: #7b110f; /* Fondo rojo base en caso de que las imágenes no carguen */
 }
 
-.fame-nav-toggle {
-  display: inline-flex;
-  gap: 0.35rem;
-  /* Hereda cuerpo, interletrado y mayúsculas de .fame-chrome en lugar de traer
-     los suyos: es el mismo registro tipográfico que el resto del marco. */
-  font: inherit;
-  letter-spacing: inherit;
-  text-transform: inherit;
-  color: #fff;
-  transition: opacity 0.3s ease;
-}
+/* Medido en fame-estate.com (.clip-slide): el marco NO se escala. Ocupa la
+   pantalla entera y quieto, y lo que crece es su clip-path — una ventana que
+   se abre desde un punto en el centro hasta cubrirlo todo. La imagen de dentro
+   escala por su cuenta, de 0.35 a 1.
 
-.fame-nav-toggle:hover {
-  opacity: 0.65;
-}
+   Esa separación es el efecto entero. Escalando el marco, la imagen crece con
+   él y se lee como «una foto haciéndose grande». Con la ventana, la imagen se
+   queda clavada a la pantalla y el rectángulo que se abre se lee como un hueco
+   hacia otro sitio — que es lo que pasa en la referencia.
 
-.fame-nav-list {
-  /* Absoluto para que al desplegarse no empuje la cabecera: los controles del
-     marco no deben moverse. */
-  position: absolute;
-  top: calc(100% + 0.5rem);
-  left: 1.3rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.28rem;
-}
-
-.fame-nav-link {
-  display: flex;
-  gap: 0.35rem;
-  color: #fff;
-  white-space: nowrap;
-  opacity: 0.7;
-  transition: transform 0.4s cubic-bezier(0.2, 0, 0, 1), opacity 0.3s ease;
-  perspective: 400px;
-}
-
-.fame-nav-link:hover {
-  opacity: 1;
-  transform: translateX(8px);
-}
-
-.fame-nav-text {
-  position: relative;
-  display: inline-block;
-  transform-style: preserve-3d;
-  transition: transform 0.5s cubic-bezier(0.76, 0, 0.24, 1);
-}
-
-.fame-nav-text-inner {
-  display: inline-block;
-  transform: translateZ(0.4em);
-}
-
-.fame-nav-text::after {
-  content: attr(data-text);
+   El borde de color alrededor del marco no es un margen: es la capa de detrás
+   asomando por la parte de la ventana que aún no ha terminado de abrirse. */
+.pip-frame {
   position: absolute;
   top: 0;
   left: 0;
-  transform: rotateX(-90deg) translateZ(0.4em);
-  color: inherit;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  /* 32.5 % por lado deja una ventana del 35 %, que es justo lo que mide la
+     imagen al nacer. Los dos números van atados: si se separan, la imagen
+     aparece recortada dentro de su propio marco. */
+  clip-path: inset(32.5%);
+  opacity: 0;
+  visibility: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  will-change: clip-path;
 }
 
-.fame-nav-link:hover .fame-nav-text,
-.fame-card-link:hover .fame-nav-text {
-  transform: rotateX(90deg);
+/* Escala a la que nace la imagen dentro de su marco. 0.35 es el valor exacto
+   de la referencia, y es también el inverso de ZOOM en Hero.jsx: los dos
+   números tienen que cuadrar o se vería un salto de tamaño en cada relevo. */
+:root {
+  --pip-birth: 0.35;
 }
 
-.fame-cta {
+.pip-level-1 {
+  z-index: 1;
+}
+
+/* El orden de apilamiento es lo que sostiene la ilusión: cada marco entrante
+   va POR ENCIMA del que sale, así que lo tapa al llegar a pantalla completa.
+   Por eso el saliente no necesita desvanecerse — solo crece hasta que el
+   entrante lo cubre y el recorte de .pip-scene se lleva el resto.
+
+   Al nivel 5 le faltaba su z-index: quedaba en auto, es decir por DEBAJO de los
+   niveles 1-4, y el bloque rojo final no llegaba a verse. */
+.pip-level-2 { z-index: 2; }
+.pip-level-3 { z-index: 3; }
+.pip-level-4 { z-index: 4; }
+
+/* Estado de partida en CSS y no solo en gsap.set(): sin esto hay un fotograma
+   con los cinco marcos apilados a pantalla completa antes de que ScrollTrigger
+   llegue a evaluar. El de fondo sí nace visible y a escala 1. */
+/* Todos los marcos nacen al 35 %, incluido el primero. Antes el nivel 1 nacía
+   ya a pantalla completa y el efecto empezaba de golpe, en vez de arrancar con
+   la imagen pequeña en el centro del rojo. */
+.pip-frame img,
+.pip-frame > .pip-content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(var(--pip-birth));
+  will-change: transform;
+}
+
+/* El bloque rojo sólido con el contenido. Se comporta igual que las imágenes:
+   escala de BIRTH a 1 mientras su ventana se abre. La geometría común vive en
+   la regla que comparte con .pip-frame img. */
+.pip-content {
+  z-index: 3;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #7b110f;
+}
+
+.pip-content-box {
+  /* Sin fondo propio: el rojo ya lo pone .pip-content a pantalla completa, y
+     como el destino de la referencia es una sola superficie roja con el texto
+     centrado, un segundo rectángulo encima solo se leía como un parche. */
+  background-color: transparent;
+  text-align: center;
+  color: #fff;
+  max-width: 62%;
+  /* El efecto exacto de la referencia: un rectángulo centrado sin bordes redondeados */
+}
+
+.pip-content-box h2 {
+  font-family: var(--font-primary);
+  font-size: clamp(1.5rem, 3vw, 2.5rem);
+  font-weight: 800;
+  line-height: 1.1;
+  text-transform: uppercase;
+  margin-bottom: 2rem;
+  letter-spacing: -0.02em;
+}
+
+.pip-small-text {
+  font-family: var(--font-secondary);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  opacity: 0.8;
+  max-width: 400px;
+  margin: 0 auto;
+  line-height: 1.5;
+}
+
+/* Brillo ambiental súper sutil */
+.ambient-glow {
   position: absolute;
   top: 50%;
-  right: clamp(1rem, 2vw, 2rem);
-  display: inline-flex;
-  align-items: center;
-  gap: 0.3rem;
-  transform: translateY(-50%);
-  color: #fff;
-  white-space: nowrap;
-  transition: opacity 0.3s ease;
-}
-
-.fame-cta:hover {
-  opacity: 0.65;
-}
-
-.fame-logo {
-  position: absolute;
-  bottom: clamp(1rem, 2vw, 2rem);
   left: 50%;
-  /* grid + min-height para que el enlace tenga 44 px de zona pulsable: como
-     texto suelto medía 39 px de alto. */
-  display: grid;
-  place-items: center;
-  min-width: 44px;
-  min-height: 44px;
-  transform: translateX(-50%);
-  font-size: 2.4rem;
-  font-weight: 700;
-  line-height: 1;
-  letter-spacing: -0.06em;
-  color: #fff;
+  transform: translate(-50%, -50%);
+  width: 80vw;
+  height: 80vh;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(255, 255, 255, 0.04) 0%,
+    rgba(255, 255, 255, 0.01) 40%,
+    transparent 70%
+  );
+  filter: blur(80px);
+  z-index: 1;
 }
 
-.fame-mark {
-  position: absolute;
-  right: clamp(1rem, 2vw, 2rem);
-  bottom: clamp(1rem, 2vw, 2rem);
+/* Tipografía y Contenido Central */
+.cinematic-content {
+  position: relative;
+  z-index: 10;
+  width: 90%;
+  max-width: 950px;
+  text-align: center;
+  margin-top: 20vh; /* Ligeramente más arriba para mayor impacto */
+}
+
+.cinematic-content h2 {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", sans-serif;
+  font-size: clamp(2.2rem, 4.5vw, 4.2rem);
+  font-weight: 700; /* Más peso para mayor actitud */
+  letter-spacing: -0.04em; /* Más apretado, estilo Apple */
+  margin: 0 0 5rem;
+  line-height: 1.05;
+  
+  /* Gradiente metálico */
+  background: linear-gradient(180deg, #ffffff 0%, #a1a1a6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  
+  /* Glow blanco sutil */
+  text-shadow: 0 10px 40px rgba(255, 255, 255, 0.15);
+}
+
+/* Estadísticas en Tarjetas de Cristal 3D */
+.cinematic-stats {
   display: flex;
-  align-items: flex-end;
-  gap: 0.9rem;
+  justify-content: center;
+  gap: 2.5rem;
+  flex-wrap: wrap;
+  perspective: 1000px; /* Para el efecto parallax 3D */
 }
 
-.fame-mark-dot {
-  width: 5px;
-  height: 5px;
-  margin-bottom: 1.1rem;
-  border-radius: 50%;
-  border: 1px solid rgba(255, 255, 255, 0.85);
+.glass-stat-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 160px;
+  padding: 1.8rem 2rem;
+  
+  /* El diseño de cristal plano de la app */
+  background-color: var(--glass-subtle);
+  backdrop-filter: var(--blur);
+  -webkit-backdrop-filter: var(--blur);
+  border-radius: var(--r-md);
+  
+  /* Un ligerísimo borde superior para atrapar la luz */
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-left: 1px solid rgba(255, 255, 255, 0.03);
+  
+  will-change: transform, opacity;
+  transform-style: preserve-3d;
 }
 
-.fame-mark-glyph {
-  font-size: 3.6rem;
-  font-weight: 700;
-  line-height: 0.8;
-  letter-spacing: -0.07em;
-  color: rgba(255, 255, 255, 0.28);
+.c-stat-v {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", sans-serif;
+  font-size: clamp(2rem, 3vw, 3.2rem);
+  font-weight: 600;
+  
+  /* Gradiente suave */
+  background: linear-gradient(180deg, #ffffff 0%, #b0b0b5 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  
+  margin-top: 0.2rem;
+  letter-spacing: -0.02em;
+}
+
+.c-stat-k {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", sans-serif;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #8a8f91;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
 }
 
 /* --------------------------------------------------------------------------
-   Tarjeta blanca
-   Solo existe en el primer fotograma; el timeline la retira al abrirse el
-   panel.
+   Movimiento reducido
+   Sin el mecanismo del zoom: se oculta el texto colosal y el chip de tránsito,
+   y el interior del núcleo queda fijo en su estado final — una sola pantalla,
+   con el mensaje real del hero legible desde el primer instante.
    -------------------------------------------------------------------------- */
 
-.fame-card {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  z-index: 60;
-  width: 240px; /* Reducido sustancialmente */
-  overflow: hidden;
-  background-color: #fff;
-  color: #000;
+.apple-hero-section.is-static .apple-giant-text-bg,
+.apple-hero-section.is-static .apple-macro-object {
+  display: none;
 }
 
-.fame-card-glyph {
-  position: absolute;
-  top: -0.4rem;
-  right: -0.4rem;
-  font-size: 5rem;
-  font-weight: 700;
-  line-height: 1;
-  letter-spacing: -0.07em;
-  color: #f1f1f1;
-}
-
-.fame-card-inner {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  padding: 1rem;
-}
-
-.fame-card-text {
-  font-size: 0.65rem;
-  line-height: 1.35;
-  letter-spacing: -0.01em;
-  max-width: 18ch;
-}
-
-.fame-card-links {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 0.2rem;
-}
-
-.fame-card-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-  font-size: 0.6rem;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  color: #000;
-  opacity: 0.7;
-  transition: transform 0.4s cubic-bezier(0.2, 0, 0, 1), opacity 0.3s ease;
-  perspective: 400px;
-}
-
-.fame-card-link:hover {
+.apple-hero-section.is-static .apple-aurora-bg {
   opacity: 1;
-  /* El diseño pide que estén alineados a la derecha, por lo que desplazar
-     hacia la izquierda al hacer hover es un detalle elegante */
-  transform: translateX(-4px);
+}
+
+.apple-hero-section.is-static .cinematic-scene,
+.apple-hero-section.is-static .smoke-container,
+.apple-hero-section.is-static .light-pillar,
+.apple-hero-section.is-static .cinematic-content h2,
+.apple-hero-section.is-static .cinematic-stat {
+  opacity: 1;
+  transform: none;
+  filter: blur(0px);
 }
 
 /* --------------------------------------------------------------------------
    Responsive
    -------------------------------------------------------------------------- */
-
-/* Tablet y móvil.
-   El cromo deja de estar centrado verticalmente y se reparte por las esquinas
-   superiores. Centrado a media altura se comía el titular, que en pantallas
-   estrechas ocupa la franja central entera.
-
-   La navegación NO se oculta: es el único acceso a las secciones que tiene el
-   sitio, así que esconderla en móvil dejaría la página sin menú. */
-@media (max-width: 1024px) {
-  /* La cabecera global ocupa la banda superior y ya lleva la navegación del
-     sitio. El cromo propio del hero es de cuando esa cabecera no existía: aquí
-     se aparta en lugar de amontonarse encima.
-
-     La marca se oculta porque a estos anchos los enlaces de la cabecera llenan
-     la banda entera y no queda hueco donde ponerla. */
-  .fame-nav,
-  .fame-top-brand {
-    display: none;
+@media (max-width: 768px) {
+  .apple-giant-text-bg h1 {
+    font-size: 24vw;
   }
 
-  /* En escritorio la lista va absoluta para no empujar la cabecera al
-     desplegarse. Aquí está siempre abierta, así que puede fluir. */
-  .fame-nav-list {
-    position: static;
-    left: 0;
-    margin-top: 0.2rem;
-    /* El aire lo da ahora el padding de cada enlace, no el gap: así el hueco
-       entre ellos también es zona pulsable en lugar de espacio muerto. */
-    gap: 0;
+  .apple-macro-object {
+    width: 80%;
+    top: 45%;
   }
 
-  /* Abajo a la derecha y no arriba: la banda superior es de la cabecera global.
-     El logo del hero va centrado abajo, así que no se estorban. */
-  .fame-cta {
-    top: auto;
-    bottom: 1.15rem;
-    right: 1rem;
-    transform: none;
+  .cinematic-content h2 {
+    font-size: 1.5rem;
   }
 
-  /* Los enlaces medían 14 px de alto, imposibles de acertar con el dedo. Se
-     llevan a los 44 px que recomiendan tanto Apple como Google. El texto sube
-     a 12 px: por debajo de eso no se lee en un móvil. */
-  .fame-chrome {
-    font-size: 0.75rem;
+  .cinematic-stats {
+    gap: 1.5rem;
   }
 
-  .fame-nav-list a,
-  .fame-nav-toggle,
-  .fame-cta {
-    min-height: 44px;
-    align-items: center;
-  }
-
-  /* Decorativos: sobran cuando el espacio es el problema. La tarjeta además
-     se pisaba con el banner de cookies en la esquina inferior derecha. */
-  .fame-dot,
-  .fame-mark,
-  .fame-card {
-    display: none;
-  }
-
-  .fame-statement p {
-    font-size: 0.6rem;
-    max-width: 34ch;
+  .c-stat-v {
+    font-size: 1.5rem;
   }
 }
 
-@media (max-width: 600px) {
-  /* Sin font-size aquí: lo resuelve el clamp fluido. Fijarlo era lo que
-     rompía la progresión entre móvil y tablet. */
-  .fame-title {
-    line-height: 1.02;
-    letter-spacing: -0.01em;
-    padding-inline: 1.25rem;
-  }
-
-  /* Los saltos de línea forzados sobran cuando no cabe el texto: se dejan
-     fluir para que no queden líneas de una palabra. */
-  .fame-title br,
-  .fame-statement h2 br {
-    display: none;
-  }
-
-  .fame-statement h2 {
-    line-height: 1.06;
-    letter-spacing: -0.015em;
-    max-width: 100%;
-  }
-
-  .fame-statement p {
-    font-size: 0.55rem;
-    line-height: 1.4;
-    max-width: 28ch;
-  }
-
-  .fame-logo {
-    font-size: 1.7rem;
-  }
-
-  /* Sin reducir el cuerpo aquí: bajarlo a 0.62rem daba 9,92 px, ilegible en un
-     teléfono. Solo se aprieta el interletrado y el hueco de la cabecera. */
-  .fame-nav,
-  .fame-cta {
-    letter-spacing: 0.04em;
-  }
-
-  .fame-nav-head {
-    gap: 1.2rem;
-  }
-}
-
-/* Lista plegable donde no cabe desplegada.
-   Desplegada mide unos 240 px de alto, y con el titular centrado se solapaba a
-   partir de pantallas de ~600 px de alto: a 320×568 el solape medido era de
-   27 px. Se cubren los dos casos — poco ancho y poca altura — porque un portátil
-   apaisado y corto tiene el mismo problema que un móvil.
-   En escritorio alto sigue siempre visible, como en la referencia. */
-@media (max-width: 1024px), (max-height: 700px) {
-  .fame-nav-list {
-    display: none;
-  }
-
-  .fame-nav.is-open .fame-nav-list {
-    display: flex;
-    /* Fondo propio: abierta se superpone al titular en pantallas cortas, y sin
-       él los dos textos se pisan y no se lee ninguno. */
-    padding: 0.15rem 0.9rem;
-    margin-left: -0.9rem;
-    border-radius: 4px;
-    background-color: rgba(5, 5, 5, 0.82);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-  }
-}
-
-/* Móvil girado. */
-@media (max-height: 520px) {
-  .fame-title {
-    font-size: 1.4rem;
+@media (max-height: 700px) {
+  .apple-hero-container {
+    gap: 1rem;
   }
 }

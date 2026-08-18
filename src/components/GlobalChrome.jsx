@@ -3,15 +3,8 @@ import { Link, useLocation } from 'react-router-dom';
 import { ArrowUpRight } from 'lucide-react';
 import { gsap, useGSAP } from '../lib/gsap';
 import { INTRO_DELAY } from '../lib/timing';
+import { SECTIONS, PAGES, anchorHref, MOBILE_QUERY, useMediaQuery } from '../lib/nav';
 import './GlobalChrome.css';
-
-const NAV = [
-  { href: '/#inicio', label: 'Inicio' },
-  { href: '/#servicios', label: 'Servicios' },
-  { href: '/#proceso', label: 'Proceso' },
-  { href: '/#resultados', label: 'Resultados' },
-  { href: '/#contacto', label: 'Contacto' },
-];
 
 const CARD_LINKS = [
   { href: '/asistentes-virtuales', label: 'Asistentes IA', isInternal: true },
@@ -24,6 +17,15 @@ const GlobalChrome = () => {
   const [navOpen, setNavOpen] = useState(false);
   const location = useLocation();
   const chromeRef = useRef(null);
+  const isMobile = useMediaQuery(MOBILE_QUERY);
+
+  // El intercambio de móvil visto desde este lado: aquí bajan los productos y
+  // las secciones suben a la cabecera. El rótulo cambia con el contenido — un
+  // desplegable que pone «Navegación» y enseña productos es una mentira.
+  const nav = isMobile
+    ? PAGES.map((p) => ({ href: p.to, label: p.label, isRoute: true }))
+    : SECTIONS.map((s) => ({ href: anchorHref(s.hash, location.pathname), label: s.label }));
+  const navLabel = isMobile ? 'Productos' : 'Navegación';
 
   // Animación inicial en el primer render de toda la app
   useGSAP(() => {
@@ -55,10 +57,7 @@ const GlobalChrome = () => {
       <div className="fame-chrome">
         <span className="fame-dot" aria-hidden="true" />
 
-        <nav
-          className={`fame-nav${navOpen ? ' is-open' : ''}`}
-          aria-label="Navegación principal"
-        >
+        <nav className={`fame-nav${navOpen ? ' is-open' : ''}`} aria-label={navLabel}>
           <div className="fame-nav-head">
             <button
               type="button"
@@ -67,30 +66,34 @@ const GlobalChrome = () => {
               aria-expanded={navOpen}
               aria-controls="fame-nav-list"
             >
-              <span aria-hidden="true">[{navOpen ? '−' : '+'}]</span> Navegación
+              <span aria-hidden="true">[{navOpen ? '−' : '+'}]</span> {navLabel}
             </button>
             <span className="fame-lang">ES</span>
           </div>
           <ol className="fame-nav-list" id="fame-nav-list">
-            {NAV.map((l, i) => (
-              <li key={l.href}>
-                {l.href.startsWith('/') && l.href.length > 2 ? (
-                  <a href={l.href.replace('/#', '#')} className="fame-nav-link">
-                    <span className="fame-nav-num">[{i + 1}]</span>
-                    <span className="fame-nav-text" data-text={l.label}>
-                      <span className="fame-nav-text-inner">{l.label}</span>
-                    </span>
-                  </a>
-                ) : (
-                  <a href={l.href} className="fame-nav-link">
-                    <span className="fame-nav-num">[{i + 1}]</span>
-                    <span className="fame-nav-text" data-text={l.label}>
-                      <span className="fame-nav-text-inner">{l.label}</span>
-                    </span>
-                  </a>
-                )}
-              </li>
-            ))}
+            {nav.map((l, i) => {
+              const contenido = (
+                <>
+                  <span className="fame-nav-num">[{i + 1}]</span>
+                  <span className="fame-nav-text" data-text={l.label}>
+                    <span className="fame-nav-text-inner">{l.label}</span>
+                  </span>
+                </>
+              );
+              return (
+                <li key={l.href}>
+                  {l.isRoute ? (
+                    <Link to={l.href} className="fame-nav-link" onClick={() => setNavOpen(false)}>
+                      {contenido}
+                    </Link>
+                  ) : (
+                    <a href={l.href} className="fame-nav-link" onClick={() => setNavOpen(false)}>
+                      {contenido}
+                    </a>
+                  )}
+                </li>
+              );
+            })}
           </ol>
         </nav>
 

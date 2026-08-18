@@ -9,7 +9,12 @@
       "PowerShell(Set-Location \"C:\\\\Users\\\\javie\\\\Desktop\\\\n\"; Remove-Item -Force \"src\\\\App.css\",\"src\\\\assets\\\\react.svg\",\"src\\\\assets\\\\vite.svg\",\"src\\\\assets\\\\hero.png\",\"public\\\\icons.svg\" -ErrorAction SilentlyContinue; if \\(\\(Get-ChildItem \"src\\\\assets\" -Force | Measure-Object\\).Count -eq 0\\) { Remove-Item -Force \"src\\\\assets\" }; Get-ChildItem src,public -Recurse -File | ForEach-Object { $_.FullName.Substring\\(\\(Get-Location\\).Path.Length+1\\) })",
       "PowerShell(Set-Location \"C:\\\\Users\\\\javie\\\\Desktop\\\\n\"; Write-Output \"=== archive/ ===\"; if \\(Test-Path archive\\) { \"{0} archivos, {1:N1} MB\" -f \\(Get-ChildItem archive -Recurse -File\\).Count, \\(\\(Get-ChildItem archive -Recurse -File | Measure-Object Length -Sum\\).Sum/1MB\\) }; Write-Output \"=== src/pages ===\"; Get-ChildItem src/pages -Recurse -File | ForEach-Object { $_.FullName.Substring\\(\\(Get-Location\\).Path.Length+1\\) }; Write-Output \"=== imagenes sin seguimiento \\(KB\\) ===\"; git status --short --untracked-files=all | Select-String '^\\\\?\\\\? public/' | ForEach-Object { $p = \\($_ -replace '^\\\\?\\\\? ',''\\).Trim\\('\"'\\); if \\(Test-Path $p\\) { \"{0,-52} {1,7:N0}\" -f $p, \\(\\(Get-Item $p\\).Length/1KB\\) } })",
       "Bash(git add *)",
-      "Bash(git -c user.name=\"Javier\" -c user.email=\"webneuronsupport@gmail.com\" commit -q -F -)"
+      "Bash(git -c user.name=\"Javier\" -c user.email=\"webneuronsupport@gmail.com\" commit -q -F -)",
+      "PowerShell(Set-Location \"C:\\\\Users\\\\javie\\\\Desktop\\\\n\"; @\\('instagram-new--v1.png','microsoft-outlook-2019--v2.png','google-sheets.png','abstract-bg.jpg'\\) | ForEach-Object { if \\(Test-Path \"public\\\\$_\"\\) { \"OK      {0,-36} {1,7:N0} KB\" -f $_, \\(\\(Get-Item \"public\\\\$_\"\\).Length/1KB\\) } else { \"FALTA   $_\" } })",
+      "PowerShell(try { $r = Invoke-WebRequest -Uri \"http://localhost:5173\" -UseBasicParsing -TimeoutSec 6; \"HTTP $\\($r.StatusCode\\) - $\\($r.Content.Length\\) bytes\" } catch { \"SIN RESPUESTA: $\\($_.Exception.Message\\)\" })",
+      "Bash(sed -i '227,474d' src/components/Hero.css)",
+      "Bash(grep -nE '^\\\\s*\\\\.fame-\\(top-brand|nav|cta|card|dot|mark|logo|chrome\\)[a-z-]*[ ,{]' src/components/Hero.css)",
+      "Bash(grep -nE '^\\\\s*\\\\.fame-\\(top-brand|nav|cta|card|dot|mark|logo|chrome\\)[a-z-]*[ ,{:]' src/components/Hero.css)"
     ]
   }
 }
