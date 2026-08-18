@@ -50,7 +50,7 @@ const GlobalChrome = () => {
   return (
     <div className="global-chrome" ref={chromeRef}>
       <div className="fame-top-brand">
-        <img src="/2_clean2.png" alt="Logo" style={{ height: '48px', width: 'auto' }} />
+        <img src={`\${import.meta.env.BASE_URL}2_clean2.png`} alt="Logo" style={{ height: '48px', width: 'auto' }} />
         <span>WEB NEURON</span>
       </div>
 
@@ -102,7 +102,7 @@ const GlobalChrome = () => {
         </a>
 
         <Link to="/" className="fame-logo" aria-label="Web Neuron, inicio">
-          <img src="/2_clean2.png" alt="WN" style={{ height: '32px', width: 'auto' }} />
+          <img src={`\${import.meta.env.BASE_URL}2_clean2.png`} alt="WN" style={{ height: '32px', width: 'auto' }} />
         </Link>
 
         <div className="fame-mark" aria-hidden="true">
@@ -113,7 +113,7 @@ const GlobalChrome = () => {
 
       <aside className="fame-card">
         <span className="fame-card-glyph" aria-hidden="true" style={{ top: '0.2rem', right: '0.2rem' }}>
-          <img src="/1.png" alt="" style={{ height: '70px', width: 'auto', opacity: 1, mixBlendMode: 'multiply', display: 'block' }} />
+          <img src={`\${import.meta.env.BASE_URL}1.png`} alt="" style={{ height: '70px', width: 'auto', opacity: 1, mixBlendMode: 'multiply', display: 'block' }} />
         </span>
         <div className="fame-card-inner">
           <p className="fame-card-text">

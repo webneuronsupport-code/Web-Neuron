@@ -157,7 +157,7 @@ const MagicTransform = () => {
 
           {/* Icono Web Neuron en el borde derecho (fuera del clip para que se vea completo) */}
           <div className="mt-atom-icon" ref={iconRef}>
-            <img src="/2_clean2.png" alt="WN" style={{ height: '20px', width: 'auto', opacity: 0.9 }} />
+            <img src={`\${import.meta.env.BASE_URL}2_clean2.png`} alt="WN" style={{ height: '20px', width: 'auto', opacity: 0.9 }} />
           </div>
         </div>
       </div>
