@@ -588,12 +588,15 @@
     height: 750px;
     width: 100%;
     margin-top: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   .va-chat-scene {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    position: relative;
+    top: auto;
+    left: auto;
+    transform: scale(0.95);
     justify-content: center;
     padding-right: 0;
   }
@@ -616,8 +619,6 @@
 
 @media (max-width: 480px) {
   .va-chat-scene {
-    transform: scale(0.85); /* Encoger toda la escena del teléfono para que no cause scroll horizontal */
-    transform-origin: top center;
-    margin-top: 20px;
+    transform: scale(0.85);
   }
 }
