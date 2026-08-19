@@ -70,6 +70,7 @@ const Hero = () => {
         // --- Fase 1: atravesamos el chip -------------------------------------
         tl.to('.apple-giant-text-bg h1', { scale: 8, opacity: 0, duration: 1 }, 0)
           .to('.apple-macro-object', { scale: 6, opacity: 0, duration: 1.2 }, 0)
+          .to('.global-chrome, .global-header', { opacity: 0, duration: 0.5 }, 0)
           .to('.apple-hero-glow', { opacity: 0.8, scale: 1.2, duration: 1.2 }, 0.2);
 
         // --- Fase 2: zoom recursivo (Inception) ------------------------------
