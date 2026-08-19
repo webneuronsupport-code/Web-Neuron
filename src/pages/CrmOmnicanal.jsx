@@ -3,6 +3,7 @@ import { gsap, useGSAP } from '../lib/gsap';
 import Contact from '../components/Contact';
 import DriftWall from '../components/DriftWall';
 import BlurText from '../components/BlurText';
+import Header from '../components/Header';
 import './CrmOmnicanal.css';
 
 const DRIFT_ITEMS = [
@@ -132,6 +133,7 @@ const CrmContext = () => {
 const CrmOmnicanal = () => {
   return (
     <div className="crm-page">
+      <Header />
       <CrmHero />
       <CrmContext />
       <Contact />

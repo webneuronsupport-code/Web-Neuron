@@ -5,6 +5,7 @@ import Contact from '../components/Contact';
 import SectionHeading from '../components/SectionHeading';
 import ParticleWave from '../components/ParticleWave';
 import MagicTransform from '../components/MagicTransform';
+import Header from '../components/Header';
 import './VirtualAssistants.css';
 
 const VAHero = () => {
@@ -480,6 +481,7 @@ const VABento = () => {
 const VirtualAssistants = () => {
   return (
     <div className="va-page">
+      <Header />
       <VAHero />
       <VAContext />
       <VABento />

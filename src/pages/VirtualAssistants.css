@@ -57,6 +57,7 @@
   line-height: 1.1; /* Mayor interlineado para evitar que choquen las tildes y las letras */
   color: #ffffff;
   margin-bottom: 2rem;
+  max-width: 60%; /* Prevents overlapping with the phone on the right */
   /* Sombra pesada para crear separación perfecta contra la onda brillante */
   text-shadow: 
     0 10px 40px rgba(0, 0, 0, 1), 
