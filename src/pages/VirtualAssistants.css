@@ -572,8 +572,10 @@
 @media (max-width: 1024px) {
   .va-hero {
     align-items: center;
-    padding-top: 120px;
+    padding-top: 100px;
     justify-content: flex-start;
+    height: 100vh;
+    padding-bottom: 0;
   }
   .va-title {
     max-width: 100%;
@@ -585,18 +587,20 @@
   }
   .va-hero-scene-wrapper {
     position: relative;
-    height: 750px;
+    flex: 1;
     width: 100%;
-    margin-top: 40px;
+    margin-top: 20px;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
+    min-height: 0;
   }
   .va-chat-scene {
     position: relative;
     top: auto;
     left: auto;
-    transform: scale(0.95);
+    transform: scale(0.65);
+    transform-origin: top center;
     justify-content: center;
     padding-right: 0;
   }
@@ -619,6 +623,6 @@
 
 @media (max-width: 480px) {
   .va-chat-scene {
-    transform: scale(0.85);
+    transform: scale(0.55);
   }
 }
