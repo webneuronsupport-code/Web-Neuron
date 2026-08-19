@@ -583,14 +583,19 @@
     text-align: center;
     margin: 0 auto;
   }
-  .va-chat-scene {
+  .va-hero-scene-wrapper {
     position: relative;
-    top: auto;
-    left: auto;
-    transform: none;
+    height: 750px;
+    width: 100%;
+    margin-top: 40px;
+  }
+  .va-chat-scene {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     justify-content: center;
     padding-right: 0;
-    margin-top: 60px;
   }
   .va-orbit-container {
     display: none; /* Ocultar órbitas en móvil para no saturar */
