@@ -1,5 +1,7 @@
 import { useRef, useState } from 'react';
 import { gsap, useGSAP } from '../lib/gsap';
+import GlobalChrome from './GlobalChrome';
+import Header from './Header';
 import './Hero.css';
 
 // --- Partitura del zoom recursivo, en unidades de timeline -----------------
@@ -143,6 +145,8 @@ const Hero = () => {
       style={reduced ? undefined : { '--scroll-mult': 7 }}
     >
       <div className="apple-hero-stage" style={{ perspective: '1000px' }}>
+        <GlobalChrome />
+        <Header />
         <div className="apple-hero-container">
           {/* Fondo: aurora de color y brillo ambiental. Familia ámbar-naranja,
               coherente con el metal y el brillo del chip — no un arcoíris que

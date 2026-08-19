@@ -36,8 +36,6 @@ function App() {
     <>
       <Preloader />
       <ScrollProgress />
-      <GlobalChrome />
-      <Header />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/asistentes-virtuales" element={<VirtualAssistants />} />
