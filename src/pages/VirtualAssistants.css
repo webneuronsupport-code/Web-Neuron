@@ -599,6 +599,8 @@
     position: relative;
     top: auto;
     left: auto;
+    height: auto;
+    align-items: flex-start;
     transform: scale(0.65);
     transform-origin: top center;
     justify-content: center;
