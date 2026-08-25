@@ -8,7 +8,8 @@
 
 .svc {
   position: relative;
-  z-index: 10; /* Crea un contexto de apilamiento superior al wipe fijo */
+  z-index: 10;
+  padding-top: clamp(6rem, 10vw, 10rem);
 }
 
 /* --------------------------------------------------------------------------
