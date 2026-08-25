@@ -31,7 +31,7 @@
    animación se comprime; no se corta. */
 @media (max-width: 768px) {
   .apple-hero-section:not(.is-static) {
-    height: calc(4 * 100vh);
+    height: calc(var(--scroll-mult, 3) * 100vh);
   }
 }
 

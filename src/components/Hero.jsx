@@ -132,7 +132,9 @@ const Hero = () => {
         // --- Fase 3: reposo y salida ------------------------------------------
         // El destino se queda quieto y legible antes de ceder el paso.
         const tEnd = PIP_START + (last + 1) * STEP;
-        tl.to('.apple-hero-container', { opacity: 0, duration: 0.8 }, tEnd + HOLD);
+        // Se agrega un hold falso para que el texto se quede quieto un rato
+        // y luego la seccion se deslice hacia arriba de forma natural
+        tl.to('.apple-hero-container', { opacity: 1, duration: HOLD }, tEnd);
       });
     },
     { scope: root, dependencies: [reduced] }
@@ -143,7 +145,7 @@ const Hero = () => {
       className={`apple-hero-section ${reduced ? 'is-static' : ''}`}
       id="inicio"
       ref={root}
-      style={reduced ? undefined : { '--scroll-mult': 4 }}
+      style={reduced ? undefined : { '--scroll-mult': 3 }}
     >
       <div className="apple-hero-stage" style={{ perspective: '1000px' }}>
         <GlobalChrome />
