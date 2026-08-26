@@ -413,7 +413,9 @@ const VAContext = () => {
             Los "chatbots" de respuestas pre-programadas están <span className="va-dead-text-wrapper"><span className="va-dead-text">muertos.</span><span className="va-strike-line"></span></span>
           </h2>
           <p className="va-context-paragraph">
-            Tus clientes odian los menús cerrados ("Escriba 1 para ventas, 2 para soporte"). Nuestros asistentes utilizan Inteligencia Artificial Generativa para entender el contexto, el sarcasmo, las dudas complejas y el historial completo del usuario antes de emitir una respuesta ultra-personalizada en milisegundos.
+            Tus clientes odian los menús cerrados ("Escriba 1 para ventas, 2 para soporte").
+            <br/><br/>
+            Nuestros asistentes utilizan Inteligencia Artificial Generativa para entender el contexto, el sarcasmo, las dudas complejas y el historial completo del usuario antes de emitir una respuesta ultra-personalizada en milisegundos.
           </p>
         </div>
         <MagicTransform />

@@ -147,7 +147,7 @@
   font-size: clamp(1.15rem, 2vw, 1.5rem); /* Reducido ligeramente para más elegancia */
   color: var(--text-muted);
   line-height: 1.7;
-  max-width: 760px; /* Reducido para mejor legibilidad */
+  max-width: 960px; /* Aumentado para aprovechar el ancho */
   margin: 0 auto;
   text-wrap: balance;
   opacity: 0.9;
