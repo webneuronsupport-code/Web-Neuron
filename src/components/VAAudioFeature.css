@@ -1,0 +1,111 @@
+.va-audio-section {
+  position: relative;
+  padding: 120px 0;
+  background-color: var(--bg);
+  z-index: 5;
+  overflow: hidden;
+}
+
+.va-audio-inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+}
+
+.va-audio-visualizer {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 300px;
+  background: linear-gradient(145deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%);
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 32px;
+  overflow: hidden;
+}
+
+.va-audio-visualizer::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(0, 122, 255, 0.15) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.va-audio-mic-wrapper {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(25, 25, 25, 0.8);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 50%;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: #fff;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+}
+
+.va-audio-waves {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  z-index: 1;
+}
+
+.audio-bar {
+  width: 6px;
+  height: 40px;
+  background-color: rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+  transform-origin: center;
+}
+
+/* Color accents on some bars for a cool "Siri" or waveform effect */
+.audio-bar:nth-child(3n) { background-color: rgba(10, 132, 255, 0.6); }
+.audio-bar:nth-child(5n) { background-color: rgba(48, 209, 88, 0.6); }
+.audio-bar:nth-child(7n) { background-color: rgba(94, 92, 230, 0.6); }
+
+.va-audio-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.va-audio-title {
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -0.04em;
+  color: #fff;
+}
+
+.va-audio-desc {
+  font-size: clamp(1rem, 1.2vw, 1.1rem);
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.65);
+  max-width: 500px;
+}
+
+.va-audio-desc strong {
+  color: #fff;
+  font-weight: 500;
+}
+
+@media (max-width: 1024px) {
+  .va-audio-inner {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+  
+  .va-audio-visualizer {
+    order: -1;
+  }
+}
