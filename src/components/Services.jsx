@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowUpRight } from 'lucide-react';
+import { ArrowUpRight, CheckCircle2 } from 'lucide-react';
 import { gsap, useGSAP } from '../lib/gsap';
 import SectionHeading from './SectionHeading';
 import './Services.css';
@@ -11,12 +11,27 @@ import './Services.css';
  * vertical con object-fit: cover pierde casi todo su contenido. Una fotografía
  * aguanta el recorte.
  */
+import { FaWhatsapp, FaChrome, FaMicrophone, FaProjectDiagram, FaPlug, FaCogs, FaInbox, FaChartBar, FaReact, FaBolt, FaSearch } from 'react-icons/fa';
+import { SiGooglecalendar } from 'react-icons/si';
+
+/**
+ * Las imágenes son fotografías y no las maquetas SVG de interfaz.
+ */
 const SERVICES = [
   {
     n: '01',
     title: 'Asistentes de IA',
-    text: 'Agentes conversacionales que atienden, cualifican y agendan 24/7 con el tono de tu marca. Contestan en segundos a cualquier hora y solo te pasan lo que merece tu tiempo.',
-    tags: ['WhatsApp', 'Web', 'Voz'],
+    text: 'Agentes conversacionales avanzados que interactúan 24/7 con tus clientes adoptando el tono de voz exacto de tu marca. Resuelven dudas, filtran prospectos y cierran citas en piloto automático.',
+    benefits: [
+      'Disponibilidad total 24/7/365',
+      'Respuestas hiper-rápidas (< 3s)',
+      'Agendamiento de citas integrado'
+    ],
+    tags: [
+      { text: 'WhatsApp', icon: <FaWhatsapp color="#25D366" /> },
+      { text: 'Web', icon: <FaChrome color="#4285F4" /> },
+      { text: 'Voz', icon: <FaMicrophone color="#FF3B30" /> }
+    ],
     image: `${import.meta.env.BASE_URL}hero-2.jpg`,
     alt: 'Equipo trabajando en una oficina moderna con vistas a la ciudad',
     link: '/asistentes-virtuales',
@@ -25,24 +40,51 @@ const SERVICES = [
   {
     n: '02',
     title: 'Automatizaciones',
-    text: 'Conectamos tus herramientas para que el trabajo repetitivo se haga solo, sin supervisión. Cada flujo queda documentado y medido, así que sabes qué se ejecuta y cuándo.',
-    tags: ['Flujos', 'API', 'Integraciones'],
+    text: 'Conectamos todas tus herramientas de software para que el trabajo administrativo se ejecute solo, sin errores y sin supervisión humana. Tu equipo se enfocará en crear valor.',
+    benefits: [
+      'Eliminación de tareas manuales',
+      'Conexión entre múltiples plataformas',
+      'Notificaciones y alertas en tiempo real'
+    ],
+    tags: [
+      { text: 'Flujos', icon: <FaProjectDiagram color="#5E5CE6" /> },
+      { text: 'API', icon: <FaPlug color="#FF9F0A" /> },
+      { text: 'Sistemas', icon: <FaCogs color="#8E8E93" /> }
+    ],
     image: `${import.meta.env.BASE_URL}hero-3.jpg`,
     alt: 'Manos sobre un portátil mostrando un flujo de trabajo automatizado',
   },
   {
     n: '03',
     title: 'CRM omnicanal',
-    text: 'Todas tus conversaciones en una bandeja, con el historial completo de cada cliente. WhatsApp, email y redes en el mismo sitio, sin saltar entre pestañas.',
-    tags: ['Bandeja única', 'Métricas'],
+    text: 'Centralizamos toda la comunicación de tu empresa en una única bandeja inteligente. Visualiza el historial completo de cada cliente y gestiona ventas sin saltar entre pestañas.',
+    benefits: [
+      'Bandeja de entrada centralizada',
+      'Historial de chats unificado',
+      'Métricas de rendimiento en vivo'
+    ],
+    tags: [
+      { text: 'Bandeja', icon: <FaInbox color="#0A84FF" /> },
+      { text: 'Métricas', icon: <FaChartBar color="#30D158" /> },
+      { text: 'Agenda', icon: <SiGooglecalendar color="#4285F4" /> }
+    ],
     image: `${import.meta.env.BASE_URL}hero-4.jpg`,
     alt: 'Puesto de trabajo con varias pantallas de seguimiento de clientes',
   },
   {
     n: '04',
     title: 'Desarrollo web',
-    text: 'Experiencias rápidas, medibles y optimizadas para convertir. Como la que estás viendo: cada animación existe para dirigir la atención, no para decorar.',
-    tags: ['React', 'Rendimiento', 'SEO'],
+    text: 'Desarrollamos interfaces de usuario espectaculares, de carga instantánea y optimizadas para máxima conversión. Combinamos la mejor tecnología con diseño de grado corporativo.',
+    benefits: [
+      'Diseño premium enfocado en conversión',
+      'Carga ultrarrápida y SEO técnico',
+      'Animaciones fluidas interactivas'
+    ],
+    tags: [
+      { text: 'React', icon: <FaReact color="#61DAFB" /> },
+      { text: 'Speed', icon: <FaBolt color="#FFD60A" /> },
+      { text: 'SEO', icon: <FaSearch color="#32ADE6" /> }
+    ],
     image: `${import.meta.env.BASE_URL}abstract-bg.jpg`,
     alt: 'Composición abstracta de luz y superficies',
   },
@@ -171,9 +213,22 @@ const Services = () => {
               </span>
               <h3 className="svc-title">{title}</h3>
               <p className="svc-desc">{text}</p>
+              
+              <ul className="svc-benefits">
+                {benefits?.map((b, i) => (
+                  <li key={i}>
+                    <CheckCircle2 size={16} className="svc-benefit-icon" />
+                    <span>{b}</span>
+                  </li>
+                ))}
+              </ul>
+
               <ul className="svc-tags">
                 {tags.map((t) => (
-                  <li key={t}>{t}</li>
+                  <li key={t.text} className="svc-tag">
+                    <span className="svc-tag-icon">{t.icon}</span>
+                    {t.text}
+                  </li>
                 ))}
               </ul>
               {link ? (
