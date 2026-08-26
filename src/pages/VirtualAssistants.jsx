@@ -6,6 +6,7 @@ import Contact from '../components/Contact';
 import SectionHeading from '../components/SectionHeading';
 import ParticleWave from '../components/ParticleWave';
 import MagicTransform from '../components/MagicTransform';
+import VAPowerFeatures from '../components/VAPowerFeatures';
 import Header from '../components/Header';
 import './VirtualAssistants.css';
 
@@ -424,70 +425,13 @@ const VAContext = () => {
   );
 };
 
-const VABento = () => {
-  const container = useRef(null);
-
-  useGSAP(() => {
-    gsap.from('.va-bento-card', {
-      y: 40,
-      opacity: 0,
-      duration: 0.8,
-      stagger: 0.15,
-      ease: 'power3.out',
-      scrollTrigger: {
-        trigger: container.current,
-        start: 'top 75%',
-      }
-    });
-  }, { scope: container });
-
-  return (
-    <section className="va-bento-section" ref={container}>
-      <div className="shell">
-        <SectionHeading
-          align="left"
-          label="Capacidades Core"
-          title="Autonomía total"
-          lede="Un equipo que nunca duerme y escala infinitamente según tu demanda."
-        />
-        
-        <div className="va-bento-grid">
-          <div className="va-bento-card card-large">
-            <img src={`${import.meta.env.BASE_URL}va-voice.jpg`} alt="Voz y Texto" className="bento-bg" />
-            <div className="bento-content">
-              <h3>Voz y Texto Omnicanal</h3>
-              <p>Conectados a WhatsApp, Instagram, Web y telefonía tradicional. Capaces de hablar con voz sintética ultra-realista que respira y hace pausas naturales.</p>
-            </div>
-          </div>
-          
-          <div className="va-bento-card card-small">
-            <img src={`${import.meta.env.BASE_URL}va-memory.jpg`} alt="Memoria" className="bento-bg" />
-            <div className="bento-content">
-              <h3>Memoria Perfecta</h3>
-              <p>Recuerdan quién es el cliente, qué compró hace un año y en qué punto dejó la conversación ayer. El contexto es absoluto.</p>
-            </div>
-          </div>
-          
-          <div className="va-bento-card card-small">
-            <img src={`${import.meta.env.BASE_URL}va-action.jpg`} alt="Acción" className="bento-bg" />
-            <div className="bento-content">
-              <h3>Agendamiento Inmediato</h3>
-              <p>Leen tu calendario, negocian horarios y agendan citas automáticamente en Calendly o Google Calendar sin que muevas un dedo.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-};
-
 const VirtualAssistants = () => {
   return (
     <div className="va-page">
       <Header />
       <VAHero />
       <VAContext />
-      <VABento />
+      <VAPowerFeatures />
       <ContactForm />
       <Contact />
     </div>
