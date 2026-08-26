@@ -1,95 +1,238 @@
-import React, { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { gsap, useGSAP } from '../lib/gsap';
-import { MousePointer2, ArrowDown } from 'lucide-react';
+import GlobalChrome from './GlobalChrome';
+import Header from './Header';
 import './Hero.css';
 
+// --- Partitura del zoom recursivo, en unidades de timeline -----------------
+// ZOOM es cuánto crece cada marco entre un salto y el siguiente. Es también el
+// inverso de la escala a la que nace cada marco: con ZOOM = 5, uno nuevo
+// aparece al 20 % justo cuando el anterior llega a pantalla completa. Los dos
+// números tienen que ser inversos o la ilusión se rompe — se vería un salto de
+// tamaño en cada relevo.
+// Valores medidos directamente en fame-estate.com, no estimados a ojo: la
+// imagen de cada capa nace a scale(0.35) y su marco lleva
+// clip-path: polygon(50% 50%, ...) — es decir, una ventana de área cero en el
+// centro. BIRTH y ZOOM son inversos, así que en cada relevo el entrante mide
+// exactamente lo que medía el saliente al empezar.
+const BIRTH = 0.35;
+const ZOOM = 1 / BIRTH; // 2.857
+const STEP = 1; // separación entre saltos
+const PIP_START = 1; // el túnel arranca cuando el chip ya casi ha pasado
+const HOLD = 1.2; // reposo en el destino antes de ceder el paso
+
 const Hero = () => {
-  const container = useRef(null);
+  const root = useRef(null);
 
-  useGSAP(() => {
-    // Reveal text animation for main heading
-    gsap.from('.pip-main-title span', {
-      y: 100,
-      opacity: 0,
-      duration: 1.2,
-      stagger: 0.15,
-      ease: 'power4.out',
-      delay: 0.5
-    });
+  const [reduced] = useState(
+    () =>
+      typeof window !== 'undefined' &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  );
 
-    gsap.from('.pip-small-text, .pip-badge, .scroll-indicator', {
-      opacity: 0,
-      y: 20,
-      duration: 1,
-      stagger: 0.2,
-      ease: 'power3.out',
-      delay: 1.5
-    });
+  useGSAP(
+    () => {
+      // 1. Entrada, independiente del scroll
+      const intro = gsap.timeline({ delay: 0.2 });
 
-  }, { scope: container });
+      intro
+        .fromTo(
+          '.apple-giant-text-bg h1',
+          { y: 50, opacity: 0 },
+          { y: 0, opacity: 1, duration: 1.2, ease: 'power3.out' }
+        )
+        .fromTo(
+          '.macro-img',
+          { scale: 0.8, opacity: 0, y: 30 },
+          { scale: 1, opacity: 1, y: 0, duration: 1.5, ease: 'power3.out' },
+          '-=0.8'
+        );
+
+      // Con movimiento reducido no se secuestran cuatro pantallas de scroll: la
+      // sección se queda como una sola pantalla, y CSS (.is-static) decide qué
+      // se ve — el interior del núcleo ya resuelto, sin el mecanismo del zoom.
+      if (reduced) return;
+
+      const mm = gsap.matchMedia(root);
+
+      mm.add('(min-width: 100px)', () => {
+        const tl = gsap.timeline({
+          defaults: { ease: 'none' },
+          scrollTrigger: {
+            trigger: root.current,
+            start: 'top top',
+            end: 'bottom bottom',
+            scrub: 0.6,
+            invalidateOnRefresh: true,
+          },
+        });
+
+        // --- Fase 1: atravesamos el chip -------------------------------------
+        tl.to('.apple-giant-text-bg h1', { scale: 8, opacity: 0, duration: 1 }, 0)
+          .to('.apple-macro-object', { scale: 6, opacity: 0, duration: 1.2 }, 0)
+          .to('.global-chrome, .global-header', { opacity: 0, duration: 0.5 }, 0)
+          .to('.apple-hero-glow', { opacity: 0.8, scale: 1.2, duration: 1.2 }, 0.2);
+
+        // --- Fase 2: zoom recursivo (Inception) ------------------------------
+        tl.fromTo('.pip-scene', { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.4 }, PIP_START - 0.4);
+
+        const frames = gsap.utils.toArray('.pip-frame');
+        const last = frames.length - 1;
+
+        frames.forEach((el, i) => {
+          // El contenido escala; el marco NO — el marco solo abre su ventana.
+          const inner = el.querySelector('img, .pip-content');
+
+          // Cada capa termina de abrirse en su propio instante, separados por
+          // STEP. Incluida la primera: el efecto arranca con la imagen pequeña
+          // en el centro del rojo, no con una capa ya desplegada.
+          const tFull = PIP_START + (i + 1) * STEP;
+          const tStart = tFull - STEP;
+
+          // La capa aparece de golpe a su tamaño de nacimiento. No hay fundido:
+          // en la referencia el rectángulo entra ya opaco.
+          tl.set(el, { autoAlpha: 1 }, tStart);
+
+          // Segundo tramo: la imagen sigue creciendo de 1 a ZOOM ya con la
+          // ventana abierta del todo, y desborda la pantalla. Sin él el túnel
+          // se queda plano. El último marco es el destino y se detiene en 1.
+          const eEnd = i === last ? 0 : 1;
+
+          // ZOOM^e con e lineal, no escala lineal: lo que el ojo percibe como
+          // velocidad es el CAMBIO RELATIVO de tamaño, no el absoluto. Con una
+          // rampa lineal el arranque va disparado y el final se arrastra.
+          const proxy = { e: -1 };
+          tl.to(
+            proxy,
+            {
+              e: eEnd,
+              duration: (eEnd + 1) * STEP,
+              ease: 'none',
+              onUpdate: () => {
+                const s = Math.pow(ZOOM, proxy.e);
+                // La ventana y la imagen crecen JUNTAS y con el mismo número.
+                // Así el rectángulo visible nace midiendo el 35 % de la
+                // pantalla — el tamaño mínimo que se ve en la referencia — en
+                // vez de abrirse desde un punto. Abriéndola por separado, la
+                // ventana pasaba la mayor parte del recorrido siendo un sello
+                // diminuto con un trozo de foto dentro.
+                //
+                // Y como ambos son del tamaño del viewport y llevan la misma
+                // escala, la imagen encaja con el borde de la ventana al pixel:
+                // no se ve recortada, se ve entera y pequeña.
+                gsap.set(inner, { scale: s });
+                const inset = s < 1 ? ((1 - s) / 2) * 100 : 0;
+                gsap.set(el, { clipPath: `inset(${inset}%)` });
+              },
+            },
+            tStart
+          );
+        });
+
+        // --- Fase 3: reposo y salida ------------------------------------------
+        // El destino se queda quieto y legible antes de ceder el paso.
+        const tEnd = PIP_START + (last + 1) * STEP;
+        
+        // --- Custom animations for the final pip-content UI ---
+        // Animate the text and UI elements once the final frame arrives
+        tl.from('.pip-main-title span', {
+          y: 50,
+          opacity: 0,
+          duration: STEP * 0.8,
+          stagger: STEP * 0.1,
+          ease: 'power3.out'
+        }, tEnd - STEP);
+        
+        tl.from('.pip-small-text, .pip-badge, .scroll-indicator, .pip-decorative-lines', {
+          opacity: 0,
+          y: 20,
+          duration: STEP,
+          stagger: STEP * 0.1,
+          ease: 'power2.out'
+        }, tEnd - (STEP * 0.5));
+
+        // Se agrega un hold falso para que el texto se quede quieto un rato
+        // y luego la seccion se deslice hacia arriba de forma natural
+        tl.to('.apple-hero-container', { opacity: 1, duration: HOLD }, tEnd);
+      });
+    },
+    { scope: root, dependencies: [reduced] }
+  );
 
   return (
-    <section className="hero-section" ref={container}>
-      <div className="hero-container">
-        <div className="hero-content">
-          <h1 className="hero-title">
-            El futuro <br /> no espera a <br /> nadie.
-          </h1>
-          <p className="hero-subtitle">
-            Soluciones avanzadas para empresas exigentes.
-          </p>
-        </div>
-        
-        <div className="hero-spline">
-           {/* Fallback elegant background instead of spline */}
-           <div style={{ width: '100%', height: '100%', background: 'radial-gradient(circle at center, rgba(94, 92, 230, 0.15) 0%, transparent 70%)' }}></div>
-        </div>
+    <section
+      className={`apple-hero-section ${reduced ? 'is-static' : ''}`}
+      id="inicio"
+      ref={root}
+      style={reduced ? undefined : { '--scroll-mult': 3 }}
+    >
+      <div className="apple-hero-stage" style={{ perspective: '1000px' }}>
+        <GlobalChrome />
+        <Header />
+        <div className="apple-hero-container">
+          {/* Fondo: aurora de color y brillo ambiental. Familia ámbar-naranja,
+              coherente con el metal y el brillo del chip — no un arcoíris que
+              rompa con la estética ya establecida del Hero. */}
+          <div className="apple-hero-glow" aria-hidden="true" />
 
-        {/* This absolutely positioned layer creates the PIP (Picture in Picture) effect */}
-        <div className="pip-container">
-           {/* The solid red background block with noise */}
-           <div className="pip-bg"></div>
+          {/* Capa trasera: tipografía colosal */}
+          <div className="apple-giant-text-bg">
+            <h1>
+              WEB
+              <br />
+              NEURON
+            </h1>
+          </div>
 
-           {/* The content that appears over the solid block */}
-           <div className="pip-content">
-              {/* Decorative Tech UI Elements */}
-              <div className="pip-tech-grid"></div>
-              
-              <div className="pip-top-bar">
-                <div className="pip-badge">[ SYS_CORE : ONLINE ]</div>
-                <div className="pip-badge text-right">DEPLOYMENT // V2.0</div>
-              </div>
+          {/* Capa media: el chip 3D (fotografía) */}
+          <div className="apple-macro-object" style={{ transformStyle: 'preserve-3d', zIndex: 5 }}>
+            <img src={`${import.meta.env.BASE_URL}hero-core.png`} alt="Núcleo de Inteligencia Artificial" className="macro-img" />
+          </div>
 
-              <div className="pip-content-layout">
-                <div className="pip-title-col">
-                  <h2 className="pip-main-title">
-                    <div className="overflow-hidden"><span>CREAMOS</span></div>
-                    <div className="overflow-hidden"><span>SISTEMAS DE IA</span></div>
-                    <div className="overflow-hidden"><span>QUE TRANSFORMAN</span></div>
-                    <div className="overflow-hidden"><span>TU NEGOCIO.</span></div>
-                  </h2>
-                </div>
+          {/* Nueva Escena PIP Inception (Solo Texto) */}
+          <div className="pip-scene" aria-hidden="true">
+            {/* Nivel 4: El bloque sólido rojo */}
+            <div className="pip-frame pip-level-4">
+              <div className="pip-content">
+                {/* Decorative Tech UI Elements */}
+                <div className="pip-tech-grid"></div>
                 
-                <div className="pip-desc-col">
-                  <p className="pip-small-text">
-                    EXCLUSIVAS SOLUCIONES CON UN DISEÑO QUE CONECTA CON TUS OBJETIVOS, DÁNDOTE UN NUEVO SENTIDO DEL ÉXITO Y LA PRODUCTIVIDAD. RENDIMIENTO ABSOLUTO.
-                  </p>
+                <div className="pip-top-bar">
+                  <div className="pip-badge">[ SYS_CORE : ONLINE ]</div>
+                  <div className="pip-badge text-right">DEPLOYMENT // V2.0</div>
+                </div>
+
+                <div className="pip-content-layout">
+                  <div className="pip-title-col">
+                    <h2 className="pip-main-title">
+                      <div className="overflow-hidden"><span>CREAMOS</span></div>
+                      <div className="overflow-hidden"><span>SISTEMAS DE IA</span></div>
+                      <div className="overflow-hidden"><span>QUE TRANSFORMAN</span></div>
+                      <div className="overflow-hidden"><span>TU NEGOCIO.</span></div>
+                    </h2>
+                  </div>
                   
-                  <div className="pip-decorative-lines">
-                     <div className="line line-1"></div>
-                     <div className="line line-2"></div>
-                     <div className="line line-3"></div>
+                  <div className="pip-desc-col">
+                    <p className="pip-small-text">
+                      EXCLUSIVAS SOLUCIONES CON UN DISEÑO QUE CONECTA CON TUS OBJETIVOS, DÁNDOTE UN NUEVO SENTIDO DEL ÉXITO Y LA PRODUCTIVIDAD. RENDIMIENTO ABSOLUTO.
+                    </p>
+                    
+                    <div className="pip-decorative-lines">
+                       <div className="line line-1"></div>
+                       <div className="line line-2"></div>
+                       <div className="line line-3"></div>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <div className="scroll-indicator">
-                 <span className="scroll-text">SCROLL DISCOVER</span>
-                 <ArrowDown size={16} className="scroll-arrow" />
-              </div>
+                <div className="scroll-indicator">
+                   <span className="scroll-text">END OF TUNNEL</span>
+                </div>
 
-              <div className="pip-glow"></div>
-           </div>
+                <div className="pip-glow"></div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
