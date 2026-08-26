@@ -44,28 +44,34 @@ const VAPowerFeatures = () => {
 
   // Initial Section Animation
   useGSAP(() => {
-    gsap.from('.va-tab-item', {
-      x: -30,
-      opacity: 0,
-      duration: 0.8,
-      stagger: 0.1,
-      ease: 'power3.out',
-      scrollTrigger: {
-        trigger: container.current,
-        start: 'top 75%',
+    gsap.fromTo('.va-tab-item', 
+      { x: -30, opacity: 0 },
+      {
+        x: 0,
+        opacity: 1,
+        duration: 0.8,
+        stagger: 0.1,
+        ease: 'power3.out',
+        scrollTrigger: {
+          trigger: container.current,
+          start: 'top 75%',
+        }
       }
-    });
+    );
 
-    gsap.from('.va-tabs-display', {
-      x: 30,
-      opacity: 0,
-      duration: 1,
-      ease: 'power3.out',
-      scrollTrigger: {
-        trigger: container.current,
-        start: 'top 75%',
+    gsap.fromTo('.va-tabs-display', 
+      { x: 30, opacity: 0 },
+      {
+        x: 0,
+        opacity: 1,
+        duration: 1,
+        ease: 'power3.out',
+        scrollTrigger: {
+          trigger: container.current,
+          start: 'top 75%',
+        }
       }
-    });
+    );
   }, { scope: container });
 
   // Crossfade Animation on Tab Change
