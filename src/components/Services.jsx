@@ -85,8 +85,8 @@ const SERVICES = [
       { text: 'Speed', icon: <FaBolt color="#FFD60A" /> },
       { text: 'SEO', icon: <FaSearch color="#32ADE6" /> }
     ],
-    image: `${import.meta.env.BASE_URL}abstract-bg.jpg`,
-    alt: 'Composición abstracta de luz y superficies',
+    image: `${import.meta.env.BASE_URL}hero-5.jpg`,
+    alt: 'Equipo de desarrollo web colaborando frente a un monitor en una oficina moderna',
   },
 ];
 
