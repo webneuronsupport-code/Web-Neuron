@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { User, Building, Mail, MessageSquare } from 'lucide-react';
+import { User, Building, Mail, MessageSquare, Phone } from 'lucide-react';
 import { gsap, useGSAP } from '../lib/gsap';
 import Button from './Button';
 import './ContactForm.css';
@@ -69,11 +69,20 @@ const ContactForm = () => {
             </div>
           </div>
           
-          <div className="form-group">
-            <label htmlFor="email">Email corporativo</label>
-            <div className="input-wrapper">
-              <Mail className="input-icon" size={18} />
-              <input type="email" id="email" name="email" placeholder="ejemplo@tuempresa.com" required />
+          <div className="form-row">
+            <div className="form-group">
+              <label htmlFor="email">Email corporativo</label>
+              <div className="input-wrapper">
+                <Mail className="input-icon" size={18} />
+                <input type="email" id="email" name="email" placeholder="ejemplo@tuempresa.com" required />
+              </div>
+            </div>
+            <div className="form-group">
+              <label htmlFor="telefono">Teléfono</label>
+              <div className="input-wrapper">
+                <Phone className="input-icon" size={18} />
+                <input type="tel" id="telefono" name="telefono" placeholder="+52 55 1234 5678" />
+              </div>
             </div>
           </div>
           
