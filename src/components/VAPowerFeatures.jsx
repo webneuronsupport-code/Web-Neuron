@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { MessageCircle, Calendar, Repeat, Package, Workflow, Check, Search } from 'lucide-react';
+import { MessageCircle, Calendar, Repeat, Package, Workflow } from 'lucide-react';
 import { gsap, useGSAP } from '../lib/gsap';
 import SectionHeading from './SectionHeading';
 import './VAPowerFeatures.css';
@@ -9,37 +9,44 @@ const features = [
     id: 'chat',
     icon: MessageCircle,
     title: 'Atención 24/7 y FAQs',
-    desc: 'Responde mensajes a cualquier hora, resolviendo preguntas frecuentes al instante con naturalidad humana.'
+    desc: 'Responde mensajes a cualquier hora, resolviendo preguntas frecuentes al instante con naturalidad humana.',
+    image: 'va_chat_lifestyle.jpg'
   },
   {
     id: 'calendar',
     icon: Calendar,
     title: 'Sincronización Calendar',
-    desc: 'Revisa disponibilidades en tiempo real y agenda reuniones de manera 100% automática.'
+    desc: 'Revisa disponibilidades en tiempo real y agenda reuniones de manera 100% automática.',
+    image: 'va_calendar_lifestyle.jpg'
   },
   {
     id: 'followups',
     icon: Repeat,
     title: 'Follow-ups Automáticos',
-    desc: 'Realiza seguimientos proactivos para reconectar con prospectos y evitar que se enfríen.'
+    desc: 'Realiza seguimientos proactivos para reconectar con prospectos y evitar que se enfríen.',
+    image: 'va_followup_lifestyle.jpg'
   },
   {
     id: 'inventory',
     icon: Package,
     title: 'Inventario Dinámico',
-    desc: 'Controla tu inventario y responde mostrando fotos, descripción exacta y precio actualizado al momento.'
+    desc: 'Controla tu inventario y responde mostrando fotos, descripción exacta y precio actualizado al momento.',
+    image: 'va_inventory_lifestyle.jpg'
   },
   {
     id: 'api',
     icon: Workflow,
     title: 'Integración Total API',
-    desc: 'Se conecta vía API con tu CRM, ERP o cualquier plataforma que ya utilices para orquestar tu negocio.'
+    desc: 'Se conecta vía API con tu CRM, ERP o cualquier plataforma que ya utilices para orquestar tu negocio.',
+    image: 'va_api_lifestyle.jpg'
   }
 ];
 
 const VAPowerFeatures = () => {
   const container = useRef(null);
   const displayRef = useRef(null);
+  const wrapperRef = useRef(null);
+  const imageRef = useRef(null);
   const [activeTab, setActiveTab] = useState('chat');
 
   // Initial Section Animation
@@ -59,7 +66,7 @@ const VAPowerFeatures = () => {
       }
     );
 
-    gsap.fromTo('.va-tabs-display', 
+    gsap.fromTo('.va-tabs-display-wrapper', 
       { x: 30, opacity: 0 },
       {
         x: 0,
@@ -78,95 +85,48 @@ const VAPowerFeatures = () => {
   useEffect(() => {
     if (!displayRef.current) return;
     
-    // Quick fade out then fade in
     const ctx = gsap.context(() => {
       gsap.fromTo(displayRef.current, 
-        { opacity: 0, y: 15 },
-        { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out' }
+        { opacity: 0, scale: 0.95 },
+        { opacity: 1, scale: 1, duration: 0.5, ease: 'power2.out' }
       );
     }, displayRef);
     
     return () => ctx.revert();
   }, [activeTab]);
 
-  const renderVisuals = () => {
-    switch(activeTab) {
-      case 'chat':
-        return (
-          <div className="card-visual visual-chat">
-            <div className="mock-phone">
-              <div className="mock-chat-header">Soporte IA <span className="mock-status"></span></div>
-              <div className="mock-chat-body">
-                <div className="mock-msg mock-msg-user anim-msg-1">¿Aún hacen envíos a esta hora? Son las 3 AM.</div>
-                <div className="mock-typing anim-typing">
-                  <span className="dot"></span><span className="dot"></span><span className="dot"></span>
-                </div>
-                <div className="mock-msg mock-msg-ai anim-msg-2">¡Hola! Sí, nuestro sistema registra pedidos 24/7. ¿Te ayudo a armar tu carrito? 📦</div>
-              </div>
-            </div>
-          </div>
-        );
-      case 'calendar':
-        return (
-          <div className="card-visual visual-calendar">
-            <div className="mock-calendar">
-              <div className="cal-header">Noviembre</div>
-              <div className="cal-grid">
-                <div className="cal-day">12</div><div className="cal-day">13</div><div className="cal-day">14</div>
-                <div className="cal-day">19</div><div className="cal-day target anim-cal-target">20</div><div className="cal-day">21</div>
-              </div>
-              <div className="cal-badge anim-cal-badge"><Check size={16}/> Agendado 10:00 AM</div>
-            </div>
-          </div>
-        );
-      case 'followups':
-        return (
-          <div className="card-visual visual-radar">
-            <div className="radar-center"><Repeat size={32} color="var(--accent)" /></div>
-            <div className="radar-ring anim-ring-1"></div>
-            <div className="radar-ring anim-ring-2"></div>
-            <div className="radar-ring anim-ring-3"></div>
-          </div>
-        );
-      case 'inventory':
-        return (
-          <div className="card-visual visual-inventory">
-            <div className="inv-searchbar"><Search size={18} /> Buscando disponibilidad en almacén...</div>
-            <div className="inv-results">
-              <div className="inv-item anim-inv-1">
-                <div className="inv-img bg-grad-1"></div>
-                <div className="inv-info">
-                  <div className="inv-title">Laptop Pro 14"</div>
-                  <div className="inv-price">$1,299 <span className="inv-stock">En stock</span></div>
-                </div>
-              </div>
-              <div className="inv-item anim-inv-2">
-                <div className="inv-img bg-grad-2"></div>
-                <div className="inv-info">
-                  <div className="inv-title">Mouse Inalámbrico</div>
-                  <div className="inv-price">$49 <span className="inv-stock">En stock</span></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        );
-      case 'api':
-        return (
-          <div className="card-visual visual-api">
-            <svg width="100%" height="100%" viewBox="0 0 300 250" className="api-svg">
-              <path d="M150 125 L60 60 M150 125 L240 60 M150 125 L150 200" stroke="rgba(255,255,255,0.05)" strokeWidth="3" fill="none" />
-              <path d="M150 125 L60 60 M150 125 L240 60 M150 125 L150 200" className="anim-node-line" stroke="var(--accent)" strokeWidth="3" fill="none" strokeDasharray="15 150" strokeDashoffset="165" strokeLinecap="round" />
-            </svg>
-            <div className="node-dot center-node anim-node-center"><Workflow size={32} /></div>
-            <div className="node-dot top-left-node anim-node-side">Salesforce</div>
-            <div className="node-dot top-right-node anim-node-side">Shopify</div>
-            <div className="node-dot bottom-node anim-node-side">HubSpot</div>
-          </div>
-        );
-      default:
-        return null;
-    }
+  // 3D Tilt Effect
+  const handleMouseMove = (e) => {
+    if (!wrapperRef.current || !imageRef.current) return;
+    
+    const { left, top, width, height } = wrapperRef.current.getBoundingClientRect();
+    const x = (e.clientX - left) / width; // 0 to 1
+    const y = (e.clientY - top) / height; // 0 to 1
+    
+    const tiltX = (y - 0.5) * -15; // Max 15 deg tilt
+    const tiltY = (x - 0.5) * 15;
+
+    gsap.to(imageRef.current, {
+      rotateX: tiltX,
+      rotateY: tiltY,
+      duration: 0.5,
+      ease: 'power2.out',
+      transformPerspective: 1000,
+      transformOrigin: 'center center'
+    });
   };
+
+  const handleMouseLeave = () => {
+    if (!imageRef.current) return;
+    gsap.to(imageRef.current, {
+      rotateX: 0,
+      rotateY: 0,
+      duration: 1,
+      ease: 'elastic.out(1, 0.3)'
+    });
+  };
+
+  const activeFeature = features.find(f => f.id === activeTab);
 
   return (
     <section className="va-pf-section" ref={container}>
@@ -205,10 +165,19 @@ const VAPowerFeatures = () => {
           </div>
 
           {/* Columna Derecha: El Escaparate (Pantalla Central) */}
-          <div className="va-tabs-display-wrapper">
-            <div className="va-tabs-display-glow"></div>
+          <div 
+            className="va-tabs-display-wrapper" 
+            ref={wrapperRef}
+            onMouseMove={handleMouseMove}
+            onMouseLeave={handleMouseLeave}
+          >
             <div className="va-tabs-display" ref={displayRef}>
-              {renderVisuals()}
+               <img 
+                 ref={imageRef}
+                 src={`${import.meta.env.BASE_URL}${activeFeature.image}`} 
+                 alt={activeFeature.title} 
+                 className="va-tilt-image" 
+               />
             </div>
           </div>
 
