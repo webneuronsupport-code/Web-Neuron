@@ -200,7 +200,7 @@ const Services = () => {
             anclado ni desvaneciéndose: el bloque se recorre como cualquier otra
             parte de la página. */}
         <div className="svc-list">
-          {SERVICES.map(({ n, title, text, tags, image, alt, link, actionText }) => (
+          {SERVICES.map(({ n, title, text, benefits, tags, image, alt, link, actionText }) => (
             <article className="svc-item" key={n}>
               {/* Solo visible en una columna y con movimiento reducido, donde no
                   hay carril: ahí cada ficha necesita su propia imagen. */}
