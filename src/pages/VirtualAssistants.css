@@ -106,8 +106,8 @@
 .va-context-inner {
   position: relative;
   z-index: 1;
-  max-width: 1100px;
-  margin: 0 auto;
+  max-width: 900px;
+  margin: 0 auto 5rem auto;
 }
 
 .va-context-headline {
@@ -144,10 +144,10 @@
 }
 
 .va-context-paragraph {
-  font-size: clamp(1.25rem, 2.5vw, 1.75rem); /* Ligeramente más grande */
+  font-size: clamp(1.15rem, 2vw, 1.5rem); /* Reducido ligeramente para más elegancia */
   color: var(--text-muted);
-  line-height: 1.6;
-  max-width: 1000px; /* Expandido para usar mejor el ancho de la página */
+  line-height: 1.7;
+  max-width: 760px; /* Reducido para mejor legibilidad */
   margin: 0 auto;
   text-wrap: balance;
   opacity: 0.9;
