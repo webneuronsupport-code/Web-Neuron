@@ -1,6 +1,5 @@
-import { useRef, useEffect } from 'react';
+import { useRef } from 'react';
 import { gsap, useGSAP } from '../lib/gsap';
-import { Mic } from 'lucide-react';
 import './VAAudioFeature.css';
 
 const VAAudioFeature = () => {
@@ -34,20 +33,6 @@ const VAAudioFeature = () => {
       duration: 0.8,
       ease: 'power2.out'
     }, '-=0.6');
-
-    // Continuous wave animation
-    gsap.to('.audio-bar', {
-      scaleY: 'random(0.2, 1.5)',
-      duration: 0.4,
-      repeat: -1,
-      yoyo: true,
-      ease: 'sine.inOut',
-      stagger: {
-        each: 0.1,
-        from: 'center'
-      }
-    });
-
   }, { scope: container });
 
   return (
@@ -55,14 +40,14 @@ const VAAudioFeature = () => {
       <div className="shell">
         <div className="va-audio-inner">
           <div className="va-audio-visualizer">
-            <div className="va-audio-mic-wrapper">
-              <Mic size={32} className="va-audio-mic" />
-            </div>
-            <div className="va-audio-waves">
-              {[...Array(15)].map((_, i) => (
-                <div key={i} className="audio-bar"></div>
-              ))}
-            </div>
+            <video 
+              src={`${import.meta.env.BASE_URL}AudioBot.mp4`} 
+              autoPlay 
+              loop 
+              muted 
+              playsInline
+              className="va-audio-video"
+            />
           </div>
           
           <div className="va-audio-content">
