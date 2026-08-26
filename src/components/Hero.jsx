@@ -1,6 +1,5 @@
 import React, { useRef } from 'react';
 import { gsap, useGSAP } from '../lib/gsap';
-import Spline from '@splinetool/react-spline';
 import { MousePointer2, ArrowDown } from 'lucide-react';
 import './Hero.css';
 
@@ -42,7 +41,8 @@ const Hero = () => {
         </div>
         
         <div className="hero-spline">
-           <Spline scene="https://prod.spline.design/q6w-vUeH1tHnDFsV/scene.splinecode" /> 
+           {/* Fallback elegant background instead of spline */}
+           <div style={{ width: '100%', height: '100%', background: 'radial-gradient(circle at center, rgba(94, 92, 230, 0.15) 0%, transparent 70%)' }}></div>
         </div>
 
         {/* This absolutely positioned layer creates the PIP (Picture in Picture) effect */}
