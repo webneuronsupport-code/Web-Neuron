@@ -1,6 +1,7 @@
 import { useRef } from 'react';
 import { ArrowUpRight, Bot, Calendar, Check } from 'lucide-react';
 import { gsap, ScrollTrigger, SplitText, useGSAP } from '../lib/gsap';
+import ContactForm from '../components/ContactForm';
 import Contact from '../components/Contact';
 import SectionHeading from '../components/SectionHeading';
 import ParticleWave from '../components/ParticleWave';
@@ -485,6 +486,7 @@ const VirtualAssistants = () => {
       <VAHero />
       <VAContext />
       <VABento />
+      <ContactForm />
       <Contact />
     </div>
   );

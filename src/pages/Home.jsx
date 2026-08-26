@@ -5,6 +5,7 @@ import Services from '../components/Services';
 import ProcessWipe from '../components/ProcessWipe';
 import Process from '../components/Process';
 import Results from '../components/Results';
+import ContactForm from '../components/ContactForm';
 import Contact from '../components/Contact';
 
 const Home = () => {
@@ -18,6 +19,7 @@ const Home = () => {
         <Process />
         <Results />
       </main>
+      <ContactForm />
       <Contact />
     </>
   );

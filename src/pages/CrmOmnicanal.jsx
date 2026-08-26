@@ -1,5 +1,6 @@
 import { useRef } from 'react';
 import { gsap, useGSAP } from '../lib/gsap';
+import ContactForm from '../components/ContactForm';
 import Contact from '../components/Contact';
 import DriftWall from '../components/DriftWall';
 import BlurText from '../components/BlurText';
@@ -136,6 +137,7 @@ const CrmOmnicanal = () => {
       <Header />
       <CrmHero />
       <CrmContext />
+      <ContactForm />
       <Contact />
     </div>
   );
