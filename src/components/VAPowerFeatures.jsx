@@ -1,19 +1,54 @@
-import React, { useRef } from 'react';
-import { MessageCircle, Calendar, Repeat, Package, Workflow, Check, Search, ChevronRight } from 'lucide-react';
+import React, { useState, useRef, useEffect } from 'react';
+import { MessageCircle, Calendar, Repeat, Package, Workflow, Check, Search } from 'lucide-react';
 import { gsap, useGSAP } from '../lib/gsap';
 import SectionHeading from './SectionHeading';
 import './VAPowerFeatures.css';
 
+const features = [
+  {
+    id: 'chat',
+    icon: MessageCircle,
+    title: 'Atención 24/7 y FAQs',
+    desc: 'Responde mensajes a cualquier hora, resolviendo preguntas frecuentes al instante con naturalidad humana.'
+  },
+  {
+    id: 'calendar',
+    icon: Calendar,
+    title: 'Sincronización Calendar',
+    desc: 'Revisa disponibilidades en tiempo real y agenda reuniones de manera 100% automática.'
+  },
+  {
+    id: 'followups',
+    icon: Repeat,
+    title: 'Follow-ups Automáticos',
+    desc: 'Realiza seguimientos proactivos para reconectar con prospectos y evitar que se enfríen.'
+  },
+  {
+    id: 'inventory',
+    icon: Package,
+    title: 'Inventario Dinámico',
+    desc: 'Controla tu inventario y responde mostrando fotos, descripción exacta y precio actualizado al momento.'
+  },
+  {
+    id: 'api',
+    icon: Workflow,
+    title: 'Integración Total API',
+    desc: 'Se conecta vía API con tu CRM, ERP o cualquier plataforma que ya utilices para orquestar tu negocio.'
+  }
+];
+
 const VAPowerFeatures = () => {
   const container = useRef(null);
+  const displayRef = useRef(null);
+  const [activeTab, setActiveTab] = useState('chat');
 
+  // Initial Section Animation
   useGSAP(() => {
-    // Animate Cards
-    gsap.from('.va-pf-card', {
-      y: 60,
+    gsap.from('.va-tab-item', {
+      x: -30,
       opacity: 0,
-      duration: 1,
-      stagger: 0.15,
+      duration: 0.8,
+      stagger: 0.1,
       ease: 'power3.out',
       scrollTrigger: {
         trigger: container.current,
@@ -21,64 +56,111 @@ const VAPowerFeatures = () => {
       }
     });
 
-    // 1. Chat Animation
-    const tlChat = gsap.timeline({
-      scrollTrigger: { trigger: '.va-card-chat', start: 'top 80%' },
-      repeat: -1,
-      repeatDelay: 2
-    });
-    tlChat.fromTo('.mock-msg-user', { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.4 })
-          .fromTo('.mock-typing', { opacity: 0 }, { opacity: 1, duration: 0.2 }, '+=0.3')
-          .to('.mock-typing', { opacity: 0, duration: 0.2 }, '+=1')
-          .fromTo('.mock-msg-ai', { opacity: 0, y: 10, scale: 0.95 }, { opacity: 1, y: 0, scale: 1, duration: 0.4 });
-
-    // 2. Calendar Animation
-    const tlCal = gsap.timeline({
-      scrollTrigger: { trigger: '.va-card-calendar', start: 'top 80%' },
-      repeat: -1,
-      repeatDelay: 1.5
-    });
-    tlCal.to('.cal-day.target', { backgroundColor: 'var(--accent)', color: '#fff', duration: 0.3 })
-         .fromTo('.cal-badge', { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.4 }, '+=0.2')
-         .to('.cal-day.target', { backgroundColor: 'rgba(255, 255, 255, 0.05)', color: 'var(--text)', duration: 0.3, delay: 1.5 })
-         .to('.cal-badge', { opacity: 0, y: -10, duration: 0.3 }, '-=0.3');
-
-    // 3. Radar/Follow-up Animation
-    gsap.to('.radar-ring', {
-      scale: 2.5,
+    gsap.from('.va-tabs-display', {
+      x: 30,
       opacity: 0,
-      duration: 2,
-      stagger: 0.6,
-      repeat: -1,
-      ease: "linear"
+      duration: 1,
+      ease: 'power3.out',
+      scrollTrigger: {
+        trigger: container.current,
+        start: 'top 75%',
+      }
     });
-
-    // 4. E-commerce / Inventory Animation
-    gsap.fromTo('.inv-item', { opacity: 0, x: 20 }, {
-      opacity: 1, 
-      x: 0, 
-      duration: 0.6, 
-      stagger: 0.2,
-      scrollTrigger: { trigger: '.va-card-inventory', start: 'top 80%' }
-    });
-
-    // 5. API Nodes
-    gsap.to('.node-line-flow', {
-      strokeDashoffset: 0,
-      duration: 1.5,
-      repeat: -1,
-      ease: 'linear'
-    });
-    gsap.to('.node-dot', {
-      scale: 1.2,
-      boxShadow: '0 0 15px var(--accent)',
-      yoyo: true,
-      repeat: -1,
-      duration: 0.8,
-      stagger: 0.3
-    });
-
   }, { scope: container });
+
+  // Crossfade Animation on Tab Change
+  useEffect(() => {
+    if (!displayRef.current) return;
+    
+    // Quick fade out then fade in
+    const ctx = gsap.context(() => {
+      gsap.fromTo(displayRef.current, 
+        { opacity: 0, y: 15 },
+        { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out' }
+      );
+    }, displayRef);
+    
+    return () => ctx.revert();
+  }, [activeTab]);
+
+  const renderVisuals = () => {
+    switch(activeTab) {
+      case 'chat':
+        return (
+          <div className="card-visual visual-chat">
+            <div className="mock-phone">
+              <div className="mock-chat-header">Soporte IA <span className="mock-status"></span></div>
+              <div className="mock-chat-body">
+                <div className="mock-msg mock-msg-user anim-msg-1">¿Aún hacen envíos a esta hora? Son las 3 AM.</div>
+                <div className="mock-typing anim-typing">
+                  <span className="dot"></span><span className="dot"></span><span className="dot"></span>
+                </div>
+                <div className="mock-msg mock-msg-ai anim-msg-2">¡Hola! Sí, nuestro sistema registra pedidos 24/7. ¿Te ayudo a armar tu carrito? 📦</div>
+              </div>
+            </div>
+          </div>
+        );
+      case 'calendar':
+        return (
+          <div className="card-visual visual-calendar">
+            <div className="mock-calendar">
+              <div className="cal-header">Noviembre</div>
+              <div className="cal-grid">
+                <div className="cal-day">12</div><div className="cal-day">13</div><div className="cal-day">14</div>
+                <div className="cal-day">19</div><div className="cal-day target anim-cal-target">20</div><div className="cal-day">21</div>
+              </div>
+              <div className="cal-badge anim-cal-badge"><Check size={16}/> Agendado 10:00 AM</div>
+            </div>
+          </div>
+        );
+      case 'followups':
+        return (
+          <div className="card-visual visual-radar">
+            <div className="radar-center"><Repeat size={32} color="var(--accent)" /></div>
+            <div className="radar-ring anim-ring-1"></div>
+            <div className="radar-ring anim-ring-2"></div>
+            <div className="radar-ring anim-ring-3"></div>
+          </div>
+        );
+      case 'inventory':
+        return (
+          <div className="card-visual visual-inventory">
+            <div className="inv-searchbar"><Search size={18} /> Buscando disponibilidad en almacén...</div>
+            <div className="inv-results">
+              <div className="inv-item anim-inv-1">
+                <div className="inv-img bg-grad-1"></div>
+                <div className="inv-info">
+                  <div className="inv-title">Laptop Pro 14"</div>
+                  <div className="inv-price">$1,299 <span className="inv-stock">En stock</span></div>
+                </div>
+              </div>
+              <div className="inv-item anim-inv-2">
+                <div className="inv-img bg-grad-2"></div>
+                <div className="inv-info">
+                  <div className="inv-title">Mouse Inalámbrico</div>
+                  <div className="inv-price">$49 <span className="inv-stock">En stock</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      case 'api':
+        return (
+          <div className="card-visual visual-api">
+            <svg width="100%" height="100%" viewBox="0 0 300 250" className="api-svg">
+              <path d="M150 125 L60 60 M150 125 L240 60 M150 125 L150 200" stroke="rgba(255,255,255,0.05)" strokeWidth="3" fill="none" />
+              <path d="M150 125 L60 60 M150 125 L240 60 M150 125 L150 200" className="anim-node-line" stroke="var(--accent)" strokeWidth="3" fill="none" strokeDasharray="15 150" strokeDashoffset="165" strokeLinecap="round" />
+            </svg>
+            <div className="node-dot center-node anim-node-center"><Workflow size={32} /></div>
+            <div className="node-dot top-left-node anim-node-side">Salesforce</div>
+            <div className="node-dot top-right-node anim-node-side">Shopify</div>
+            <div className="node-dot bottom-node anim-node-side">HubSpot</div>
+          </div>
+        );
+      default:
+        return null;
+    }
+  };
 
   return (
     <section className="va-pf-section" ref={container}>
@@ -90,122 +172,37 @@ const VAPowerFeatures = () => {
           lede="Un equipo hiper-productivo que nunca duerme y opera a la velocidad de la luz."
         />
         
-        <div className="va-pf-grid">
+        <div className="va-tabs-container">
           
-          {/* Card 1: Atención 24/7 (Wide) */}
-          <div className="va-pf-card va-card-chat card-wide">
-            <div className="va-pf-card-glow"></div>
-            
-            <div className="card-visual visual-chat">
-              <div className="mock-phone">
-                <div className="mock-chat-header">Soporte IA <span className="mock-status"></span></div>
-                <div className="mock-chat-body">
-                  <div className="mock-msg mock-msg-user">¿Aún hacen envíos a esta hora? Son las 3 AM.</div>
-                  <div className="mock-typing">
-                    <span className="dot"></span><span className="dot"></span><span className="dot"></span>
+          {/* Columna Izquierda: Botones de Pestañas */}
+          <div className="va-tabs-list">
+            {features.map((feat) => {
+              const Icon = feat.icon;
+              const isActive = activeTab === feat.id;
+              
+              return (
+                <button 
+                  key={feat.id}
+                  className={`va-tab-item ${isActive ? 'active' : ''}`}
+                  onClick={() => setActiveTab(feat.id)}
+                >
+                  <div className="va-tab-icon-wrap">
+                    <Icon size={20} />
                   </div>
-                  <div className="mock-msg mock-msg-ai">¡Hola! Sí, nuestro sistema registra pedidos 24/7. ¿Te ayudo a armar tu carrito? 📦</div>
-                </div>
-              </div>
-            </div>
-
-            <div className="card-content">
-              <div className="va-pf-icon-wrapper"><MessageCircle size={24} /></div>
-              <h3 className="va-pf-title">Atención 24/7 y FAQs</h3>
-              <p className="va-pf-desc">Responde mensajes a cualquier hora, resolviendo preguntas frecuentes al instante con naturalidad humana.</p>
-            </div>
-          </div>
-
-          {/* Card 2: Calendar (Square) */}
-          <div className="va-pf-card va-card-calendar card-square">
-            <div className="va-pf-card-glow"></div>
-            
-            <div className="card-visual visual-calendar">
-              <div className="mock-calendar">
-                <div className="cal-header">Noviembre</div>
-                <div className="cal-grid">
-                  <div className="cal-day">12</div><div className="cal-day">13</div><div className="cal-day">14</div>
-                  <div className="cal-day">19</div><div className="cal-day target">20</div><div className="cal-day">21</div>
-                </div>
-                <div className="cal-badge"><Check size={14}/> Agendado 10:00 AM</div>
-              </div>
-            </div>
-
-            <div className="card-content">
-              <div className="va-pf-icon-wrapper"><Calendar size={24} /></div>
-              <h3 className="va-pf-title">Google Calendar</h3>
-              <p className="va-pf-desc">Revisa disponibilidades en tiempo real y agenda reuniones automáticamente.</p>
-            </div>
-          </div>
-
-          {/* Card 3: Follow-ups (Square) */}
-          <div className="va-pf-card va-card-radar card-square">
-            <div className="va-pf-card-glow"></div>
-            
-            <div className="card-visual visual-radar">
-              <div className="radar-center"><Repeat size={24} color="var(--accent)" /></div>
-              <div className="radar-ring"></div>
-              <div className="radar-ring"></div>
-              <div className="radar-ring"></div>
-            </div>
-
-            <div className="card-content">
-              <div className="va-pf-icon-wrapper"><Repeat size={24} /></div>
-              <h3 className="va-pf-title">Follow-ups Automáticos</h3>
-              <p className="va-pf-desc">Realiza seguimientos proactivos para reconectar con prospectos que se han enfriado.</p>
-            </div>
-          </div>
-
-          {/* Card 4: Inventory (Wide) */}
-          <div className="va-pf-card va-card-inventory card-wide">
-            <div className="va-pf-card-glow"></div>
-            
-            <div className="card-visual visual-inventory">
-              <div className="inv-searchbar"><Search size={16} /> Buscar "Laptop Pro"...</div>
-              <div className="inv-results">
-                <div className="inv-item">
-                  <div className="inv-img bg-grad-1"></div>
-                  <div className="inv-info">
-                    <div className="inv-title">Laptop Pro 14"</div>
-                    <div className="inv-price">$1,299 <span className="inv-stock">En stock</span></div>
+                  <div className="va-tab-content">
+                    <h3 className="va-tab-title">{feat.title}</h3>
+                    {isActive && <p className="va-tab-desc">{feat.desc}</p>}
                   </div>
-                </div>
-                <div className="inv-item">
-                  <div className="inv-img bg-grad-2"></div>
-                  <div className="inv-info">
-                    <div className="inv-title">Mouse Inalámbrico</div>
-                    <div className="inv-price">$49 <span className="inv-stock">En stock</span></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="card-content">
-              <div className="va-pf-icon-wrapper"><Package size={24} /></div>
-              <h3 className="va-pf-title">Inventario Dinámico</h3>
-              <p className="va-pf-desc">Controla tu inventario y responde mostrando fotos, descripción exacta y precio actualizado al momento.</p>
-            </div>
+                </button>
+              );
+            })}
           </div>
 
-          {/* Card 5: Integrations (Square) */}
-          <div className="va-pf-card va-card-api card-square">
-            <div className="va-pf-card-glow"></div>
-            
-            <div className="card-visual visual-api">
-              <svg width="100%" height="100%" viewBox="0 0 200 150" className="api-svg">
-                <path d="M100 75 L40 40 M100 75 L160 40 M100 75 L100 120" stroke="rgba(255,255,255,0.1)" strokeWidth="2" fill="none" />
-                <path d="M100 75 L40 40 M100 75 L160 40 M100 75 L100 120" className="node-line-flow" stroke="var(--accent)" strokeWidth="2" fill="none" strokeDasharray="10 100" strokeDashoffset="110" strokeLinecap="round" />
-              </svg>
-              <div className="node-dot center-node"><Workflow size={20} /></div>
-              <div className="node-dot top-left-node">CRM</div>
-              <div className="node-dot top-right-node">ERP</div>
-              <div className="node-dot bottom-node">API</div>
-            </div>
-
-            <div className="card-content">
-              <div className="va-pf-icon-wrapper"><Workflow size={24} /></div>
-              <h3 className="va-pf-title">Integración Total API</h3>
-              <p className="va-pf-desc">Se conecta con tu CRM, ERP o cualquier plataforma que ya utilices para orquestar tu negocio.</p>
+          {/* Columna Derecha: El Escaparate (Pantalla Central) */}
+          <div className="va-tabs-display-wrapper">
+            <div className="va-tabs-display-glow"></div>
+            <div className="va-tabs-display" ref={displayRef}>
+              {renderVisuals()}
             </div>
           </div>
 
