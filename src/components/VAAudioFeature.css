@@ -67,6 +67,51 @@
   font-weight: 500;
 }
 
+/* --- Mini Visualizer Styles --- */
+.mini-audio-visualizer {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1rem 1.5rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 100px;
+  width: fit-content;
+  margin: 0.5rem 0;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+}
+
+.mini-audio-mic-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  background-color: rgba(25, 25, 25, 0.9);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 50%;
+  color: #fff;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+}
+
+.mini-audio-waves {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.mini-audio-bar {
+  width: 4px;
+  height: 24px;
+  background-color: rgba(255, 255, 255, 0.15);
+  border-radius: 3px;
+  transform-origin: center;
+}
+
+.mini-audio-bar:nth-child(3n) { background-color: rgba(10, 132, 255, 0.75); }
+.mini-audio-bar:nth-child(5n) { background-color: rgba(48, 209, 88, 0.75); }
+.mini-audio-bar:nth-child(7n) { background-color: rgba(94, 92, 230, 0.75); }
+
 @media (max-width: 1024px) {
   .va-audio-inner {
     grid-template-columns: 1fr;
