@@ -52,7 +52,7 @@ const SERVICES = [
       { text: 'Sistemas', icon: <FaCogs color="#8E8E93" /> }
     ],
     image: `${import.meta.env.BASE_URL}service-automatizaciones.png`,
-    imagePosition: '80% center',
+    imagePosition: '65% center',
     alt: 'Holographic display of automated systems running over a laptop on a wooden desk',
   },
   {
