@@ -51,8 +51,8 @@ const SERVICES = [
       { text: 'API', icon: <FaPlug color="#FF9F0A" /> },
       { text: 'Sistemas', icon: <FaCogs color="#8E8E93" /> }
     ],
-    image: `${import.meta.env.BASE_URL}hero-3.jpg`,
-    alt: 'Manos sobre un portátil mostrando un flujo de trabajo automatizado',
+    image: `${import.meta.env.BASE_URL}service-automatizaciones.png`,
+    alt: 'Holographic display of automated systems running over a laptop on a wooden desk',
   },
   {
     n: '03',
