@@ -52,6 +52,7 @@ const SERVICES = [
       { text: 'Sistemas', icon: <FaCogs color="#8E8E93" /> }
     ],
     image: `${import.meta.env.BASE_URL}service-automatizaciones.png`,
+    imagePosition: '80% center',
     alt: 'Holographic display of automated systems running over a laptop on a wooden desk',
   },
   {
@@ -146,10 +147,12 @@ const Services = () => {
         if (!frontImg.src.endsWith(SERVICES[front].image)) {
           frontImg.src = SERVICES[front].image;
           frontImg.alt = SERVICES[front].alt;
+          frontImg.style.objectPosition = SERVICES[front].imagePosition || '50% 50%';
         }
         if (!backImg.src.endsWith(SERVICES[back].image)) {
           backImg.src = SERVICES[back].image;
           backImg.alt = SERVICES[back].alt;
+          backImg.style.objectPosition = SERVICES[back].imagePosition || '50% 50%';
         }
       };
 
@@ -200,12 +203,12 @@ const Services = () => {
             anclado ni desvaneciéndose: el bloque se recorre como cualquier otra
             parte de la página. */}
         <div className="svc-list">
-          {SERVICES.map(({ n, title, text, benefits, tags, image, alt, link, actionText }) => (
+          {SERVICES.map(({ n, title, text, benefits, tags, image, alt, link, actionText, imagePosition }) => (
             <article className="svc-item" key={n}>
               {/* Solo visible en una columna y con movimiento reducido, donde no
                   hay carril: ahí cada ficha necesita su propia imagen. */}
               <figure className="svc-item-media">
-                <img src={image} alt={alt} loading="lazy" />
+                <img src={image} alt={alt} loading="lazy" style={{ objectPosition: imagePosition || '50% 50%' }} />
               </figure>
 
               <span className="svc-n">
@@ -265,6 +268,7 @@ const Services = () => {
                     <img
                       src={SERVICES[slot].image}
                       alt=""
+                      style={{ objectPosition: SERVICES[slot].imagePosition || '50% 50%' }}
                       ref={(el) => {
                         faceImgs.current[slot] = el;
                       }}
