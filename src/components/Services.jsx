@@ -32,8 +32,8 @@ const SERVICES = [
       { text: 'Web', icon: <FaChrome color="#4285F4" /> },
       { text: 'Voz', icon: <FaMicrophone color="#FF3B30" /> }
     ],
-    image: `${import.meta.env.BASE_URL}hero-2.jpg`,
-    alt: 'Equipo trabajando en una oficina moderna con vistas a la ciudad',
+    image: `${import.meta.env.BASE_URL}service-ai-assistants.png`,
+    alt: 'Laptop showing an AI assistant dashboard interface',
     link: '/asistentes-virtuales',
     actionText: 'Saber más'
   },
