@@ -8,6 +8,7 @@ import ParticleWave from '../components/ParticleWave';
 import MagicTransform from '../components/MagicTransform';
 import VAPowerFeatures from '../components/VAPowerFeatures';
 import VAAudioFeature from '../components/VAAudioFeature';
+import VAOcrFeature from '../components/VAOcrFeature';
 import Header from '../components/Header';
 import './VirtualAssistants.css';
 
@@ -491,6 +492,7 @@ const VirtualAssistants = () => {
       <VAContext />
       <VAPowerFeatures />
       <VAAudioFeature />
+      <VAOcrFeature />
       <VABento />
       <ContactForm />
       <Contact />
