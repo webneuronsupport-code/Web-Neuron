@@ -1,8 +1,8 @@
 import React from 'react';
 import './VAOcrFeature.css';
 import ocrIdScan from '../assets/ocr_id_scan.jpg';
-import ocrReceiptScan from '../assets/ocr_receipt_scan.jpg';
-import ocrExcelScan from '../assets/ocr_excel_scan.jpg';
+import ocrReceiptScan from '../assets/ocr_receipt_scan_v2.jpg';
+import ocrExcelScan from '../assets/ocr_excel_scan_v2.jpg';
 
 const VAOcrFeature = () => {
   return (
