@@ -1,5 +1,8 @@
 import React from 'react';
 import './VAOcrFeature.css';
+import ocrIdScan from '../assets/ocr_id_scan.jpg';
+import ocrReceiptScan from '../assets/ocr_receipt_scan.jpg';
+import ocrExcelScan from '../assets/ocr_excel_scan.jpg';
 
 const VAOcrFeature = () => {
   return (
@@ -19,7 +22,7 @@ const VAOcrFeature = () => {
           {/* Card 1 */}
           <div className="ocr-vis-card">
             <div className="ocr-vis-image-container">
-              <img src="/ocr_id_scan.jpg" alt="Escaneo de Identificación" className="ocr-vis-img" />
+              <img src={ocrIdScan} alt="Escaneo de Identificación" className="ocr-vis-img" />
             </div>
             <div className="ocr-vis-content">
               <h3>Identificaciones Oficiales</h3>
@@ -30,7 +33,7 @@ const VAOcrFeature = () => {
           {/* Card 2 */}
           <div className="ocr-vis-card">
             <div className="ocr-vis-image-container">
-              <img src="/ocr_receipt_scan.jpg" alt="Escaneo de Imagen o Baucher" className="ocr-vis-img" />
+              <img src={ocrReceiptScan} alt="Escaneo de Imagen o Baucher" className="ocr-vis-img" />
             </div>
             <div className="ocr-vis-content">
               <h3>Imágenes y Bauchers</h3>
@@ -41,7 +44,7 @@ const VAOcrFeature = () => {
           {/* Card 3 */}
           <div className="ocr-vis-card">
             <div className="ocr-vis-image-container">
-              <img src="/ocr_excel_scan.jpg" alt="Análisis de Excel" className="ocr-vis-img" />
+              <img src={ocrExcelScan} alt="Análisis de Excel" className="ocr-vis-img" />
             </div>
             <div className="ocr-vis-content">
               <h3>Excels y PDFs</h3>
