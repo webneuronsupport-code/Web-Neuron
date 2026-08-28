@@ -17,16 +17,17 @@ const VAOcrFeature = () => {
 
     const texts = gsap.utils.toArray('.ocr-huge-text');
     
-    // Set initial state
+    // We already set opacity 0 in CSS, but GSAP needs to know the starting values for the animation
     gsap.set(texts, { opacity: 0, y: 50, scale: 0.95 });
 
     texts.forEach((text, i) => {
-      // Fade in and move up
-      tl.to(text, { opacity: 1, y: 0, scale: 1, duration: 1 }, i * 2)
-      // Stay visible
-      .to(text, { opacity: 1, duration: 1 }, i * 2 + 1)
-      // Fade out and move up further
-      .to(text, { opacity: 0, y: -50, scale: 1.05, duration: 1 }, i * 2 + 2);
+      // Using a multiplier of 3 to ensure distinct phases:
+      // i*3 + 0: Fade in
+      // i*3 + 1: Hold
+      // i*3 + 2: Fade out
+      tl.to(text, { opacity: 1, y: 0, scale: 1, duration: 1 }, i * 3)
+        .to(text, { opacity: 1, duration: 1.5 }, i * 3 + 1)
+        .to(text, { opacity: 0, y: -50, scale: 1.05, duration: 1 }, i * 3 + 2.5);
     });
 
   }, { scope: containerRef });

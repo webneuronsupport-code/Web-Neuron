@@ -1,6 +1,6 @@
 .va-ocr-minimal {
   background-color: #000;
-  height: 500vh; /* Provides plenty of scrolling space for the animation */
+  height: 600vh; /* Plenty of space for sequential non-overlapping animations */
   position: relative;
   z-index: 10;
 }
@@ -19,8 +19,8 @@
 .ocr-huge-text {
   position: absolute;
   font-family: 'Anton', 'Oswald', 'Impact', sans-serif;
-  font-size: clamp(3rem, 7vw, 7.5rem);
-  line-height: 1;
+  font-size: clamp(3.5rem, 7vw, 8rem);
+  line-height: 1.1;
   text-align: center;
   color: #fff;
   text-transform: uppercase;
@@ -28,7 +28,10 @@
   width: 90%;
   max-width: 1200px;
   letter-spacing: 0.02em;
+  opacity: 0; /* Crucial: hide by default so they don't overlap before JS runs */
+  transform: translateY(50px) scale(0.95);
   will-change: transform, opacity;
+  text-shadow: 0 10px 30px rgba(0,0,0,0.8);
 }
 
 @media (max-width: 768px) {
