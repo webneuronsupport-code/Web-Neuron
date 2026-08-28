@@ -1,6 +1,7 @@
 import React from 'react';
 import Hero from '../components/Hero';
 import Marquee from '../components/Marquee';
+import PainPoints from '../components/PainPoints';
 import Services from '../components/Services';
 import ProcessWipe from '../components/ProcessWipe';
 import Process from '../components/Process';
@@ -14,6 +15,7 @@ const Home = () => {
       <main>
         <Hero />
         <Marquee />
+        <PainPoints />
         <Services />
         <ProcessWipe />
         <Process />

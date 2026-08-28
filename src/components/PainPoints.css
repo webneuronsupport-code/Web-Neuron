@@ -1,0 +1,89 @@
+.pain-points {
+  background-color: var(--color-bg, #000);
+  color: var(--color-text, #fff);
+  padding: 8rem 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  z-index: 10;
+}
+
+.pp-container {
+  max-width: 900px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 6rem;
+}
+
+.pp-block {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.pp-heading {
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  line-height: 1.1;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  margin: 0;
+  color: #fff;
+}
+
+.pp-heading span {
+  color: var(--color-accent, #5E5CE6);
+  opacity: 0.9;
+}
+
+.pp-sub {
+  font-size: clamp(1.1rem, 2vw, 1.5rem);
+  line-height: 1.5;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.6);
+  max-width: 800px;
+  margin: 0;
+}
+
+.pp-finale {
+  margin-top: 2rem;
+  text-align: center;
+  align-items: center;
+  padding: 4rem 2rem;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 24px;
+}
+
+.pp-intro-climax {
+  font-size: clamp(1.2rem, 2vw, 1.8rem);
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: -1rem;
+}
+
+.pp-climax {
+  font-size: clamp(2.5rem, 5vw, 4.5rem);
+  line-height: 1;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  margin: 0;
+  text-transform: uppercase;
+  color: #ff3b30;
+  text-shadow: 0 0 40px rgba(255, 59, 48, 0.3);
+}
+
+@media (max-width: 768px) {
+  .pain-points {
+    padding: 6rem 1.5rem;
+  }
+  
+  .pp-container {
+    gap: 4rem;
+  }
+  
+  .pp-finale {
+    padding: 3rem 1.5rem;
+  }
+}
