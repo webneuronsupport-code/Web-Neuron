@@ -1,41 +1,160 @@
-.va-ocr-minimal {
+.va-ocr-list-section {
+  padding: 8rem 0;
   background-color: #000;
-  height: 600vh; /* Plenty of space for sequential non-overlapping animations */
+  color: #fff;
   position: relative;
   z-index: 10;
 }
 
-.va-ocr-sticky {
-  position: sticky;
-  top: 0;
-  height: 100vh;
+/* Header */
+.ocr-list-header {
+  margin-bottom: 5rem;
+  max-width: 800px;
+}
+
+.ocr-list-tag {
+  display: inline-block;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: #ff9f0a;
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+}
+
+.ocr-list-title {
+  font-size: clamp(3rem, 5vw, 4.5rem);
+  line-height: 1.1;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  margin: 0 0 1.5rem 0;
+}
+
+.ocr-list-subtitle {
+  font-size: 1.25rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.6);
+  margin: 0;
+}
+
+/* List Container */
+.ocr-list-container {
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  margin-bottom: 6rem;
+}
+
+.ocr-list-row {
   display: flex;
   align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  padding: 0 2rem;
+  padding: 4rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  transition: background 0.3s ease;
+  position: relative;
 }
 
-.ocr-huge-text {
-  position: absolute;
+.ocr-list-row:hover {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.ocr-row-num {
   font-family: 'Anton', 'Oswald', 'Impact', sans-serif;
-  font-size: clamp(3.5rem, 7vw, 8rem);
-  line-height: 1.1;
-  text-align: center;
-  color: #fff;
-  text-transform: uppercase;
-  margin: 0;
-  width: 90%;
-  max-width: 1200px;
-  letter-spacing: 0.02em;
-  opacity: 0; /* Crucial: hide by default so they don't overlap before JS runs */
-  transform: translateY(50px) scale(0.95);
-  will-change: transform, opacity;
-  text-shadow: 0 10px 30px rgba(0,0,0,0.8);
+  font-size: 2rem;
+  color: rgba(255, 255, 255, 0.3);
+  width: 100px;
+  flex-shrink: 0;
 }
 
-@media (max-width: 768px) {
-  .ocr-huge-text {
-    font-size: clamp(2.5rem, 10vw, 4rem);
+.ocr-row-title {
+  font-family: 'Anton', 'Oswald', 'Impact', sans-serif;
+  font-size: clamp(3rem, 5vw, 6rem);
+  line-height: 1;
+  letter-spacing: 0.02em;
+  color: #fff;
+  margin: 0;
+  flex: 1;
+  text-transform: uppercase;
+}
+
+.ocr-row-desc {
+  flex: 0 0 350px;
+  padding-left: 2rem;
+}
+
+.ocr-row-desc p {
+  font-size: 1.1rem;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0;
+}
+
+/* Cases of Use */
+.ocr-list-cases {
+  padding-top: 2rem;
+}
+
+.ocr-cases-heading {
+  font-size: 1rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.4);
+  letter-spacing: 0.1em;
+  margin-bottom: 3rem;
+  text-transform: uppercase;
+}
+
+.ocr-cases-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+}
+
+.ocr-case-block {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding-left: 2rem;
+  border-left: 2px solid #ff9f0a;
+}
+
+.ocr-case-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #fff;
+  margin: 0;
+}
+
+.ocr-case-desc {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.6);
+  margin: 0;
+}
+
+/* Mobile Fallback */
+@media (max-width: 1024px) {
+  .ocr-list-row {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 3rem 0;
+    gap: 1.5rem;
+  }
+  
+  .ocr-row-num {
+    width: auto;
+  }
+  
+  .ocr-row-title {
+    font-size: 3rem;
+  }
+  
+  .ocr-row-desc {
+    flex: auto;
+    padding-left: 0;
+  }
+  
+  .ocr-cases-grid {
+    grid-template-columns: 1fr;
+    gap: 3rem;
   }
 }
