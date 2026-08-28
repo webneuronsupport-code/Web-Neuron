@@ -1,67 +1,102 @@
 import React, { useRef } from 'react';
 import { gsap, useGSAP } from '../lib/gsap';
+import { FaRegClock, FaRegComments, FaRegCalendarTimes, FaExclamationTriangle } from 'react-icons/fa';
 import './PainPoints.css';
 
 const PainPoints = () => {
   const sectionRef = useRef(null);
+  const trackRef = useRef(null);
 
   useGSAP(() => {
-    const bubbles = gsap.utils.toArray('.pp-chat-message');
+    // Calculate how far the track needs to move
+    const trackWidth = trackRef.current.scrollWidth;
+    const viewportWidth = window.innerWidth;
     
-    bubbles.forEach((bubble, i) => {
-      gsap.from(bubble, {
+    // We only want to scroll horizontally if the track is wider than the container
+    // On mobile, we might just stack them, but let's assume we do horizontal scroll on desktop
+    let mm = gsap.matchMedia();
+
+    mm.add("(min-width: 1024px)", () => {
+      gsap.to(trackRef.current, {
+        x: () => -(trackRef.current.scrollWidth - trackRef.current.parentElement.clientWidth),
+        ease: "none",
         scrollTrigger: {
-          trigger: bubble,
-          start: 'top 85%',
-          toggleActions: 'play none none reverse',
-        },
-        x: bubble.classList.contains('pp-chat-left') ? -50 : 50,
-        opacity: 0,
-        duration: 1,
-        ease: 'power3.out'
+          trigger: sectionRef.current,
+          start: "top 15%",
+          end: () => `+=${trackRef.current.scrollWidth}`,
+          pin: true,
+          scrub: 1,
+          invalidateOnRefresh: true
+        }
       });
     });
 
-    gsap.from('.pp-climax', {
-      scrollTrigger: {
-        trigger: '.pp-climax',
-        start: 'top 80%',
-        toggleActions: 'play none none reverse',
-      },
-      scale: 0.95,
-      opacity: 0,
-      color: '#ff3b30',
-      duration: 1.2,
-      ease: 'power4.out',
-      delay: 0.2
-    });
   }, { scope: sectionRef });
 
   return (
-    <section className="pain-points" ref={sectionRef}>
-      <div className="pp-container">
+    <section className="pain-points-section" ref={sectionRef}>
+      <div className="pp-layout">
         
-        <div className="pp-chat-container">
-          <div className="pp-chat-message pp-chat-left">
-            <h2 className="pp-chat-title">¿Tu personal aún responde a los clientes de forma manual?</h2>
-            <p className="pp-chat-desc">
-              ¿Sabes cuánto tiempo valioso pierde tu equipo por atender chats de clientes uno por uno?
-            </p>
-          </div>
-
-          <div className="pp-chat-message pp-chat-right">
-            <h2 className="pp-chat-title">¿Sabes la cantidad de clientes que se pierden por no responder a tiempo?</h2>
-            <p className="pp-chat-desc">
-              ¿Qué pasa si un cliente pregunta por algún producto o quiere agendar una reunión cuando tu equipo ya salió de su turno laboral?
-            </p>
-          </div>
+        <div className="pp-left">
+          <h2 className="pp-main-title">El Problema</h2>
+          <p className="pp-main-desc">
+            Los desafíos de la atención manual tradicional.
+          </p>
         </div>
 
-        <div className="pp-finale">
-          <p className="pp-intro-climax">Yo te diré qué pasa...</p>
-          <h2 className="pp-climax">
-            SE VAN CON LA COMPETENCIA
-          </h2>
+        <div className="pp-right">
+          <div className="pp-track" ref={trackRef}>
+            
+            {/* Card 1 */}
+            <div className="pp-card">
+              <span className="pp-card-num">01.</span>
+              <h3 className="pp-card-title">ATENCIÓN MANUAL</h3>
+              <p className="pp-card-desc">
+                ¿Tu personal aún responde a los clientes de forma manual? Tu equipo pierde un tiempo valioso atendiendo chats uno por uno.
+              </p>
+              <div className="pp-card-icon">
+                <FaRegComments />
+              </div>
+            </div>
+
+            {/* Card 2 */}
+            <div className="pp-card">
+              <span className="pp-card-num">02.</span>
+              <h3 className="pp-card-title">HORARIOS LIMITADOS</h3>
+              <p className="pp-card-desc">
+                ¿Sabes la cantidad de clientes que se pierden por no responder a tiempo o fuera de horario?
+              </p>
+              <div className="pp-card-icon">
+                <FaRegClock />
+              </div>
+            </div>
+
+            {/* Card 3 */}
+            <div className="pp-card">
+              <span className="pp-card-num">03.</span>
+              <h3 className="pp-card-title">OPORTUNIDADES PERDIDAS</h3>
+              <p className="pp-card-desc">
+                ¿Qué pasa si un cliente quiere agendar una reunión o comprar cuando tu equipo ya salió de su turno laboral?
+              </p>
+              <div className="pp-card-icon">
+                <FaRegCalendarTimes />
+              </div>
+            </div>
+
+            {/* Card 4 - The Climax */}
+            <div className="pp-card pp-card-alert">
+              <span className="pp-card-num">04.</span>
+              <h3 className="pp-card-title">LA CONSECUENCIA</h3>
+              <p className="pp-card-desc pp-climax-text">
+                Yo te diré qué pasa...<br/>
+                <strong>SE VAN CON LA COMPETENCIA</strong>
+              </p>
+              <div className="pp-card-icon">
+                <FaExclamationTriangle />
+              </div>
+            </div>
+
+          </div>
         </div>
 
       </div>
