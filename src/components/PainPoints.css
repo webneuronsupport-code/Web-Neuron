@@ -14,40 +14,81 @@
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 6rem;
+  gap: 4rem;
 }
 
-.pp-block {
+.pp-chat-container {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 2rem;
+  width: 100%;
 }
 
-.pp-heading {
-  font-size: clamp(2rem, 4vw, 3.5rem);
-  line-height: 1.1;
+.pp-chat-message {
+  max-width: 85%;
+  padding: 2rem;
+  border-radius: 24px;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.pp-chat-message::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  width: 30px;
+  height: 30px;
+}
+
+.pp-chat-left {
+  align-self: flex-start;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom-left-radius: 4px;
+}
+
+.pp-chat-left::after {
+  left: -15px;
+  border-bottom-right-radius: 15px;
+  box-shadow: 15px 0 0 0 rgba(255, 255, 255, 0.05);
+}
+
+.pp-chat-right {
+  align-self: flex-end;
+  background: rgba(94, 92, 230, 0.15); /* Accent color #5E5CE6 with opacity */
+  border: 1px solid rgba(94, 92, 230, 0.3);
+  border-bottom-right-radius: 4px;
+}
+
+.pp-chat-right::after {
+  right: -15px;
+  border-bottom-left-radius: 15px;
+  box-shadow: -15px 0 0 0 rgba(94, 92, 230, 0.15);
+}
+
+.pp-chat-title {
+  font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+  line-height: 1.3;
   font-weight: 600;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.01em;
   margin: 0;
   color: #fff;
 }
 
-.pp-heading span {
-  color: var(--color-accent, #5E5CE6);
-  opacity: 0.9;
-}
-
-.pp-sub {
-  font-size: clamp(1.1rem, 2vw, 1.5rem);
-  line-height: 1.5;
+.pp-chat-desc {
+  font-size: clamp(1rem, 1.5vw, 1.1rem);
+  line-height: 1.6;
   font-weight: 400;
-  color: rgba(255, 255, 255, 0.6);
-  max-width: 800px;
+  color: rgba(255, 255, 255, 0.7);
   margin: 0;
 }
 
 .pp-finale {
-  margin-top: 2rem;
+  margin-top: 3rem;
   text-align: center;
   align-items: center;
   padding: 4rem 2rem;
@@ -79,10 +120,11 @@
     padding: 6rem 1.5rem;
   }
   
-  .pp-container {
-    gap: 4rem;
+  .pp-chat-message {
+    max-width: 95%;
+    padding: 1.5rem;
   }
-  
+
   .pp-finale {
     padding: 3rem 1.5rem;
   }

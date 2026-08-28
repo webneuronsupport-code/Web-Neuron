@@ -6,16 +6,16 @@ const PainPoints = () => {
   const sectionRef = useRef(null);
 
   useGSAP(() => {
-    const lines = gsap.utils.toArray('.pp-line');
+    const bubbles = gsap.utils.toArray('.pp-chat-message');
     
-    lines.forEach((line) => {
-      gsap.from(line, {
+    bubbles.forEach((bubble, i) => {
+      gsap.from(bubble, {
         scrollTrigger: {
-          trigger: line,
+          trigger: bubble,
           start: 'top 85%',
           toggleActions: 'play none none reverse',
         },
-        y: 40,
+        x: bubble.classList.contains('pp-chat-left') ? -50 : 50,
         opacity: 0,
         duration: 1,
         ease: 'power3.out'
@@ -41,26 +41,24 @@ const PainPoints = () => {
     <section className="pain-points" ref={sectionRef}>
       <div className="pp-container">
         
-        <div className="pp-block">
-          <h2 className="pp-line pp-heading">
-            ¿Tu personal aún responde a los clientes que llegan a tu negocio de forma <span>manual</span>?
-          </h2>
-          <p className="pp-line pp-sub">
-            ¿Sabes cuánto tiempo valioso pierde tu equipo por atender chats de clientes uno por uno?
-          </p>
+        <div className="pp-chat-container">
+          <div className="pp-chat-message pp-chat-left">
+            <h2 className="pp-chat-title">¿Tu personal aún responde a los clientes de forma manual?</h2>
+            <p className="pp-chat-desc">
+              ¿Sabes cuánto tiempo valioso pierde tu equipo por atender chats de clientes uno por uno?
+            </p>
+          </div>
+
+          <div className="pp-chat-message pp-chat-right">
+            <h2 className="pp-chat-title">¿Sabes la cantidad de clientes que se pierden por no responder a tiempo?</h2>
+            <p className="pp-chat-desc">
+              ¿Qué pasa si un cliente pregunta por algún producto o quiere agendar una reunión cuando tu equipo ya salió de su turno laboral?
+            </p>
+          </div>
         </div>
 
-        <div className="pp-block">
-          <h2 className="pp-line pp-heading">
-            ¿Sabes la cantidad de clientes que se pierden por no responder a <span>tiempo</span> o fuera de <span>horario</span>?
-          </h2>
-          <p className="pp-line pp-sub">
-            ¿Qué pasa si un cliente pregunta por algún producto o quiere agendar una reunión contigo cuando tu equipo ya salió de su turno laboral?
-          </p>
-        </div>
-
-        <div className="pp-block pp-finale">
-          <p className="pp-line pp-intro-climax">Yo te diré qué pasa...</p>
+        <div className="pp-finale">
+          <p className="pp-intro-climax">Yo te diré qué pasa...</p>
           <h2 className="pp-climax">
             SE VAN CON LA COMPETENCIA
           </h2>
