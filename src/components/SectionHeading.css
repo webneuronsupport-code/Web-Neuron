@@ -37,3 +37,6 @@
     padding-bottom: 0.4rem;
   }
 }
+  
+.sh--huge .sh-title { font-size: clamp(3rem, 7vw, 6rem); max-width: 20ch; line-height: 0.95; letter-spacing: -0.03em; margin: 0 auto; }  
+.sh--huge .sh-lede { max-width: 50ch; margin: 0 auto; font-size: 1.25rem; opacity: 0.8; } 

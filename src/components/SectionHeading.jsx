@@ -7,7 +7,7 @@ import './SectionHeading.css';
  *
  * Se repite en cada bloque, así que la animación vive aquí una sola vez.
  */
-const SectionHeading = ({ label, title, lede, align = 'left' }) => {
+const SectionHeading = ({ label, title, lede, align = 'left', size = 'normal' }) => {
   const root = useRef(null);
 
   useGSAP(
@@ -54,7 +54,7 @@ const SectionHeading = ({ label, title, lede, align = 'left' }) => {
   );
 
   return (
-    <header className={`sh sh--${align}`} ref={root}>
+    <header className={`sh sh--${align} sh--${size}`} ref={root}>
       {label && <span className="label sh-label">{label}</span>}
       {/* El titular no lleva degradado: SplitText mueve el texto a divs por
           línea, y esos heredarían el text-fill transparente del padre. */}

@@ -191,7 +191,8 @@ const Services = () => {
     <section className={`svc${reduced ? ' is-static' : ''}`} id="servicios" ref={root}>
       <div className="shell">
         <SectionHeading
-          align="split"
+          align="center"
+          size="huge"
           label="Servicios"
           title="Cuatro piezas que trabajan como una sola"
           lede="Cada servicio funciona por separado, pero juntos comparten datos y contexto. Ahí está la diferencia."
