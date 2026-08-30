@@ -44,7 +44,7 @@ const VAOcrFeature = () => {
           {/* Card 3 */}
           <div className="ocr-vis-card">
             <div className="ocr-vis-image-container">
-              <img src={ocrExcelScan} alt="Análisis de Excel" className="ocr-vis-img" />
+              <img src={ocrExcelScan} alt="Análisis de Excel" className="ocr-vis-img ocr-vis-img-zoom" />
             </div>
             <div className="ocr-vis-content">
               <h3>Excels y PDFs</h3>

@@ -74,6 +74,11 @@
   object-fit: cover;
 }
 
+.ocr-vis-img-zoom {
+  transform: scale(1.15);
+  transform-origin: center;
+}
+
 .ocr-vis-content {
   padding: 2rem;
 }
