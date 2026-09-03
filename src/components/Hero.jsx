@@ -135,7 +135,7 @@ const Hero = () => {
         
         // --- Custom animations for the final pip-content UI ---
         // Animate the text and UI elements once the final frame arrives
-        tl.from('.pip-main-title span', {
+        tl.from('.white-ending-title span', {
           y: 50,
           opacity: 0,
           duration: STEP * 0.8,
@@ -143,11 +143,11 @@ const Hero = () => {
           ease: 'power3.out'
         }, tEnd - STEP);
         
-        tl.from('.glass-stat-card', {
+        tl.from('.white-ending-desc, .white-ending-logo', {
           opacity: 0,
-          y: 30,
+          y: 20,
           duration: STEP,
-          stagger: STEP * 0.15,
+          stagger: STEP * 0.2,
           ease: 'power3.out'
         }, tEnd - (STEP * 0.5));
 
@@ -190,33 +190,20 @@ const Hero = () => {
           </div>
 
           {/* Nueva Escena PIP Inception (Solo Texto) */}
-          {/* Nueva Escena PIP Inception (Solo Texto) */}
+          {/* Nueva Escena PIP Inception (Blanco Minimalista) */}
           <div className="pip-scene" aria-hidden="true">
             <div className="pip-frame pip-level-4">
-              <div className="pip-content glass-ending">
-                <div className="glass-ambient-glow"></div>
-                <div className="cinematic-content">
-                  <h2 className="pip-main-title">
-                    <div className="overflow-hidden"><span>Creamos</span></div>
-                    <div className="overflow-hidden"><span>Sistemas de IA</span></div>
-                    <div className="overflow-hidden"><span>Que Transforman</span></div>
-                    <div className="overflow-hidden"><span>Tu Negocio.</span></div>
+              <div className="pip-content white-ending">
+                <div className="white-ending-content">
+                  <div className="white-ending-logo">WEB NEURON</div>
+                  <h2 className="white-ending-title">
+                    <div className="overflow-hidden"><span>Inteligencia Artificial</span></div>
+                    <div className="overflow-hidden"><span>que transforma</span></div>
+                    <div className="overflow-hidden"><span>tu empresa.</span></div>
                   </h2>
-                  
-                  <div className="cinematic-stats" style={{ marginTop: '3rem' }}>
-                    <div className="glass-stat-card">
-                       <span className="c-stat-v">99%</span>
-                       <span className="c-stat-k">Precisión</span>
-                    </div>
-                    <div className="glass-stat-card">
-                       <span className="c-stat-v">24/7</span>
-                       <span className="c-stat-k">Operación</span>
-                    </div>
-                    <div className="glass-stat-card">
-                       <span className="c-stat-v">10x</span>
-                       <span className="c-stat-k">ROI</span>
-                    </div>
-                  </div>
+                  <p className="white-ending-desc">
+                    Sistemas autónomos diseñados con precisión para maximizar tu productividad.
+                  </p>
                 </div>
               </div>
             </div>
