@@ -190,11 +190,17 @@ const Hero = () => {
           </div>
 
           {/* Nueva Escena PIP Inception (Solo Texto) */}
-          {/* Nueva Escena PIP Inception (Orbe de Inteligencia Artificial) */}
+          {/* Nueva Escena PIP Inception (Video Premium Glassmorphism) */}
           <div className="pip-scene" aria-hidden="true">
             <div className="pip-frame pip-level-4">
-              <div className="pip-content orb-ending">
-                <div className="ai-orb-container"></div>
+              <div className="pip-content video-ending">
+                <video 
+                  className="video-ending-bg"
+                  autoPlay loop muted playsInline
+                  src={`${import.meta.env.BASE_URL}Quiero_crear_un_video_en_donde.mp4`}
+                ></video>
+                <div className="video-ending-overlay"></div>
+                
                 <div className="orb-ending-content">
                   <div className="orb-ending-logo">WEB NEURON</div>
                   <h2 className="orb-ending-title">
