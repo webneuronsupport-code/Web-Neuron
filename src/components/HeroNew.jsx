@@ -120,7 +120,7 @@ const HeroNew = () => {
         </div>
       </div>
 
-    </section>
+      </div>
     </section>
   );
 };
