@@ -143,12 +143,12 @@ const Hero = () => {
           ease: 'power3.out'
         }, tEnd - STEP);
         
-        tl.from('.pip-small-text, .pip-badge, .scroll-indicator, .pip-decorative-lines', {
+        tl.from('.glass-stat-card', {
           opacity: 0,
-          y: 20,
+          y: 30,
           duration: STEP,
-          stagger: STEP * 0.1,
-          ease: 'power2.out'
+          stagger: STEP * 0.15,
+          ease: 'power3.out'
         }, tEnd - (STEP * 0.5));
 
         // Se agrega un hold falso para que el texto se quede quieto un rato
@@ -190,46 +190,34 @@ const Hero = () => {
           </div>
 
           {/* Nueva Escena PIP Inception (Solo Texto) */}
+          {/* Nueva Escena PIP Inception (Solo Texto) */}
           <div className="pip-scene" aria-hidden="true">
-            {/* Nivel 4: El bloque sólido rojo */}
             <div className="pip-frame pip-level-4">
-              <div className="pip-content">
-                {/* Decorative Tech UI Elements */}
-                <div className="pip-tech-grid"></div>
-                
-                <div className="pip-top-bar">
-                  <div className="pip-badge">[ SYS_CORE : ONLINE ]</div>
-                  <div className="pip-badge text-right">DEPLOYMENT // V2.0</div>
-                </div>
-
-                <div className="pip-content-layout">
-                  <div className="pip-title-col">
-                    <h2 className="pip-main-title">
-                      <div className="overflow-hidden"><span>CREAMOS</span></div>
-                      <div className="overflow-hidden"><span>SISTEMAS DE IA</span></div>
-                      <div className="overflow-hidden"><span>QUE TRANSFORMAN</span></div>
-                      <div className="overflow-hidden"><span>TU NEGOCIO.</span></div>
-                    </h2>
-                  </div>
+              <div className="pip-content glass-ending">
+                <div className="glass-ambient-glow"></div>
+                <div className="cinematic-content">
+                  <h2 className="pip-main-title">
+                    <div className="overflow-hidden"><span>Creamos</span></div>
+                    <div className="overflow-hidden"><span>Sistemas de IA</span></div>
+                    <div className="overflow-hidden"><span>Que Transforman</span></div>
+                    <div className="overflow-hidden"><span>Tu Negocio.</span></div>
+                  </h2>
                   
-                  <div className="pip-desc-col">
-                    <p className="pip-small-text">
-                      EXCLUSIVAS SOLUCIONES CON UN DISEÑO QUE CONECTA CON TUS OBJETIVOS, DÁNDOTE UN NUEVO SENTIDO DEL ÉXITO Y LA PRODUCTIVIDAD. RENDIMIENTO ABSOLUTO.
-                    </p>
-                    
-                    <div className="pip-decorative-lines">
-                       <div className="line line-1"></div>
-                       <div className="line line-2"></div>
-                       <div className="line line-3"></div>
+                  <div className="cinematic-stats" style={{ marginTop: '3rem' }}>
+                    <div className="glass-stat-card">
+                       <span className="c-stat-v">99%</span>
+                       <span className="c-stat-k">Precisión</span>
+                    </div>
+                    <div className="glass-stat-card">
+                       <span className="c-stat-v">24/7</span>
+                       <span className="c-stat-k">Operación</span>
+                    </div>
+                    <div className="glass-stat-card">
+                       <span className="c-stat-v">10x</span>
+                       <span className="c-stat-k">ROI</span>
                     </div>
                   </div>
                 </div>
-
-                <div className="scroll-indicator">
-                   <span className="scroll-text">END OF TUNNEL</span>
-                </div>
-
-                <div className="pip-glow"></div>
               </div>
             </div>
           </div>

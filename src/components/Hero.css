@@ -313,170 +313,55 @@
   will-change: transform;
 }
 
-/* El bloque rojo sólido con el contenido. */
+/* Final Scene Container */
 .pip-content {
   z-index: 3;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  padding: 8vw 10vw;
-  background-color: #7b110f;
+  justify-content: center;
+  align-items: center;
+  background-color: #050505;
   color: #fff;
   overflow: hidden;
+  position: relative;
+  width: 100%;
+  height: 100%;
 }
 
-/* Tech Grid Background Overlay */
-.pip-tech-grid {
-  position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background-size: 50px 50px;
-  background-image: 
-    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-  z-index: -1;
-  pointer-events: none;
-}
-
-/* Top Bar / Badges */
-.pip-top-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-  padding-bottom: 1.5rem;
-  text-transform: uppercase;
-}
-
-.pip-badge {
-  font-size: 0.75rem;
-  font-family: monospace;
-  letter-spacing: 0.1em;
-  opacity: 0.8;
-}
-
-.text-right {
-  text-align: right;
-}
-
-/* Main Layout Grid */
-.pip-content-layout {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 4rem;
-  align-items: center;
-  margin: auto 0;
-}
-
-.pip-title-col {
-  display: flex;
-  flex-direction: column;
-}
-
-.overflow-hidden {
-  overflow: hidden;
-}
-
-.pip-main-title {
-  font-size: clamp(2rem, 5vw, 4.5rem);
-  font-weight: 800;
-  line-height: 0.9;
-  letter-spacing: -0.04em;
-  margin: 0;
-  text-transform: uppercase;
-}
-
-.pip-main-title span {
-  display: block; /* needed for gsap y translation from overflow-hidden wrapper */
-}
-
-/* Right Column */
-.pip-desc-col {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-  border-left: 1px solid rgba(255, 255, 255, 0.2);
-  padding-left: 2rem;
-}
-
-.pip-small-text {
-  font-family: var(--font-secondary);
-  font-size: clamp(0.7rem, 1vw, 0.9rem);
-  line-height: 1.6;
-  font-weight: 500;
-  letter-spacing: 0.05em;
-  opacity: 0.9;
-}
-
-/* Decorative Lines */
-.pip-decorative-lines {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-.pip-decorative-lines .line {
-  height: 2px;
-  background: rgba(255, 255, 255, 0.3);
-}
-.line-1 { width: 100%; }
-.line-2 { width: 70%; }
-.line-3 { width: 40%; }
-
-/* Scroll Indicator */
-.scroll-indicator {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  border-top: 1px solid rgba(255, 255, 255, 0.2);
-  padding-top: 1.5rem;
-  width: max-content;
-}
-
-.scroll-text {
-  font-size: 0.8rem;
-  font-family: monospace;
-  letter-spacing: 0.1em;
-}
-
-.scroll-arrow {
-  animation: bounceDown 2s infinite ease-in-out;
-}
-
-@keyframes bounceDown {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(5px); }
-}
-
-/* Subtle Dynamic Glow */
-.pip-glow {
+.glass-ambient-glow {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 60vw;
-  height: 60vw;
-  background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 60%);
-  filter: blur(60px);
-  z-index: -1;
+  width: 70vw;
+  height: 70vh;
+  background: radial-gradient(circle, rgba(255,255,255,0.06) 0%, transparent 60%);
+  filter: blur(80px);
+  z-index: 0;
   pointer-events: none;
-  animation: pulseGlow 8s infinite alternate ease-in-out;
 }
 
-@keyframes pulseGlow {
-  0% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
-  100% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
+.pip-main-title {
+  font-size: clamp(2.5rem, 6vw, 5rem);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.04em;
+  margin: 0;
+  text-align: center;
+  
+  /* Gradiente metálico */
+  background: linear-gradient(180deg, #ffffff 0%, #a1a1a6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
-@media (max-width: 900px) {
-  .pip-content-layout {
-    grid-template-columns: 1fr;
-    gap: 2rem;
-  }
-  .pip-desc-col {
-    border-left: none;
-    border-top: 1px solid rgba(255, 255, 255, 0.2);
-    padding-left: 0;
-    padding-top: 2rem;
-  }
+.pip-main-title span {
+  display: block;
+}
+
+.overflow-hidden {
+  overflow: hidden;
 }
 
 @media (max-width: 600px) {
