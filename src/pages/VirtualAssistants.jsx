@@ -427,7 +427,7 @@ const VAContext = () => {
             loop
             muted
             playsInline
-            style={{ width: '100%', maxWidth: '900px', borderRadius: '16px', border: '1px solid rgba(255, 255, 255, 0.1)', boxShadow: '0 20px 40px rgba(0,0,0,0.5)' }}
+            style={{ width: '100%', maxWidth: '700px', borderRadius: '16px', border: '1px solid rgba(255, 255, 255, 0.1)', boxShadow: '0 20px 40px rgba(0,0,0,0.5)' }}
           />
         </div>
       </div>
