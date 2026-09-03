@@ -1,13 +1,17 @@
 import React, { useEffect, useRef } from 'react';
 import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import './HeroNew.css';
 
+gsap.registerPlugin(ScrollTrigger);
+
 const HeroNew = () => {
+  const sectionRef = useRef(null);
   const containerRef = useRef(null);
 
   useEffect(() => {
     let ctx = gsap.context(() => {
-      // Small intro animation for the elements coming into view
+      // Intro animations
       gsap.from('.hero-h-category, .hero-h-title, .hero-h-desc', {
         y: 30,
         opacity: 0,
@@ -16,12 +20,28 @@ const HeroNew = () => {
         ease: 'power3.out',
         delay: 0.2
       });
-    }, containerRef);
+
+      // Horizontal Scroll animation (Pin and slide)
+      const wrapper = containerRef.current;
+      
+      gsap.to(wrapper, {
+        x: () => -(wrapper.scrollWidth - window.innerWidth),
+        ease: "none",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          pin: true,
+          scrub: 1,
+          end: () => "+=" + (wrapper.scrollWidth - window.innerWidth)
+        }
+      });
+
+    }, sectionRef);
     return () => ctx.revert();
   }, []);
 
   return (
-    <section className="hero-horizontal-wrapper" ref={containerRef}>
+    <section className="hero-h-pin-section" ref={sectionRef}>
+      <div className="hero-horizontal-wrapper" ref={containerRef}>
       
       {/* Decorative squiggle */}
       <svg className="hero-squiggle" viewBox="0 0 200 40" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -100,6 +120,7 @@ const HeroNew = () => {
         </div>
       </div>
 
+    </section>
     </section>
   );
 };

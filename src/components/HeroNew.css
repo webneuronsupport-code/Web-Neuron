@@ -1,20 +1,18 @@
-.hero-horizontal-wrapper {
+.hero-h-pin-section {
   position: relative;
   width: 100%;
   height: 100vh;
   min-height: 600px;
+  overflow: hidden;
   background-color: #1a1b1e;
-  display: flex;
-  overflow-x: auto;
-  overflow-y: hidden;
-  scroll-snap-type: x mandatory;
-  -webkit-overflow-scrolling: touch;
-  /* Hide scrollbar */
-  scrollbar-width: none; 
 }
 
-.hero-horizontal-wrapper::-webkit-scrollbar {
-  display: none;
+.hero-horizontal-wrapper {
+  position: relative;
+  height: 100%;
+  display: flex;
+  width: max-content;
+  will-change: transform;
 }
 
 /* Green squiggly line */
@@ -34,7 +32,6 @@
   height: 100%;
   display: flex;
   flex-direction: column;
-  scroll-snap-align: start;
   border-right: 1px solid rgba(255, 255, 255, 0.05);
 }
 
