@@ -310,6 +310,9 @@
   height: 100%;
   object-fit: cover;
   transform: scale(var(--pip-birth));
+  will-change: transform;
+}
+
 /* Final Scene Container - AI Orb */
 .orb-ending {
   z-index: 3;
