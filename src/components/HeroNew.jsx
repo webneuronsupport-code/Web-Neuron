@@ -51,9 +51,9 @@ const HeroNew = () => {
       {/* Intro Column */}
       <div className="hero-h-col col-intro">
         <div className="hero-h-top">
-          <h1 className="hero-h-title">
-            WEB<br/>NEURON
-          </h1>
+          <div style={{ marginBottom: '1.5rem' }}>
+            <img src={`${import.meta.env.BASE_URL}2_clean2.png`} alt="Web Neuron Logo" style={{ maxWidth: '300px', height: 'auto' }} />
+          </div>
           <p className="hero-h-desc" style={{marginTop: '1rem'}}>
             Sistemas Autónomos &<br/>Crecimiento Exponencial.
           </p>
