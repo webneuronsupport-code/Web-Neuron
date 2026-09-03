@@ -135,7 +135,7 @@ const Hero = () => {
         
         // --- Custom animations for the final pip-content UI ---
         // Animate the text and UI elements once the final frame arrives
-        tl.from('.white-ending-title span', {
+        tl.from('.orb-ending-title span', {
           y: 50,
           opacity: 0,
           duration: STEP * 0.8,
@@ -143,7 +143,7 @@ const Hero = () => {
           ease: 'power3.out'
         }, tEnd - STEP);
         
-        tl.from('.white-ending-desc, .white-ending-logo', {
+        tl.from('.orb-ending-desc, .orb-ending-logo', {
           opacity: 0,
           y: 20,
           duration: STEP,
@@ -190,18 +190,19 @@ const Hero = () => {
           </div>
 
           {/* Nueva Escena PIP Inception (Solo Texto) */}
-          {/* Nueva Escena PIP Inception (Blanco Minimalista) */}
+          {/* Nueva Escena PIP Inception (Orbe de Inteligencia Artificial) */}
           <div className="pip-scene" aria-hidden="true">
             <div className="pip-frame pip-level-4">
-              <div className="pip-content white-ending">
-                <div className="white-ending-content">
-                  <div className="white-ending-logo">WEB NEURON</div>
-                  <h2 className="white-ending-title">
+              <div className="pip-content orb-ending">
+                <div className="ai-orb-container"></div>
+                <div className="orb-ending-content">
+                  <div className="orb-ending-logo">WEB NEURON</div>
+                  <h2 className="orb-ending-title">
                     <div className="overflow-hidden"><span>Inteligencia Artificial</span></div>
                     <div className="overflow-hidden"><span>que transforma</span></div>
                     <div className="overflow-hidden"><span>tu empresa.</span></div>
                   </h2>
-                  <p className="white-ending-desc">
+                  <p className="orb-ending-desc">
                     Sistemas autónomos diseñados con precisión para maximizar tu productividad.
                   </p>
                 </div>
