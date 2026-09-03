@@ -5,7 +5,6 @@ import ContactForm from '../components/ContactForm';
 import Contact from '../components/Contact';
 import SectionHeading from '../components/SectionHeading';
 import ParticleWave from '../components/ParticleWave';
-import MagicTransform from '../components/MagicTransform';
 import VAPowerFeatures from '../components/VAPowerFeatures';
 import VAAudioFeature from '../components/VAAudioFeature';
 import VAOcrFeature from '../components/VAOcrFeature';
@@ -421,7 +420,16 @@ const VAContext = () => {
             Nuestros asistentes utilizan Inteligencia Artificial Generativa para entender el contexto, el sarcasmo, las dudas complejas y el historial completo del usuario antes de emitir una respuesta ultra-personalizada en milisegundos.
           </p>
         </div>
-        <MagicTransform />
+        <div className="va-video-container" style={{ marginTop: '4rem', display: 'flex', justifyContent: 'center' }}>
+          <video 
+            src={`${import.meta.env.BASE_URL}Quiero_crear_un_video_en_donde.mp4`}
+            autoPlay
+            loop
+            muted
+            playsInline
+            style={{ width: '100%', maxWidth: '900px', borderRadius: '16px', border: '1px solid rgba(255, 255, 255, 0.1)', boxShadow: '0 20px 40px rgba(0,0,0,0.5)' }}
+          />
+        </div>
       </div>
     </section>
   );
