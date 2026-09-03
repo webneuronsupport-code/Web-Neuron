@@ -1,128 +1,170 @@
 .va-pf-section {
   position: relative;
-  padding: 80px 0 0 0;
+  padding: 80px 0 160px;
   background-color: var(--bg);
   z-index: 5;
 }
 
-.va-pf-layout {
+.va-accordion-container {
   display: flex;
-  gap: 60px;
+  gap: 16px;
+  height: 600px;
   margin-top: 64px;
 }
 
-/* ==========================================================================
-   Left Column: Scrollable Text Blocks
-   ========================================================================== */
-.va-pf-text-column {
-  width: 50%;
-  padding-bottom: 50vh; /* Extra space at the bottom to scroll past the last item */
-}
-
-.va-pf-text-item {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  opacity: 0.3;
-  transition: opacity 0.5s ease, transform 0.5s ease;
-  transform: translateX(-20px);
-}
-
-.va-pf-text-item.active {
-  opacity: 1;
-  transform: translateX(0);
-}
-
-.va-pf-icon-wrap {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 64px;
-  height: 64px;
-  border-radius: var(--r-md);
-  background: rgba(94, 92, 230, 0.15);
-  color: var(--accent-light);
-  border: 1px solid rgba(94, 92, 230, 0.3);
-  margin-bottom: 32px;
-}
-
-.va-pf-item-title {
-  font-size: clamp(2rem, 4vw, 3rem);
-  font-weight: 700;
-  color: var(--text);
-  margin: 0 0 24px 0;
-  line-height: 1.1;
-  letter-spacing: -0.02em;
-}
-
-.va-pf-item-desc {
-  font-size: 1.25rem;
-  line-height: 1.6;
-  color: var(--text-muted);
-  max-width: 480px;
-}
-
-/* ==========================================================================
-   Right Column: Sticky Pinned Image
-   ========================================================================== */
-.va-pf-image-column {
-  width: 50%;
-  height: 100vh; /* Take full viewport height for pinning */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.va-pf-image-wrapper {
+.va-accordion-panel {
   position: relative;
-  width: 100%;
-  aspect-ratio: 4 / 5;
-  max-height: 80vh;
+  flex: 1;
   border-radius: var(--r-lg);
   overflow: hidden;
-  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5), 0 0 40px rgba(94, 92, 230, 0.15);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+  transition: flex 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
 }
 
-.va-tilt-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  will-change: transform;
+/* When active, it takes up much more space */
+.va-accordion-panel.active {
+  flex: 5;
+  box-shadow: 0 20px 50px rgba(94, 92, 230, 0.2);
 }
 
-.va-pf-image-overlay {
+.va-accordion-bg {
   position: absolute;
   top: 0; left: 0; right: 0; bottom: 0;
-  background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 40%);
-  pointer-events: none;
+  background-size: cover;
+  background-position: center;
+  transition: transform 10s ease;
+}
+
+.va-accordion-panel.active .va-accordion-bg {
+  transform: scale(1.05); /* Slow zoom effect on hover */
+}
+
+.va-accordion-overlay {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.3) 100%);
+  transition: background 0.6s ease;
+}
+
+.va-accordion-panel:not(.active) .va-accordion-overlay {
+  background: rgba(0, 0, 0, 0.7); /* Darker when inactive */
+}
+
+.va-accordion-content {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: flex-end;
+}
+
+.va-accordion-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  /* To make the title vertical when inactive, we use absolute positioning */
+  position: relative;
+}
+
+.va-accordion-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: var(--r-sm);
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(5px);
+  color: #fff;
+  flex-shrink: 0;
+  transition: all 0.4s ease;
+  z-index: 2;
+}
+
+.va-accordion-panel.active .va-accordion-icon {
+  background: rgba(94, 92, 230, 0.8);
+}
+
+.va-accordion-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 0;
+  white-space: nowrap;
+  transition: all 0.4s ease;
+}
+
+/* For inactive panels, rotate the title and position it nicely */
+.va-accordion-panel:not(.active) .va-accordion-title {
+  transform: rotate(-90deg) translateX(100px);
+  transform-origin: left bottom;
+  position: absolute;
+  left: 14px;
+  bottom: 80px;
+  opacity: 0.6;
+  font-size: 1.25rem;
+}
+
+.va-accordion-body {
+  margin-top: 16px;
+  height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+  transform: translateY(20px);
+}
+
+.va-accordion-panel.active .va-accordion-body {
+  height: 80px; /* Adjust based on content */
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 0.2s; /* Wait for flex to expand */
+}
+
+.va-accordion-desc {
+  font-size: 1.125rem;
+  line-height: 1.5;
+  color: rgba(255,255,255,0.9);
+  margin: 0;
+  max-width: 500px;
 }
 
 
-/* Responsive */
+/* Responsive Fallback for Mobile (Vertical Accordion) */
 @media (max-width: 900px) {
-  .va-pf-layout {
+  .va-accordion-container {
     flex-direction: column;
-    margin-top: 32px;
+    height: 800px; /* Fixed total height for vertical stack */
   }
-  .va-pf-text-column {
-    width: 100%;
-    padding-bottom: 0;
+  
+  .va-accordion-panel {
+    flex: 1;
   }
-  .va-pf-text-item {
-    min-height: auto;
-    padding: 60px 0;
-    opacity: 1; /* Keep them all visible on mobile */
-    transform: translateX(0);
+  
+  .va-accordion-panel.active {
+    flex: 4;
   }
-  .va-pf-image-column {
-    width: 100%;
-    height: auto;
-    position: relative !important; /* Override pinning */
-    margin-top: 40px;
+  
+  .va-accordion-panel:not(.active) .va-accordion-title {
+    transform: none; /* No rotation on mobile */
+    position: static;
+    opacity: 0.8;
   }
-  .va-pf-image-wrapper {
-    aspect-ratio: 16 / 10;
+  
+  .va-accordion-panel:not(.active) .va-accordion-header {
+    flex-direction: row;
+  }
+  
+  .va-accordion-content {
+    padding: 20px;
+  }
+  
+  .va-accordion-panel.active .va-accordion-body {
+    height: 120px; /* Taller for mobile text wrapping */
   }
 }
