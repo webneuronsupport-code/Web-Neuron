@@ -1,6 +1,6 @@
 import React from 'react';
-import Hero from '../components/Hero';
-// import HeroNew from '../components/HeroNew'; // Ocultando la propuesta fallida
+// import Hero from '../components/Hero';
+import HeroNew from '../components/HeroNew'; // Usando el nuevo Horizontal Hero
 import Marquee from '../components/Marquee';
 // import PainPoints from '../components/PainPoints';
 import Services from '../components/Services';
@@ -14,8 +14,8 @@ const Home = () => {
   return (
     <>
       <main>
-        <Hero />
-        {/* <HeroNew /> */}
+        {/* <Hero /> */}
+        <HeroNew />
         <Marquee />
         {/* <PainPoints /> */}
         <Services />

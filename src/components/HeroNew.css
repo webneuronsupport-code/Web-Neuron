@@ -1,101 +1,118 @@
-.hero-clean-container {
+.hero-horizontal-wrapper {
   position: relative;
   width: 100%;
   height: 100vh;
-  min-height: 700px;
-  background-color: #ffffff;
+  min-height: 600px;
+  background-color: #1a1b1e;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #1d1d1f;
-  overflow: hidden;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  /* Hide scrollbar */
+  scrollbar-width: none; 
 }
 
-.hero-clean-content {
-  position: relative;
-  z-index: 2;
-  text-align: center;
-  max-width: 900px;
-  padding: 0 2rem;
+.hero-horizontal-wrapper::-webkit-scrollbar {
+  display: none;
+}
+
+/* Green squiggly line */
+.hero-squiggle {
+  position: absolute;
+  top: 15vh;
+  left: 20vw;
+  width: 300px;
+  z-index: 10;
+  pointer-events: none;
+  opacity: 0.8;
+  filter: drop-shadow(0 0 8px rgba(163, 230, 53, 0.4));
+}
+
+.hero-h-col {
+  flex: 0 0 45vw; /* Desktop width */
+  height: 100%;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  scroll-snap-align: start;
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-.hero-clean-badge {
-  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", sans-serif;
-  font-size: 0.9rem;
-  font-weight: 700;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: #86868b;
-  margin-bottom: 2rem;
+/* Responsive columns */
+@media (max-width: 1024px) {
+  .hero-h-col {
+    flex: 0 0 65vw;
+  }
+}
+@media (max-width: 768px) {
+  .hero-h-col {
+    flex: 0 0 85vw;
+  }
+  .hero-squiggle {
+    width: 200px;
+    top: 10vh;
+  }
 }
 
-.hero-clean-title {
-  font-size: clamp(3rem, 7vw, 6.5rem);
-  font-weight: 800;
-  line-height: 1.05;
-  letter-spacing: -0.04em;
-  margin: 0 0 1.5rem 0;
-  color: #1d1d1f;
-}
-
-.hero-clean-title span {
-  display: block;
-}
-
-.hero-clean-desc {
-  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", sans-serif;
-  font-size: clamp(1.2rem, 2vw, 1.5rem);
-  line-height: 1.5;
-  font-weight: 500;
-  letter-spacing: -0.01em;
-  color: #86868b;
-  max-width: 650px;
-  margin: 0 auto 3rem auto;
-}
-
-.hero-clean-buttons {
+.hero-h-top {
+  height: 45%;
+  background-color: #1a1b1e;
+  padding: 8vh 4vw;
   display: flex;
-  gap: 1rem;
-  justify-content: center;
-  flex-wrap: wrap;
+  flex-direction: column;
+  justify-content: flex-end;
 }
 
-.btn-clean-primary {
-  padding: 1rem 2rem;
-  border-radius: 100px;
-  background: #1d1d1f;
+.hero-h-category {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", sans-serif;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #a1a1aa;
+  margin-bottom: 0.5rem;
+  letter-spacing: 0.05em;
+}
+
+.hero-h-title {
+  font-size: clamp(2rem, 3.5vw, 4rem);
+  font-weight: 500;
+  line-height: 1.1;
   color: #ffffff;
-  font-weight: 600;
-  font-size: 1.1rem;
-  text-decoration: none;
-  transition: transform 0.3s ease, background 0.3s ease;
+  margin: 0 0 1rem 0;
+  letter-spacing: -0.02em;
 }
 
-.btn-clean-primary:hover {
-  background: #000000;
-  transform: translateY(-2px);
+.hero-h-desc {
+  font-size: clamp(0.9rem, 1.2vw, 1.1rem);
+  color: #71717a;
+  margin: 0;
+  line-height: 1.5;
+  max-width: 90%;
 }
 
-.btn-clean-secondary {
-  padding: 1rem 2rem;
-  border-radius: 100px;
-  background: transparent;
-  border: 1px solid #d2d2d7;
-  color: #1d1d1f;
-  font-weight: 600;
-  font-size: 1.1rem;
-  text-decoration: none;
-  transition: background 0.3s ease, border-color 0.3s ease;
-}
-
-.btn-clean-secondary:hover {
-  background: rgba(0, 0, 0, 0.05);
-  border-color: #1d1d1f;
-}
-
-.overflow-hidden {
+.hero-h-bottom {
+  height: 55%;
+  width: 100%;
+  background-color: #000;
   overflow: hidden;
+  position: relative;
+}
+
+.hero-h-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.7s ease;
+}
+
+.hero-h-col:hover .hero-h-image {
+  transform: scale(1.05);
+}
+
+/* Intro column (First column can be slightly different if needed) */
+.col-intro .hero-h-top {
+  justify-content: center;
+}
+.col-intro .hero-h-title {
+  font-size: clamp(2.5rem, 5vw, 5.5rem);
+  font-weight: 400;
 }
