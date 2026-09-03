@@ -1,5 +1,6 @@
 import React from 'react';
-import Hero from '../components/Hero';
+// import Hero from '../components/Hero'; // Manteniendo el Hero antiguo comentado por seguridad
+import HeroNew from '../components/HeroNew';
 import Marquee from '../components/Marquee';
 // import PainPoints from '../components/PainPoints';
 import Services from '../components/Services';
@@ -13,7 +14,8 @@ const Home = () => {
   return (
     <>
       <main>
-        <Hero />
+        {/* <Hero /> */}
+        <HeroNew />
         <Marquee />
         {/* <PainPoints /> */}
         <Services />
