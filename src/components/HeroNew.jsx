@@ -43,18 +43,16 @@ const HeroNew = () => {
     <section className="hero-h-pin-section" ref={sectionRef}>
       <div className="hero-horizontal-wrapper" ref={containerRef}>
       
-      {/* Decorative squiggle */}
-      <svg className="hero-squiggle" viewBox="0 0 200 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M5 25C50 15 100 5 190 20C120 20 80 25 20 35" stroke="#a3e635" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
-      </svg>
-
       {/* Intro Column */}
       <div className="hero-h-col col-intro">
         <div className="hero-h-top">
-          <div style={{ marginBottom: '1.5rem' }}>
-            <img src={`${import.meta.env.BASE_URL}2_clean2.png`} alt="Web Neuron Logo" style={{ maxWidth: '300px', height: 'auto' }} />
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', marginBottom: '1.5rem', justifyContent: 'center' }}>
+            <img src={`${import.meta.env.BASE_URL}2_clean2.png`} alt="Web Neuron Logo" style={{ height: '80px', width: 'auto' }} />
+            <h1 className="hero-h-title" style={{ margin: 0, textAlign: 'left' }}>
+              WEB<br/>NEURON
+            </h1>
           </div>
-          <p className="hero-h-desc" style={{marginTop: '1rem'}}>
+          <p className="hero-h-desc" style={{marginTop: '1rem', textAlign: 'center', width: '100%'}}>
             Sistemas Autónomos &<br/>Crecimiento Exponencial.
           </p>
         </div>

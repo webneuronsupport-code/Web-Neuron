@@ -15,17 +15,7 @@
   will-change: transform;
 }
 
-/* Green squiggly line */
-.hero-squiggle {
-  position: absolute;
-  top: 15vh;
-  left: 20vw;
-  width: 300px;
-  z-index: 10;
-  pointer-events: none;
-  opacity: 0.8;
-  filter: drop-shadow(0 0 8px rgba(163, 230, 53, 0.4));
-}
+
 
 .hero-h-col {
   flex: 0 0 45vw; /* Desktop width */
@@ -44,10 +34,6 @@
 @media (max-width: 768px) {
   .hero-h-col {
     flex: 0 0 85vw;
-  }
-  .hero-squiggle {
-    width: 200px;
-    top: 10vh;
   }
 }
 
