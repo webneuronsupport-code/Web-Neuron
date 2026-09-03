@@ -1,166 +1,128 @@
 .va-pf-section {
   position: relative;
-  padding: 80px 0 160px;
+  padding: 80px 0 0 0;
   background-color: var(--bg);
   z-index: 5;
 }
 
-/* ==========================================================================
-   Tabs Container (2 Columns)
-   ========================================================================== */
-.va-tabs-container {
+.va-pf-layout {
   display: flex;
-  gap: 40px;
+  gap: 60px;
   margin-top: 64px;
-  align-items: center; /* Center align with the image */
 }
 
 /* ==========================================================================
-   Left Column: Tab Buttons
+   Left Column: Scrollable Text Blocks
    ========================================================================== */
-.va-tabs-list {
+.va-pf-text-column {
+  width: 50%;
+  padding-bottom: 50vh; /* Extra space at the bottom to scroll past the last item */
+}
+
+.va-pf-text-item {
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  width: 400px;
-  flex-shrink: 0;
+  justify-content: center;
+  opacity: 0.3;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  transform: translateX(-20px);
 }
 
-.va-tab-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 16px;
-  padding: 20px;
-  background: transparent;
-  border: 1px solid transparent;
-  border-radius: var(--r-md);
-  text-align: left;
-  cursor: pointer;
-  transition: all 0.3s ease;
+.va-pf-text-item.active {
+  opacity: 1;
+  transform: translateX(0);
 }
 
-.va-tab-item:hover {
-  background: rgba(255, 255, 255, 0.02);
-}
-
-.va-tab-item.active {
-  background: rgba(20, 20, 20, 0.6);
-  border-color: rgba(94, 92, 230, 0.3);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 10px 30px rgba(0, 0, 0, 0.2);
-  backdrop-filter: blur(10px);
-}
-
-.va-tab-icon-wrap {
+.va-pf-icon-wrap {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 48px;
-  height: 48px;
-  border-radius: var(--r-sm);
-  background: rgba(255, 255, 255, 0.05);
-  color: var(--text-muted);
-  transition: all 0.3s ease;
-  flex-shrink: 0;
-}
-
-.va-tab-item.active .va-tab-icon-wrap {
+  width: 64px;
+  height: 64px;
+  border-radius: var(--r-md);
   background: rgba(94, 92, 230, 0.15);
   color: var(--accent-light);
   border: 1px solid rgba(94, 92, 230, 0.3);
+  margin-bottom: 32px;
 }
 
-.va-tab-content {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  min-height: 48px;
-}
-
-.va-tab-title {
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: var(--text-muted);
-  transition: color 0.3s ease;
-  margin: 0;
-}
-
-.va-tab-item.active .va-tab-title {
+.va-pf-item-title {
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 700;
   color: var(--text);
-  margin-bottom: 8px;
+  margin: 0 0 24px 0;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
 }
 
-.va-tab-desc {
-  font-size: 1rem;
-  line-height: 1.5;
+.va-pf-item-desc {
+  font-size: 1.25rem;
+  line-height: 1.6;
   color: var(--text-muted);
-  margin: 0;
-  animation: fadeInDown 0.4s ease forwards;
-}
-
-@keyframes fadeInDown {
-  from { opacity: 0; transform: translateY(-5px); }
-  to { opacity: 1; transform: translateY(0); }
+  max-width: 480px;
 }
 
 /* ==========================================================================
-   Right Column: The Display (Escaparate)
+   Right Column: Sticky Pinned Image
    ========================================================================== */
-.va-tabs-display-wrapper {
-  position: relative;
-  flex: 1;
-  aspect-ratio: 16 / 10;
-  border-radius: var(--r-lg);
+.va-pf-image-column {
+  width: 50%;
+  height: 100vh; /* Take full viewport height for pinning */
   display: flex;
   align-items: center;
   justify-content: center;
-  perspective: 1000px; /* Required for 3D tilt effect */
-  overflow: visible; /* Let the tilted image pop out a bit if needed */
 }
 
-.va-tabs-display {
+.va-pf-image-wrapper {
   position: relative;
-  z-index: 1;
   width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transform-style: preserve-3d;
+  aspect-ratio: 4 / 5;
+  max-height: 80vh;
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5), 0 0 40px rgba(94, 92, 230, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .va-tilt-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: var(--r-lg);
-  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5), 
-              0 0 40px rgba(94, 92, 230, 0.15); /* Soft glowing shadow */
-  border: 1px solid rgba(255, 255, 255, 0.1);
   will-change: transform;
+}
+
+.va-pf-image-overlay {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 40%);
+  pointer-events: none;
 }
 
 
 /* Responsive */
-@media (max-width: 1024px) {
-  .va-tabs-container {
+@media (max-width: 900px) {
+  .va-pf-layout {
     flex-direction: column;
+    margin-top: 32px;
   }
-  .va-tabs-list {
+  .va-pf-text-column {
     width: 100%;
-    flex-direction: row;
-    flex-wrap: wrap;
+    padding-bottom: 0;
   }
-  .va-tab-item {
-    flex: 1 1 300px;
+  .va-pf-text-item {
+    min-height: auto;
+    padding: 60px 0;
+    opacity: 1; /* Keep them all visible on mobile */
+    transform: translateX(0);
   }
-}
-
-@media (max-width: 768px) {
-  .va-tab-item {
-    flex: 1 1 100%;
-  }
-  .va-tabs-display-wrapper {
+  .va-pf-image-column {
     width: 100%;
-    aspect-ratio: 4 / 3;
+    height: auto;
+    position: relative !important; /* Override pinning */
+    margin-top: 40px;
+  }
+  .va-pf-image-wrapper {
+    aspect-ratio: 16 / 10;
   }
 }

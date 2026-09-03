@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { MessageCircle, Calendar, Repeat, Package, Workflow } from 'lucide-react';
-import { gsap, useGSAP } from '../lib/gsap';
+import { gsap, useGSAP, ScrollTrigger } from '../lib/gsap';
 import SectionHeading from './SectionHeading';
 import './VAPowerFeatures.css';
 
@@ -44,87 +44,47 @@ const features = [
 
 const VAPowerFeatures = () => {
   const container = useRef(null);
+  const rightSideRef = useRef(null);
   const displayRef = useRef(null);
-  const wrapperRef = useRef(null);
-  const imageRef = useRef(null);
   const [activeTab, setActiveTab] = useState('chat');
 
-  // Initial Section Animation
   useGSAP(() => {
-    gsap.fromTo('.va-tab-item', 
-      { x: -30, opacity: 0 },
-      {
-        x: 0,
-        opacity: 1,
-        duration: 0.8,
-        stagger: 0.1,
-        ease: 'power3.out',
-        scrollTrigger: {
-          trigger: container.current,
-          start: 'top 75%',
-        }
-      }
-    );
+    // Detect which item is in view
+    features.forEach((feat, i) => {
+      ScrollTrigger.create({
+        trigger: `.va-pf-item-${i}`,
+        start: 'top 50%',
+        end: 'bottom 50%',
+        onEnter: () => setActiveTab(feat.id),
+        onEnterBack: () => setActiveTab(feat.id),
+      });
+    });
 
-    gsap.fromTo('.va-tabs-display-wrapper', 
-      { x: 30, opacity: 0 },
-      {
-        x: 0,
-        opacity: 1,
-        duration: 1,
-        ease: 'power3.out',
-        scrollTrigger: {
-          trigger: container.current,
-          start: 'top 75%',
-        }
-      }
-    );
+    // Pin the right side while the left side scrolls
+    // We use a matchMedia so it only pins on desktop
+    const mm = gsap.matchMedia();
+    mm.add("(min-width: 901px)", () => {
+      ScrollTrigger.create({
+        trigger: container.current,
+        start: 'top 15%',
+        end: 'bottom 85%',
+        pin: rightSideRef.current,
+        pinSpacing: false,
+      });
+    });
   }, { scope: container });
 
-  // Crossfade Animation on Tab Change
+  // Crossfade Animation on Image Change
   useEffect(() => {
     if (!displayRef.current) return;
-    
     const ctx = gsap.context(() => {
-      gsap.fromTo(displayRef.current, 
+      gsap.fromTo('.va-tilt-image', 
         { opacity: 0, scale: 0.95 },
-        { opacity: 1, scale: 1, duration: 0.5, ease: 'power2.out' }
+        { opacity: 1, scale: 1, duration: 0.8, ease: 'power2.out', clearProps: 'transform' }
       );
     }, displayRef);
-    
     return () => ctx.revert();
   }, [activeTab]);
-
-  // 3D Tilt Effect
-  const handleMouseMove = (e) => {
-    if (!wrapperRef.current || !imageRef.current) return;
-    
-    const { left, top, width, height } = wrapperRef.current.getBoundingClientRect();
-    const x = (e.clientX - left) / width; // 0 to 1
-    const y = (e.clientY - top) / height; // 0 to 1
-    
-    const tiltX = (y - 0.5) * -15; // Max 15 deg tilt
-    const tiltY = (x - 0.5) * 15;
-
-    gsap.to(imageRef.current, {
-      rotateX: tiltX,
-      rotateY: tiltY,
-      duration: 0.5,
-      ease: 'power2.out',
-      transformPerspective: 1000,
-      transformOrigin: 'center center'
-    });
-  };
-
-  const handleMouseLeave = () => {
-    if (!imageRef.current) return;
-    gsap.to(imageRef.current, {
-      rotateX: 0,
-      rotateY: 0,
-      duration: 1,
-      ease: 'elastic.out(1, 0.3)'
-    });
-  };
 
   const activeFeature = features.find(f => f.id === activeTab);
 
@@ -132,52 +92,41 @@ const VAPowerFeatures = () => {
     <section className="va-pf-section" ref={container}>
       <div className="shell">
         <SectionHeading
-          align="left"
+          align="center"
           label="Potencia para negocios"
           title="Autonomía y Escalabilidad"
           lede="Un equipo hiper-productivo que nunca duerme y opera a la velocidad de la luz."
         />
         
-        <div className="va-tabs-container">
+        <div className="va-pf-layout">
           
-          {/* Columna Izquierda: Botones de Pestañas */}
-          <div className="va-tabs-list">
-            {features.map((feat) => {
+          {/* Columna Izquierda: Textos con Scroll */}
+          <div className="va-pf-text-column">
+            {features.map((feat, i) => {
               const Icon = feat.icon;
               const isActive = activeTab === feat.id;
               
               return (
-                <button 
-                  key={feat.id}
-                  className={`va-tab-item ${isActive ? 'active' : ''}`}
-                  onClick={() => setActiveTab(feat.id)}
-                >
-                  <div className="va-tab-icon-wrap">
-                    <Icon size={20} />
+                <div key={feat.id} className={`va-pf-text-item va-pf-item-${i} ${isActive ? 'active' : ''}`}>
+                  <div className="va-pf-icon-wrap">
+                    <Icon size={32} />
                   </div>
-                  <div className="va-tab-content">
-                    <h3 className="va-tab-title">{feat.title}</h3>
-                    {isActive && <p className="va-tab-desc">{feat.desc}</p>}
-                  </div>
-                </button>
+                  <h3 className="va-pf-item-title">{feat.title}</h3>
+                  <p className="va-pf-item-desc">{feat.desc}</p>
+                </div>
               );
             })}
           </div>
 
-          {/* Columna Derecha: El Escaparate (Pantalla Central) */}
-          <div 
-            className="va-tabs-display-wrapper" 
-            ref={wrapperRef}
-            onMouseMove={handleMouseMove}
-            onMouseLeave={handleMouseLeave}
-          >
-            <div className="va-tabs-display" ref={displayRef}>
+          {/* Columna Derecha: Imagen Fija (Pinned) */}
+          <div className="va-pf-image-column" ref={rightSideRef}>
+            <div className="va-pf-image-wrapper" ref={displayRef}>
                <img 
-                 ref={imageRef}
                  src={`${import.meta.env.BASE_URL}${activeFeature.image}`} 
                  alt={activeFeature.title} 
                  className="va-tilt-image" 
                />
+               <div className="va-pf-image-overlay"></div>
             </div>
           </div>
 
