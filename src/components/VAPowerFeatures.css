@@ -1,110 +1,170 @@
-.va-manifesto-section {
+.va-pf-section {
   position: relative;
-  background-color: #6a2222; /* Matches screenshot red */
-  color: #ffffff;
-  padding: 100px 0;
-  min-height: 80vh;
-  display: flex;
-  align-items: center;
-  overflow: hidden;
+  padding: 80px 0 160px;
+  background-color: var(--bg);
   z-index: 5;
 }
 
-.va-manifesto-grid-bg {
+.va-accordion-container {
+  display: flex;
+  gap: 16px;
+  height: 600px;
+  margin-top: 64px;
+}
+
+.va-accordion-panel {
+  position: relative;
+  flex: 1;
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  cursor: pointer;
+  transition: flex 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+/* When active, it takes up much more space */
+.va-accordion-panel.active {
+  flex: 5;
+  box-shadow: 0 20px 50px rgba(94, 92, 230, 0.2);
+}
+
+.va-accordion-bg {
   position: absolute;
   top: 0; left: 0; right: 0; bottom: 0;
-  background-size: 100px 100px;
-  background-image: 
-    linear-gradient(to right, rgba(255,255,255,0.05) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255,255,255,0.05) 1px, transparent 1px);
-  z-index: 1;
+  background-size: cover;
+  background-position: center;
+  transition: transform 10s ease;
 }
 
-.va-manifesto-content {
+.va-accordion-panel.active .va-accordion-bg {
+  transform: scale(1.05); /* Slow zoom effect on hover */
+}
+
+.va-accordion-overlay {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.3) 100%);
+  transition: background 0.6s ease;
+}
+
+.va-accordion-panel:not(.active) .va-accordion-overlay {
+  background: rgba(0, 0, 0, 0.7); /* Darker when inactive */
+}
+
+.va-accordion-content {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: flex-end;
+}
+
+.va-accordion-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  /* To make the title vertical when inactive, we use absolute positioning */
   position: relative;
+}
+
+.va-accordion-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: var(--r-sm);
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(5px);
+  color: #fff;
+  flex-shrink: 0;
+  transition: all 0.4s ease;
   z-index: 2;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 120px; /* Spacing between top, main, bottom */
 }
 
-.va-manifesto-mono {
-  font-family: 'Space Mono', monospace, Consolas, Courier New;
-  font-size: 0.85rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.7);
+.va-accordion-panel.active .va-accordion-icon {
+  background: rgba(94, 92, 230, 0.8);
 }
 
-.va-manifesto-top-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-}
-
-.va-manifesto-main {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 60px;
-}
-
-.va-manifesto-title {
-  font-size: clamp(3rem, 6vw, 5rem);
-  font-weight: 800;
-  line-height: 1;
-  letter-spacing: -0.04em;
+.va-accordion-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #fff;
   margin: 0;
-  flex: 1;
+  white-space: nowrap;
+  transition: all 0.4s ease;
 }
 
-.va-manifesto-side {
-  max-width: 480px;
-  display: flex;
-  flex-direction: column;
-  gap: 32px;
+/* For inactive panels, rotate the title and position it nicely */
+.va-accordion-panel:not(.active) .va-accordion-title {
+  transform: rotate(-90deg) translateX(100px);
+  transform-origin: left bottom;
+  position: absolute;
+  left: 14px;
+  bottom: 80px;
+  opacity: 0.6;
+  font-size: 1.25rem;
 }
 
-.va-manifesto-desc {
-  font-size: 1.1rem;
-  line-height: 1.6;
-  font-weight: 500;
-  letter-spacing: 0.02em;
+.va-accordion-body {
+  margin-top: 16px;
+  height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+  transform: translateY(20px);
+}
+
+.va-accordion-panel.active .va-accordion-body {
+  height: 80px; /* Adjust based on content */
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 0.2s; /* Wait for flex to expand */
+}
+
+.va-accordion-desc {
+  font-size: 1.125rem;
+  line-height: 1.5;
+  color: rgba(255,255,255,0.9);
   margin: 0;
-  text-transform: uppercase;
+  max-width: 500px;
 }
 
-.va-manifesto-lines {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
 
-.va-manifesto-lines .line {
-  height: 1px;
-  background-color: rgba(255,255,255,0.3);
-}
-
-.va-manifesto-lines .line-1 { width: 100%; }
-.va-manifesto-lines .line-2 { width: 60%; }
-.va-manifesto-lines .line-3 { width: 40%; }
-
-.va-manifesto-bottom-bar {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-}
-
-/* Responsive */
+/* Responsive Fallback for Mobile (Vertical Accordion) */
 @media (max-width: 900px) {
-  .va-manifesto-main {
+  .va-accordion-container {
     flex-direction: column;
-    align-items: flex-start;
-    gap: 48px;
+    height: 800px; /* Fixed total height for vertical stack */
   }
-  .va-manifesto-content {
-    gap: 60px;
+  
+  .va-accordion-panel {
+    flex: 1;
+  }
+  
+  .va-accordion-panel.active {
+    flex: 4;
+  }
+  
+  .va-accordion-panel:not(.active) .va-accordion-title {
+    transform: none; /* No rotation on mobile */
+    position: static;
+    opacity: 0.8;
+  }
+  
+  .va-accordion-panel:not(.active) .va-accordion-header {
+    flex-direction: row;
+  }
+  
+  .va-accordion-content {
+    padding: 20px;
+  }
+  
+  .va-accordion-panel.active .va-accordion-body {
+    height: 120px; /* Taller for mobile text wrapping */
   }
 }

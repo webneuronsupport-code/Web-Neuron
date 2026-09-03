@@ -1,5 +1,6 @@
 import React from 'react';
 import Hero from '../components/Hero';
+import RedManifesto from '../components/RedManifesto';
 import Marquee from '../components/Marquee';
 // import PainPoints from '../components/PainPoints';
 import Services from '../components/Services';
@@ -14,6 +15,7 @@ const Home = () => {
     <>
       <main>
         <Hero />
+        <RedManifesto />
         <Marquee />
         {/* <PainPoints /> */}
         <Services />
