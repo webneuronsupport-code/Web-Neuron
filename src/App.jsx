@@ -8,8 +8,8 @@ import Header from './components/Header';
 import GlobalChrome from './components/GlobalChrome';
 import Home from './pages/Home';
 import VirtualAssistants from './pages/VirtualAssistants';
-
 import CrmOmnicanal from './pages/CrmOmnicanal';
+import HeroTestPage from './pages/HeroTestPage';
 
 function App() {
   useSmoothScroll();
@@ -36,10 +36,14 @@ function App() {
     <>
       <Preloader />
       <ScrollProgress />
+      <Header />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/asistentes-virtuales" element={<VirtualAssistants />} />
         <Route path="/crm-omnicanal" element={<CrmOmnicanal />} />
+        {/* Banco de pruebas. No hay ningún enlace apuntando aquí: solo se llega
+            escribiendo la URL, así que no toca nada de la página pública. */}
+        <Route path="/hero-test" element={<HeroTestPage />} />
       </Routes>
     </>
   );

@@ -1,159 +1,240 @@
-.va-ocr-visual-section {
+.va-ocr-bento-section {
   padding: 8rem 0;
-  background-color: #000;
+  background-color: #050505;
   color: #fff;
+  position: relative;
+  z-index: 10;
 }
 
-.ocr-vis-header {
+.ocr-bento-header {
   text-align: center;
-  max-width: 900px;
-  margin: 0 auto 5rem auto;
+  max-width: 700px;
+  margin: 0 auto 4rem auto;
 }
 
-.ocr-vis-tag {
+.ocr-bento-tag {
   display: inline-block;
-  font-size: 0.9rem;
+  font-size: 0.75rem;
   font-weight: 700;
+  color: #a8b2d1;
   letter-spacing: 0.1em;
-  color: #ff9f0a;
-  text-transform: uppercase;
-  background: rgba(255, 159, 10, 0.1);
-  padding: 0.5rem 1.2rem;
-  border-radius: 100px;
+  padding: 6px 14px;
+  border: 1px solid rgba(168, 178, 209, 0.3);
+  border-radius: 20px;
   margin-bottom: 1.5rem;
+  text-transform: uppercase;
 }
 
-.ocr-vis-title {
-  font-size: clamp(2.5rem, 4vw, 4rem);
-  line-height: 1.2;
+.ocr-bento-title {
+  font-size: clamp(2rem, 4vw, 3rem);
+  line-height: 1.1;
   font-weight: 700;
-  margin: 0 0 1.5rem 0;
+  margin-bottom: 1.2rem;
   letter-spacing: -0.02em;
 }
 
-.ocr-vis-subtitle {
-  font-size: 1.2rem;
+.ocr-bento-subtitle {
+  font-size: 1.1rem;
+  color: #a0a0a0;
   line-height: 1.6;
-  color: rgba(255, 255, 255, 0.7);
-  margin: 0;
 }
 
-/* 3-Column Image Grid */
-.ocr-vis-grid {
+/* --- BENTO GRID LAYOUT --- */
+.ocr-bento-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 2rem;
-  margin-bottom: 6rem;
+  grid-template-rows: 400px 320px;
+  gap: 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
-.ocr-vis-card {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 20px;
+/* Glassmorphism base for cards */
+.ocr-bento-card {
+  position: relative;
+  background: rgba(30, 30, 35, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 24px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  transition: transform 0.3s ease;
+  backdrop-filter: blur(12px);
+  transition: transform 0.3s ease, border-color 0.3s ease;
 }
 
-.ocr-vis-card:hover {
-  transform: translateY(-5px);
-  background: rgba(255, 255, 255, 0.05);
+.ocr-bento-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(255, 255, 255, 0.15);
 }
 
-.ocr-vis-image-container {
-  width: 100%;
-  aspect-ratio: 16/10;
-  overflow: hidden;
-  background: #111;
-}
-
-.ocr-vis-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.ocr-vis-img-zoom {
-  transform: scale(1.15);
-  transform-origin: center;
-}
-
-.ocr-vis-content {
+.ocr-bento-content {
   padding: 2rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  z-index: 2;
 }
 
-.ocr-vis-content h3 {
-  font-size: 1.5rem;
+.ocr-bento-content h3 {
+  font-size: 1.25rem;
+  margin-bottom: 0.75rem;
   font-weight: 600;
-  margin: 0 0 1rem 0;
   color: #fff;
 }
 
-.ocr-vis-content p {
-  font-size: 1.05rem;
-  line-height: 1.6;
-  color: rgba(255, 255, 255, 0.6);
-  margin: 0;
+.ocr-bento-content p {
+  font-size: 0.95rem;
+  color: #a0a0a0;
+  line-height: 1.5;
 }
 
-/* Use Cases */
-.ocr-vis-use-cases {
-  background: rgba(20, 24, 32, 0.5);
-  border-radius: 24px;
-  padding: 4rem;
-  border: 1px solid rgba(255, 159, 10, 0.2);
+.ocr-bento-media {
+  position: relative;
+  flex: 1;
+  overflow: hidden;
+  background: #000;
 }
 
-.ocr-vis-use-cases h3 {
-  font-size: 2rem;
-  font-weight: 700;
-  margin: 0 0 3rem 0;
-  text-align: center;
-  color: #ff9f0a;
+.ocr-bento-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.8;
+  transition: opacity 0.3s ease, transform 0.5s ease;
 }
 
-.ocr-vis-cases-container {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 3rem;
+.ocr-bento-card:hover .ocr-bento-media img {
+  opacity: 1;
+  transform: scale(1.05);
 }
 
-.ocr-vis-case {
-  display: flex;
-  gap: 1.5rem;
-  align-items: flex-start;
+/* Específicos del Grid */
+.card-main {
+  grid-column: 1 / 3;
+  grid-row: 1 / 2;
+  flex-direction: row; /* Horizontal para la grande */
 }
 
-.ocr-vis-case-icon {
-  font-size: 2.5rem;
-  line-height: 1;
+.card-main .ocr-bento-content {
+  flex: 0 0 45%;
+  justify-content: center;
 }
 
-.ocr-vis-case h4 {
-  font-size: 1.3rem;
+.card-secondary-top {
+  grid-column: 3 / 4;
+  grid-row: 1 / 2;
+}
+
+.card-use-cases {
+  grid-column: 1 / 2;
+  grid-row: 2 / 3;
+  background: linear-gradient(145deg, rgba(30, 30, 35, 0.8), rgba(15, 15, 20, 0.9));
+  justify-content: center;
+}
+
+.card-secondary-bottom {
+  grid-column: 2 / 4;
+  grid-row: 2 / 3;
+  flex-direction: row-reverse; /* Imagen a la derecha */
+}
+
+.card-secondary-bottom .ocr-bento-content {
+  flex: 0 0 45%;
+  justify-content: center;
+}
+
+/* Animación LÁSER de Escaneo */
+.scanning-laser {
+  position: absolute;
+  top: -10px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: #00e5ff;
+  box-shadow: 0 0 15px #00e5ff, 0 0 5px #00e5ff;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 5;
+}
+
+.ocr-bento-card:hover .scanning-laser {
+  opacity: 1;
+  animation: scan-move 2.5s infinite linear;
+}
+
+@keyframes scan-move {
+  0% { top: 0%; opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { top: 100%; opacity: 0; }
+}
+
+/* Casos de Uso Integrados */
+.use-cases-inner {
+  padding: 2rem;
+}
+
+.use-cases-inner h3 {
+  font-size: 1.1rem;
+  color: #fff;
+  margin-bottom: 1.5rem;
   font-weight: 600;
-  margin: 0 0 1rem 0;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
-.ocr-vis-case p {
-  font-size: 1.05rem;
-  line-height: 1.6;
-  color: rgba(255, 255, 255, 0.7);
+.uc-list {
+  list-style: none;
+  padding: 0;
   margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
 }
 
-/* Mobile Fallback */
+.uc-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.uc-icon {
+  font-size: 1.5rem;
+  background: rgba(255,255,255,0.05);
+  padding: 0.5rem;
+  border-radius: 12px;
+}
+
+.uc-text strong {
+  display: block;
+  font-size: 0.95rem;
+  color: #fff;
+  margin-bottom: 0.25rem;
+}
+
+.uc-text span {
+  font-size: 0.85rem;
+  color: #a0a0a0;
+  line-height: 1.4;
+  display: block;
+}
+
+/* Responsive Mobile */
 @media (max-width: 900px) {
-  .ocr-vis-grid {
+  .ocr-bento-grid {
     grid-template-columns: 1fr;
+    grid-template-rows: auto;
   }
   
-  .ocr-vis-cases-container {
-    grid-template-columns: 1fr;
+  .card-main, .card-secondary-top, .card-use-cases, .card-secondary-bottom {
+    grid-column: 1 / -1;
+    grid-row: auto;
+    flex-direction: column-reverse; /* Imagen arriba, texto abajo */
+    height: auto;
   }
   
-  .ocr-vis-use-cases {
-    padding: 2rem;
+  .ocr-bento-media {
+    min-height: 250px;
   }
 }

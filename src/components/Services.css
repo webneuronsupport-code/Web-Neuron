@@ -1,294 +1,368 @@
 /* ==========================================================================
-   Servicios — flujo continuo con una tarjeta que gira
-   Medido en fame-estate.com: la tarjeta es 242×327 (ratio 0,740), sin radio de
-   esquina, centrada al 75% del ancho y al 50% del alto, con perspective 1000px
-   en el contenedor y preserve-3d en el interior. Y sobre todo: las secciones
-   corren con normalidad — lo ÚNICO anclado es la tarjeta.
+   Servicios — tira horizontal con visor
+
+   Las fichas desfilan de derecha a izquierda mientras bajas, y un visor
+   punteado fijo en el centro marca cuál está activa.
+
+   La decisión que lo sostiene: el visor NO se mueve ni sigue a la ficha. Es un
+   marco fijo por el que las fichas pasan. Si el marco persiguiera a la ficha
+   habría dos cosas moviéndose a la vez y el ojo no sabría dónde mirar; siendo
+   fijo, actúa como el encuadre de una cámara y da un punto de reposo.
+
+   Y la escala de las fichas va en transform, que no toca el layout: el hueco
+   entre ellas se mantiene regular aunque la del centro sea un 40 % mayor.
    ========================================================================== */
 
-.svc {
+.ory {
   position: relative;
-  z-index: 10;
-  padding-top: clamp(6rem, 10vw, 10rem);
+  /* La altura ES el recorrido: el timeline se reparte de 'top top' a
+     'bottom bottom'. Una pantalla y media por ficha. */
+  height: 460vh;
+  background-color: #16110d;
+  /* clip y no hidden: hidden crearía un contenedor de scroll y rompería el
+     sticky del escenario. Hace falta porque el halo se posiciona contra esta
+     sección —no contra .ory-stage—, así que el overflow del escenario no lo
+     recorta y se salía por la derecha. */
+  overflow-x: clip;
+
+  --ory-w: clamp(200px, 26vw, 340px);
+  --ory-hueco: clamp(1.5rem, 3.5vw, 3.5rem);
 }
 
-/* --------------------------------------------------------------------------
-   Flujo
-   Sin escena anclada. La columna izquierda es contenido normal del documento y
-   la derecha es el carril por el que la tarjeta acompaña la lectura. Anclar la
-   sección entera es lo que producía la sensación de bloque de página.
-   -------------------------------------------------------------------------- */
-
-.svc-flow {
-  position: relative;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  align-items: start;
-}
-
-/* --------------------------------------------------------------------------
-   Columna izquierda — fichas en flujo
-   -------------------------------------------------------------------------- */
-
-.svc-item {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
-  gap: 1.05rem;
-  /* Una pantalla por ficha: es lo que sincroniza la lectura con los giros. */
-  min-height: 100vh;
-  padding: clamp(2rem, 5vw, 5rem) clamp(1.5rem, 4vw, 4.5rem);
-}
-
-.svc-n {
-  display: inline-flex;
-  align-items: baseline;
-  gap: 0.35rem;
-  font-size: 0.78rem;
-  font-weight: 500;
-  letter-spacing: 0.1em;
-  color: var(--accent-light);
-  font-variant-numeric: tabular-nums;
-}
-
-.svc-n i {
-  font-style: normal;
-  color: var(--text-dim);
-}
-
-.svc-title {
-  font-size: clamp(1.6rem, 0.9rem + 2.4vw, 3.25rem);
-  font-weight: 500;
-  line-height: 1;
-  letter-spacing: -0.03em;
-  color: var(--display);
-}
-
-.svc-desc {
-  font-size: clamp(0.95rem, 0.85rem + 0.25vw, 1.1rem);
-  line-height: 1.55;
-  color: var(--text-muted);
-  max-width: 40ch;
-}
-
-.svc-benefits {
-  margin-top: 1rem;
-  margin-bottom: 1.5rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
-  list-style: none;
-  padding: 0;
-}
-
-.svc-benefits li {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.5rem;
-  font-size: 0.85rem;
-  color: var(--text);
-  line-height: 1.4;
-}
-
-.svc-benefit-icon {
-  color: var(--accent-light);
-  flex-shrink: 0;
-  margin-top: 0.1rem;
-}
-
-.svc-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-bottom: 1.5rem;
-}
-
-.svc-tag {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  padding: 0.35rem 0.75rem 0.4rem;
-  border-radius: var(--r-sm);
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: var(--text);
-  background-color: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  transition: all 0.3s ease;
-}
-
-.svc-tag:hover {
-  background-color: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.2);
-}
-
-.svc-tag-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1rem; /* Icons scale with this */
-}
-
-.svc-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  min-height: 44px;
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: var(--text);
-  transition: color 0.35s var(--ease-out), gap 0.35s var(--ease-out);
-}
-
-.svc-link:hover {
-  color: var(--accent-light);
-  gap: 0.6rem;
-}
-
-/* Imagen por ficha: solo se usa en una columna, donde no hay carril. */
-.svc-item-media {
-  display: none;
-}
-
-/* --------------------------------------------------------------------------
-   Columna derecha — carril y tarjeta
-   -------------------------------------------------------------------------- */
-
-/* Tan alto como la lista, con un hijo sticky dentro: eso mantiene la tarjeta
-   en pantalla durante las cuatro fichas sin anclar nada más. */
-.svc-rail {
-  position: relative;
-  height: 100%;
-  border-left: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.svc-sticky {
+.ory-stage {
+  /* sticky y no el pin de ScrollTrigger: el pin escribe medidas en línea y ya
+     rompió el ancho de esta misma sección en otro momento del proyecto. */
   position: sticky;
   top: 0;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Halo cálido. El fondo no es negro plano: es un ámbar muy abierto entrando
+   por abajo a la izquierda, que es de donde viene la luz en el Hero. */
+.ory-halo {
+  position: absolute;
+  left: -18%;
+  bottom: -32%;
+  width: 78%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(196, 118, 46, 0.42) 0%,
+    rgba(120, 68, 26, 0.18) 42%,
+    transparent 70%
+  );
+  filter: blur(70px);
+  pointer-events: none;
+}
+
+/* --------------------------------------------------------------------------
+   Columna izquierda
+   -------------------------------------------------------------------------- */
+
+.ory-copy {
+  position: absolute;
+  top: 50%;
+  left: clamp(1.5rem, 5vw, 5rem);
+  z-index: 3;
+  width: min(26rem, 30vw);
+  transform: translateY(-50%);
+}
+
+/* Los textos se apilan en la misma casilla y se relevan por opacidad. En flujo
+   normal, cuatro bloques seguidos empujarían la altura de la columna y el
+   bloque activo dejaría de estar centrado. */
+.ory-txt {
+  grid-area: 1 / 1;
+}
+
+.ory-copy {
   display: grid;
-  place-items: center;
-  height: 100dvh;
 }
 
-.svc-card {
-  /* Vertical, con el ratio de la referencia: 242 / 327 = 0,740. Pero bastante
-     más grande que allí (donde son 19vw), a peticion expresa.
-     El ancho se limita por dos vías a la vez: 30vw manda en pantallas normales
-     y 57dvh toma el relevo en las bajas — como el alto es el ancho por 1,35,
-     ese tope lo deja en un 77% de la pantalla y la tarjeta nunca desborda la
-     zona anclada. Limitar con max-height en su lugar rompería el ratio. */
-  width: clamp(240px, min(30vw, 57dvh), 520px);
-  aspect-ratio: 242 / 327;
-  /* La perspectiva vive en el contenedor y no en el elemento que gira: es lo
-     que convierte el giro en rotación 3D real y no en un achatamiento. */
-  perspective: 1000px;
+.ory-txt:not(.ory-txt-0) {
+  opacity: 0;
+  visibility: hidden;
 }
 
-.svc-card-wrap {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  /* Sin esto las caras se aplanan y la trasera nunca se ve. */
-  transform-style: preserve-3d;
+/* La imagen de la versión en columna. En escritorio no existe: manda la tira. */
+.ory-txt-media { display: none; }
+
+.ory-kicker {
+  font-size: clamp(1.05rem, 1.6vw, 1.45rem);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: rgba(255, 255, 255, 0.45);
+  margin-bottom: 0.15rem;
+}
+
+.ory-title {
+  font-family: var(--font);
+  font-size: clamp(1.6rem, 2.6vw, 2.4rem);
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  color: #fff;
+  margin-bottom: 1.6rem;
+}
+
+.ory-nombre {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+  margin-bottom: 0.7rem;
+}
+
+.ory-nombre span {
+  padding: 0.12rem 0.4rem;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 3px;
+  color: #e8b478;
+}
+
+.ory-desc {
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 1.5rem;
+  max-width: 34ch;
+}
+
+.ory-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.5rem 0.95rem;
+  border-radius: var(--r-pill);
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #16110d;
+  background-color: #f0e3d4;
+  transition: background-color 0.3s var(--ease-out), transform 0.3s var(--ease-out);
+}
+
+.ory-link:hover {
+  background-color: #e8b478;
+  transform: translateX(3px);
+}
+
+/* --------------------------------------------------------------------------
+   La tira
+   -------------------------------------------------------------------------- */
+
+.ory-carril {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+
+.ory-tira {
+  display: flex;
+  gap: var(--ory-hueco);
+  /* Deja la PRIMERA ficha centrada en el visor sin mover nada: a partir de ahí
+     el scroll solo resta. */
+  padding-left: calc(50% - var(--ory-w) / 2);
   will-change: transform;
 }
 
-.svc-card-face {
-  position: absolute;
-  inset: 0;
+.ory-ficha {
+  position: relative;
+  flex: 0 0 var(--ory-w);
+  aspect-ratio: 3 / 4;
+  margin: 0;
   overflow: hidden;
-  background-color: var(--bg-raised);
-  box-shadow: 0 40px 80px -40px rgba(0, 0, 0, 0.9);
-  /* Sin border-radius: la referencia no lo lleva. */
-  /* Cada cara desaparece cuando da la espalda, así que solo una es visible y a
-     90° ninguna: ese es el instante del relevo de imágenes. */
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
+  background-color: #0d0a08;
+  will-change: transform;
 }
 
-/* La trasera nace pregirada media vuelta: al llegar el contenedor a 180° queda
-   de frente y sin reflejar. */
-.svc-card-face--back {
-  transform: rotateY(180deg);
+/* La primera nace ya a tamaño completo: es la que está en el visor al llegar. */
+.ory-ficha:not(.ory-ficha-0) {
+  transform: scale(0.7);
 }
 
-.svc-card-face img {
+.ory-ficha img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  /* Nivela imágenes de orígenes distintos hacia la misma temperatura cálida. */
+  filter: contrast(1.05) saturate(0.9) brightness(0.94) sepia(0.12);
+}
+
+/* Rótulo sobre la ficha activa. Copia la anatomía de la referencia: una pieza
+   sólida a la izquierda con la etiqueta en negrita y, separado, el texto
+   pequeño en dos líneas. */
+.ory-chip {
+  position: absolute;
+  left: 6%;
+  right: 6%;
+  bottom: 6%;
+  display: flex;
+  align-items: stretch;
+  font-size: 0.56rem;
+  line-height: 1.45;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #fff;
+  background-color: rgba(10, 8, 6, 0.86);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.ory-chip:not(.ory-chip-0) {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.ory-chip-tag {
+  display: grid;
+  place-items: center;
+  padding: 0.55rem 0.7rem;
+  border-right: 1px solid rgba(255, 255, 255, 0.18);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.ory-chip-txt {
+  display: grid;
+  place-items: center;
+  flex: 1;
+  padding: 0.55rem 0.7rem;
+  /* Los saltos van escritos en el texto y son deliberados: con dos líneas
+     iguales el rótulo se lee como una placa, no como un párrafo. */
+  white-space: pre-line;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+/* Visor. Fijo en el centro, un pelo más grande que la ficha para que el
+   punteado no la toque. */
+.ory-visor {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: calc(var(--ory-w) + 22px);
+  aspect-ratio: 3 / 4;
+  transform: translate(-50%, -50%);
+  border: 1px dashed rgba(240, 227, 212, 0.45);
+  pointer-events: none;
 }
 
 /* --------------------------------------------------------------------------
-   Una columna
-   El carril desaparece y cada ficha lleva su propia imagen. La tarjeta que
-   viaja es una comodidad de escritorio: en un móvil no hay mitad derecha donde
-   ponerla sin robarle la pantalla al texto.
+   Aviso de scroll
+   -------------------------------------------------------------------------- */
+
+.ory-seguir {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(1.25rem, 4vh, 2.5rem);
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  transform: translateX(-50%);
+  margin: 0;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+  white-space: nowrap;
+}
+
+.ory-seguir-btn {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border: 1px dashed rgba(255, 255, 255, 0.4);
+  border-radius: 50%;
+}
+
+/* --------------------------------------------------------------------------
+   Responsive — por debajo de 901 px no hay tira, hay lista
+   El JS también se desactiva ahí (gsap.matchMedia), así que nada anima
+   propiedades que este bloque necesita en reposo.
    -------------------------------------------------------------------------- */
 
 @media (max-width: 900px) {
-  .svc-flow {
-    grid-template-columns: 1fr;
+  .ory {
+    height: auto;
+    padding-block: clamp(3.5rem, 9vw, 6rem);
   }
 
-  .svc-rail {
-    display: none;
+  .ory-stage {
+    position: static;
+    height: auto;
+    display: grid;
+    gap: 3.5rem;
   }
 
-  .svc-item {
-    min-height: 0;
-    padding: clamp(2rem, 7vw, 3rem) var(--gutter);
+  .ory-halo { left: -40%; bottom: auto; top: 0; width: 150%; }
+
+  /* Los cuatro textos vuelven al flujo, uno debajo de otro y todos visibles:
+     sin la tira, no hay «activo» que resaltar. */
+  .ory-copy {
+    position: static;
+    display: grid;
+    gap: 3rem;
+    width: auto;
+    padding-inline: var(--gutter);
+    transform: none;
   }
 
-  .svc-item-media {
+  /* El :not() se repite a propósito. La regla de reposo es
+     `.ory-txt:not(.ory-txt-0)`, con dos clases de especificidad; escribir aquí
+     solo `.ory-txt` pierde la puja aunque esté dentro de una media query y más
+     abajo en el archivo — y tres de los cuatro textos se quedaban invisibles. */
+  .ory-txt,
+  .ory-txt:not(.ory-txt-0) {
+    grid-area: auto;
+    opacity: 1;
+    visibility: visible;
+  }
+
+  /* Cada texto se lleva su propia imagen encima. La tira desaparece. */
+  .ory-carril,
+  .ory-seguir { display: none; }
+
+  .ory-txt-media {
+    position: relative;
     display: block;
-    order: -1;
-    width: 100%;
+    margin: 0 0 1.4rem;
     aspect-ratio: 4 / 3;
-    margin-bottom: 0.5rem;
     overflow: hidden;
-    background-color: var(--bg-raised);
+    background-color: #0d0a08;
   }
 
-  .svc-item-media img {
+  .ory-txt-media img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    filter: contrast(1.05) saturate(0.9) brightness(0.94) sepia(0.12);
   }
 
-  .svc-desc {
-    max-width: 100%;
+  /* En columna el rótulo siempre se ve: no hay «ficha activa» que distinguir.
+     Doble clase para empatar con `.ory-chip:not(.ory-chip-0)`, que si no gana. */
+  .ory-chip.ory-chip-movil {
+    opacity: 1;
+    visibility: visible;
   }
 }
 
-/* --------------------------------------------------------------------------
-   Movimiento reducido
-   Sin giros: se oculta el carril y cada ficha muestra su imagen en línea, que
-   es la misma solución que en una columna.
-   -------------------------------------------------------------------------- */
-
-.svc.is-static .svc-flow {
-  grid-template-columns: 1fr;
-}
-
-.svc.is-static .svc-rail {
-  display: none;
-}
-
-.svc.is-static .svc-item {
-  min-height: 0;
-}
-
-.svc.is-static .svc-item-media {
-  display: block;
-  order: -1;
-  width: min(100%, 620px);
-  aspect-ratio: 4 / 3;
-  overflow: hidden;
-}
-
-.svc.is-static .svc-item-media img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+@media (prefers-reduced-motion: reduce) {
+  .ory { height: auto; }
+  .ory-stage { position: static; height: auto; }
+  .ory-txt { opacity: 1; visibility: visible; }
+  .ory-carril { display: none; }
 }

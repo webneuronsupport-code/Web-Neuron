@@ -1,8 +1,7 @@
 /* La altura vive en una variable porque el hero necesita apartar su propio
-   cromo de esta banda. Duplicar el 64 en dos archivos garantiza que algún día
-   se desincronicen. */
+   cromo de esta banda. */
 :root {
-  --header-h: 64px;
+  --header-h: 70px;
 }
 
 .global-header {
@@ -11,32 +10,27 @@
   left: 0;
   width: 100%;
   z-index: 1000;
-  /* Fondo transparente sin bordes */
   background: transparent;
-  pointer-events: none; /* Permite clickear los elementos de abajo si la barra no tiene fondo */
+  pointer-events: none;
 }
 
 .header-container {
-  max-width: var(--shell);
+  max-width: 100%; /* Ocupa casi todo el ancho */
   margin: 0 auto;
-  padding: 0 var(--gutter);
+  padding: 0 4vw; /* Padding lateral */
   height: var(--header-h);
   display: flex;
   align-items: center;
-  justify-content: flex-end; /* Alinear enlaces a la derecha */
-  pointer-events: auto; /* Reactivar clicks solo dentro del contenedor */
+  justify-content: space-between; /* SpaceX distribuye: Logo izq, Nav centro, Botones der */
+  pointer-events: auto;
 }
 
 .header-brand {
   display: flex;
   align-items: center;
-  gap: 12px;
   text-decoration: none;
-  color: var(--text);
-  font-weight: 500;
-  letter-spacing: -0.01em;
-  font-size: 0.9rem;
-  transition: opacity 0.2s var(--ease-soft);
+  transition: opacity 0.2s ease;
+  flex: 1; /* Para ayudar a centrar la nav */
 }
 
 .header-brand:hover {
@@ -44,43 +38,93 @@
 }
 
 .header-logo {
-  height: 28px;
+  height: 44px; /* Logo más grande */
   width: auto;
+}
+
+.header-brand-text {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", sans-serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 0.08em;
+  margin-left: 14px;
 }
 
 .header-nav {
   display: flex;
   gap: 24px;
+  flex: 2; /* Toma el espacio central */
+  justify-content: center; /* Centra los enlaces */
 }
 
 .header-link {
   text-decoration: none;
-  color: var(--text-muted);
-  font-size: 0.85rem;
-  font-weight: 500;
-  transition: color 0.2s var(--ease-soft);
+  color: #ffffff;
+  font-size: 0.95rem; /* Más grande y notorio */
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: color 0.3s ease, opacity 0.3s ease;
   position: relative;
+  opacity: 0.8;
+  padding: 4px 0;
 }
 
 .header-link:hover {
-  color: var(--text);
+  opacity: 1;
+}
+
+/* Animación estándar premium: la línea se desliza desde la izquierda */
+.header-link::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: #ffffff;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+}
+
+.header-link:hover::after,
+.header-link.is-active::after {
+  transform: scaleX(1);
 }
 
 .header-link.is-active {
-  color: var(--text);
+  opacity: 1;
 }
 
-/* Indicador sutil de página activa */
-.header-link.is-active::after {
-  content: '';
-  position: absolute;
-  bottom: -6px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 4px;
-  height: 4px;
-  background-color: var(--accent);
-  border-radius: 50%;
+/* Acciones a la derecha */
+.header-actions {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 16px;
+}
+
+.header-dropdown-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #fff;
+  text-decoration: none;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 8px 16px;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.header-dropdown-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.5);
 }
 
 /* Zona pulsable en dispositivos táctiles.

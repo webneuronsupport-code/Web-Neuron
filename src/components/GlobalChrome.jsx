@@ -49,11 +49,6 @@ const GlobalChrome = () => {
 
   return (
     <div className="global-chrome" ref={chromeRef}>
-      <div className="fame-top-brand">
-        <img src={`${import.meta.env.BASE_URL}2_clean2.png`} alt="Logo" style={{ height: '48px', width: 'auto' }} />
-        <span>WEB NEURON</span>
-      </div>
-
       <div className="fame-chrome">
         <span className="fame-dot" aria-hidden="true" />
 
@@ -101,14 +96,6 @@ const GlobalChrome = () => {
           Agendar demo <ArrowUpRight size={13} strokeWidth={3} />
         </a>
 
-        <Link to="/" className="fame-logo" aria-label="Web Neuron, inicio">
-          <img src={`${import.meta.env.BASE_URL}2_clean2.png`} alt="WN" style={{ height: '32px', width: 'auto' }} />
-        </Link>
-
-        <div className="fame-mark" aria-hidden="true">
-          <span className="fame-mark-dot" />
-          <span className="fame-mark-glyph">WN</span>
-        </div>
       </div>
 
       <aside className="fame-card">

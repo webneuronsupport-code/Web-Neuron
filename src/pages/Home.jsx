@@ -1,6 +1,11 @@
 import React from 'react';
-// import Hero from '../components/Hero';
-import HeroNew from '../components/HeroNew'; // Usando el nuevo Horizontal Hero
+import Hero from '../components/Hero';
+// El Hero horizontal se probó y se descartó. Se queda el archivo por si acaso,
+// pero el que va a producción es Hero: el del chip con la tipografía colosal.
+// Ojo al reactivarlo: GlobalChrome (la navegación lateral y la tarjeta) se
+// renderiza DENTRO de Hero, así que cambiar de hero se lleva por delante el
+// cromo de toda la portada.
+// import HeroNew from '../components/HeroNew';
 import Marquee from '../components/Marquee';
 // import PainPoints from '../components/PainPoints';
 import Services from '../components/Services';
@@ -14,8 +19,7 @@ const Home = () => {
   return (
     <>
       <main>
-        {/* <Hero /> */}
-        <HeroNew />
+        <Hero />
         <Marquee />
         {/* <PainPoints /> */}
         <Services />

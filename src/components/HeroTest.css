@@ -1,0 +1,478 @@
+/* ==========================================================================
+   HeroTest — plano técnico anotado
+
+   Suizo + HUD sobre blanco. Lo que sostiene el género, por orden de peso:
+
+   1. TODO es monoespaciado en mayúsculas y diminuto (10-11 px), MENOS el
+      titular, que es enorme y de una grotesca neutra. Ese salto brutal de
+      escala entre dos únicos tamaños es el gesto central; con tamaños
+      intermedios se deshace y parece una web normal.
+   2. Trazo de 1 px, negro puro, nunca gris. Es un plano, no una acuarela.
+   3. Las guías van en tramos recto-diagonal-recto, jamás en curva ni en
+      línea directa. Una diagonal suelta se lee como flecha; la escalera se
+      lee como plano técnico.
+   4. Muchísimo aire. El objeto ocupa el centro y lo demás vive pegado a los
+      bordes. Rellenar el espacio intermedio rompe el efecto.
+
+   Envoltorios anidados, cada uno con un dueño distinto — es lo que impide
+   que un bucle y un scrub se peleen por la misma propiedad:
+
+     .sx-obj    — acercamiento. Solo scrub.
+     .sx-flota  — flotación. Solo bucle.
+     .sx-gira   — balanceo. Solo bucle.
+   ========================================================================== */
+
+.sx {
+  position: relative;
+  width: 100%;
+  height: 480vh;
+  background-color: #fff;
+  color: #000;
+
+  --sx-mono: ui-monospace, 'SFMono-Regular', 'Roboto Mono', Menlo, monospace;
+  --sx-linea: rgba(0, 0, 0, 0.22);
+  --sx-micro: 0.6rem;
+}
+
+.sx-stage {
+  /* sticky y no el pin de ScrollTrigger: el pin escribe medidas en línea y ya
+     rompió el ancho de otra sección de este proyecto. */
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+  font-family: var(--sx-mono);
+  font-size: var(--sx-micro);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  line-height: 1.5;
+}
+
+/* --------------------------------------------------------------------------
+   Rejilla
+   -------------------------------------------------------------------------- */
+
+.sx-rejilla {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.sx-rejilla line {
+  stroke: var(--sx-linea);
+  stroke-width: 1;
+  /* Sin esto, el preserveAspectRatio="none" estira el trazo: las verticales
+     salen gordas y las horizontales finas. */
+  vector-effect: non-scaling-stroke;
+}
+
+.sx-cruz {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  font-size: 0.85rem;
+  line-height: 1;
+  color: rgba(0, 0, 0, 0.35);
+  pointer-events: none;
+}
+
+/* --------------------------------------------------------------------------
+   Barra superior
+   -------------------------------------------------------------------------- */
+
+.sx-marca-txt {
+  position: absolute;
+  top: calc(var(--header-h, 64px) + 1.1rem);
+  left: 2rem;
+  font-size: 0.78rem;
+  letter-spacing: 0.02em;
+}
+
+.sx-modo {
+  position: absolute;
+  top: calc(var(--header-h, 64px) + 1rem);
+  left: 50%;
+  transform: translateX(-50%);
+  display: grid;
+  justify-items: center;
+  gap: 0.5rem;
+}
+
+.sx-pill {
+  padding: 0.28rem 0.7rem;
+  border: 1px solid #000;
+  border-radius: 2px;
+  font: inherit;
+  letter-spacing: 0.06em;
+  background: #fff;
+  cursor: pointer;
+}
+
+.sx-globo {
+  width: 56px;
+  height: 38px;
+  fill: none;
+  stroke: #000;
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+.sx-hora {
+  position: absolute;
+  top: calc(var(--header-h, 64px) + 1.1rem);
+  right: 2rem;
+  display: grid;
+  justify-items: end;
+  gap: 0.1rem;
+  color: rgba(0, 0, 0, 0.4);
+}
+
+.sx-hora span:last-child { color: #000; }
+
+/* --------------------------------------------------------------------------
+   Titular
+   El otro extremo de la escala: enorme, ajustado y en caja alta.
+   -------------------------------------------------------------------------- */
+
+.sx-titulo {
+  position: absolute;
+  top: calc(var(--header-h, 64px) + 4vh);
+  left: 2rem;
+  z-index: 4;
+  font-family: var(--font);
+  font-size: clamp(2.6rem, 7.2vw, 7rem);
+  font-weight: 500;
+  line-height: 0.92;
+  letter-spacing: -0.045em;
+  text-transform: none;
+  pointer-events: none;
+}
+
+/* Cada línea entra desde abajo tras su propia máscara. */
+.sx-mask { display: block; overflow: hidden; }
+.sx-linea { display: block; }
+
+/* --------------------------------------------------------------------------
+   El objeto
+   -------------------------------------------------------------------------- */
+
+.sx-obj {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: min(46vw, 62vh);
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  will-change: transform;
+}
+
+/* El transform del contenedor lo escribe GSAP y borraría el centrado, así que
+   el translate vive en su propio envoltorio. */
+.sx-obj > .sx-flota {
+  position: absolute;
+  inset: 0;
+  will-change: transform;
+}
+
+.sx-gira {
+  position: absolute;
+  inset: 0;
+  will-change: transform;
+}
+
+.sx-gira img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  /* La sombra la proyecta la propia silueta, no una caja: es lo que hace que
+     el objeto se apoye en el blanco en lugar de flotar recortado. */
+  filter: drop-shadow(0 40px 55px rgba(0, 0, 0, 0.22));
+}
+
+/* Recuadros de muestreo saltando por la superficie. */
+.sx-muestra {
+  position: absolute;
+  aspect-ratio: 1;
+  opacity: 0;
+  pointer-events: none;
+  backdrop-filter: blur(7px) saturate(0.4);
+  -webkit-backdrop-filter: blur(7px) saturate(0.4);
+  background: rgba(255, 255, 255, 0.12);
+  outline: 1px solid rgba(0, 0, 0, 0.25);
+}
+
+/* --------------------------------------------------------------------------
+   Guías y anotaciones
+   -------------------------------------------------------------------------- */
+
+.sx-guias {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.sx-guia {
+  fill: none;
+  stroke: #000;
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+.sx-marca {
+  position: absolute;
+  z-index: 4;
+  display: grid;
+  place-items: center;
+  width: 17px;
+  height: 17px;
+  margin: -8.5px 0 0 -8.5px;
+  border: 1px solid #000;
+  background: #fff;
+  opacity: 0;
+}
+
+.sx-marca i {
+  width: 7px;
+  height: 7px;
+  background: #000;
+}
+
+.sx-nota {
+  position: absolute;
+  z-index: 4;
+  max-width: 15rem;
+  margin: 0;
+  /* El texto se apoya SOBRE la guía, no centrado en ella: por eso sube su
+     propia altura menos el grosor de la línea. */
+  transform: translateY(calc(-100% - 6px));
+  white-space: pre-line;
+  opacity: 0;
+}
+
+.sx-nota--der { text-align: left; }
+.sx-nota--izq { text-align: left; }
+
+/* --------------------------------------------------------------------------
+   Ficha de definición — con la esquina cortada
+   -------------------------------------------------------------------------- */
+
+.sx-ficha {
+  position: absolute;
+  right: 2rem;
+  top: 28%;
+  z-index: 5;
+  width: 15rem;
+  padding: 0 0 1.4rem;
+  border: 1px solid #000;
+  background: #fff;
+  /* La muesca de la esquina. Es el detalle que más dice «ficha técnica» y
+     cuesta una línea. */
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 22px), calc(100% - 22px) 100%, 0 100%);
+}
+
+.sx-ficha header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  margin: 0.75rem 0.75rem 1rem;
+  padding: 0.3rem 0.5rem;
+  background: rgba(0, 0, 0, 0.08);
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.sx-ficha-n { font-size: var(--sx-micro); font-weight: 400; color: rgba(0, 0, 0, 0.45); }
+.sx-ficha p { margin: 0 1.25rem; }
+.sx-ficha-def { margin-top: 1rem; }
+
+/* --------------------------------------------------------------------------
+   Lista de capacidades
+   -------------------------------------------------------------------------- */
+
+.sx-hilos {
+  position: absolute;
+  left: 2rem;
+  bottom: 2rem;
+  z-index: 5;
+  width: 17rem;
+}
+
+.sx-hilos-t { margin: 0 0 0.9rem; }
+
+.sx-hilos-cuerpo { display: grid; grid-template-columns: auto 1fr; gap: 0.9rem; }
+
+/* Glifo decorativo: un trazo y una retícula de píxeles. Es puro atrezo y da
+   el punto de «sistema propietario». */
+.sx-glifo {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  gap: 2px;
+  width: 62px;
+}
+
+.sx-glifo-a {
+  height: 42px;
+  border: 1px solid #000;
+  background:
+    linear-gradient(28deg, transparent 47%, #000 47%, #000 52%, transparent 52%),
+    linear-gradient(-46deg, transparent 48%, #000 48%, #000 51%, transparent 51%);
+}
+
+.sx-glifo-b {
+  height: 74px;
+  background-image:
+    repeating-linear-gradient(to right, #000 0 6px, transparent 6px 12px),
+    repeating-linear-gradient(to bottom, rgba(255, 255, 255, 0.85) 0 6px, transparent 6px 18px);
+  background-blend-mode: screen;
+  opacity: 0.55;
+}
+
+.sx-hilos ol { display: grid; gap: 0.55rem; }
+
+.sx-hilos li { display: grid; gap: 0.1rem; }
+
+.sx-hilo-top {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.sx-hilo-top b { font-weight: 400; }
+.sx-hilo-top em { font-style: normal; }
+
+/* Barra rayada: la trama va en el hijo para poder deslizarla dentro de una
+   ventana de ancho fijo. */
+.sx-barra {
+  flex: 1;
+  height: 7px;
+  overflow: hidden;
+}
+
+.sx-barra i {
+  display: block;
+  width: 200%;
+  height: 100%;
+  background: repeating-linear-gradient(115deg, #000 0 2px, transparent 2px 5px);
+}
+
+.sx-hilo-t {
+  padding-bottom: 0.3rem;
+  border-bottom: 1px solid #000;
+  font-size: 0.72rem;
+  letter-spacing: 0.02em;
+}
+
+/* --------------------------------------------------------------------------
+   Nota personal — muesca en la esquina contraria
+   -------------------------------------------------------------------------- */
+
+.sx-nota-pers {
+  position: absolute;
+  right: 2rem;
+  bottom: 2rem;
+  z-index: 5;
+  width: 17rem;
+  border: 1px solid #000;
+  background: #fff;
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 22px 100%, 0 calc(100% - 22px));
+}
+
+.sx-nota-pers header {
+  padding: 0.3rem 0.6rem;
+  background: #000;
+  color: #fff;
+}
+
+.sx-nota-pers p {
+  margin: 0.8rem 0.9rem;
+  text-transform: none;
+  letter-spacing: 0.01em;
+  line-height: 1.55;
+}
+
+.sx-enlaces {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin: 0 0.9rem 1.4rem;
+}
+
+.sx-enlaces a {
+  padding: 0.22rem 0.55rem;
+  border: 1px solid #000;
+  border-radius: 999px;
+  font-size: 0.55rem;
+}
+
+.sx-enlaces a:hover { background: #000; color: #fff; }
+
+.sx-cierre {
+  position: absolute;
+  left: 50%;
+  bottom: 1.6rem;
+  z-index: 5;
+  transform: translate(-50%, 10px);
+  margin: 0;
+  letter-spacing: 0.18em;
+  opacity: 0;
+}
+
+.sx-late { color: #d33; }
+
+/* --------------------------------------------------------------------------
+   Movimiento reducido
+   -------------------------------------------------------------------------- */
+
+.sx.is-static { height: auto; min-height: 100vh; }
+.sx.is-static .sx-stage { position: static; height: 100vh; }
+.sx.is-static .sx-marca,
+.sx.is-static .sx-nota,
+.sx.is-static .sx-cierre { opacity: 1; transform: none; }
+.sx.is-static .sx-nota { transform: translateY(calc(-100% - 6px)); }
+.sx.is-static .sx-cierre { transform: translate(-50%, 0); }
+
+/* --------------------------------------------------------------------------
+   Responsive
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 1100px) {
+  .sx { height: 340vh; }
+
+  /* Las guías dependen de que haya sitio a izquierda y derecha del objeto.
+     En vertical no lo hay: las anotaciones se caen y las capacidades pasan a
+     ser la única lectura. Forzarlas aquí solo produce líneas cruzadas sobre
+     el objeto. */
+  .sx-guias,
+  .sx-marca,
+  .sx-nota,
+  .sx-ficha { display: none; }
+
+  .sx-obj { width: min(86vw, 46vh); top: 44%; }
+
+  .sx-hilos {
+    left: 1.25rem;
+    right: 1.25rem;
+    bottom: 1.25rem;
+    width: auto;
+  }
+
+  .sx-nota-pers { display: none; }
+  .sx-cierre { display: none; }
+  .sx-titulo { left: 1.25rem; }
+}
+
+@media (max-width: 640px) {
+  .sx { height: 260vh; }
+  .sx-marca-txt, .sx-hora { display: none; }
+  .sx-glifo { display: none; }
+  .sx-hilos-cuerpo { grid-template-columns: 1fr; }
+  .sx-obj { top: 42%; width: 92vw; }
+}

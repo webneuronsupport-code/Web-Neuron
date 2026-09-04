@@ -1,285 +1,201 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowUpRight, CheckCircle2 } from 'lucide-react';
+import { ArrowUpRight, ChevronDown } from 'lucide-react';
 import { gsap, useGSAP } from '../lib/gsap';
-import SectionHeading from './SectionHeading';
 import './Services.css';
 
-/**
- * Las imágenes son fotografías y no las maquetas SVG de interfaz: la tarjeta de
- * la referencia es vertical (ratio 0,740) y una maqueta de 900×620 recortada a
- * vertical con object-fit: cover pierde casi todo su contenido. Una fotografía
- * aguanta el recorte.
- */
-import { FaWhatsapp, FaChrome, FaMicrophone, FaProjectDiagram, FaPlug, FaCogs, FaInbox, FaChartBar, FaReact, FaBolt, FaSearch } from 'react-icons/fa';
-import { SiGooglecalendar } from 'react-icons/si';
-
-/**
- * Las imágenes son fotografías y no las maquetas SVG de interfaz.
- */
 const SERVICES = [
   {
     n: '01',
-    title: 'Asistentes de IA',
-    text: 'Agentes conversacionales avanzados que interactúan 24/7 con tus clientes adoptando el tono de voz exacto de tu marca. Resuelven dudas, filtran prospectos y cierran citas en piloto automático.',
-    benefits: [
-      'Disponibilidad total 24/7/365',
-      'Respuestas hiper-rápidas (< 3s)',
-      'Agendamiento de citas integrado'
-    ],
-    tags: [
-      { text: 'WhatsApp', icon: <FaWhatsapp color="#25D366" /> },
-      { text: 'Web', icon: <FaChrome color="#4285F4" /> },
-      { text: 'Voz', icon: <FaMicrophone color="#FF3B30" /> }
-    ],
+    kicker: 'Tan constante,',
+    title: 'que nunca duerme',
+    text: 'Agentes conversacionales que atienden 24/7 con el tono exacto de tu marca. Resuelven dudas, filtran prospectos y cierran citas solos.',
+    nombre: 'Asistentes de IA',
+    chip: 'SIEMPRE ACTIVO',
+    chipTexto: 'RESPONDE EN MENOS DE 3 SEGUNDOS,\nA CUALQUIER HORA Y CUALQUIER DÍA.',
     image: `${import.meta.env.BASE_URL}service-ai-assistants.png`,
-    alt: 'Laptop showing an AI assistant dashboard interface',
+    alt: 'Asistente de IA atendiendo conversaciones de día y de noche',
     link: '/asistentes-virtuales',
-    actionText: 'Saber más'
+    actionText: 'Ver asistentes',
   },
   {
     n: '02',
-    title: 'Automatizaciones',
-    text: 'Conectamos todas tus herramientas de software para que el trabajo administrativo se ejecute solo, sin errores y sin supervisión humana. Tu equipo se enfocará en crear valor.',
-    benefits: [
-      'Eliminación de tareas manuales',
-      'Conexión entre múltiples plataformas',
-      'Notificaciones y alertas en tiempo real'
-    ],
-    tags: [
-      { text: 'Flujos', icon: <FaProjectDiagram color="#5E5CE6" /> },
-      { text: 'API', icon: <FaPlug color="#FF9F0A" /> },
-      { text: 'Sistemas', icon: <FaCogs color="#8E8E93" /> }
-    ],
+    kicker: 'Tan silencioso,',
+    title: 'que ni lo notas',
+    text: 'Conectamos tus herramientas para que el trabajo administrativo se ejecute solo, sin errores y sin supervisión. Tu equipo vuelve a lo que aporta valor.',
+    nombre: 'Automatizaciones',
+    chip: 'SIN MANOS',
+    chipTexto: 'EL TRABAJO REPETITIVO SE EJECUTA\nAUNQUE NADIE ESTÉ MIRANDO.',
     image: `${import.meta.env.BASE_URL}service-automatizaciones.png`,
     imagePosition: '65% center',
-    alt: 'Holographic display of automated systems running over a laptop on a wooden desk',
+    alt: 'Sistemas automatizados ejecutándose sobre un escritorio de trabajo',
   },
   {
     n: '03',
-    title: 'CRM omnicanal',
-    text: 'Centralizamos toda la comunicación de tu empresa en una única bandeja inteligente. Visualiza el historial completo de cada cliente y gestiona ventas sin saltar entre pestañas.',
-    benefits: [
-      'Bandeja de entrada centralizada',
-      'Historial de chats unificado',
-      'Métricas de rendimiento en vivo'
-    ],
-    tags: [
-      { text: 'Bandeja', icon: <FaInbox color="#0A84FF" /> },
-      { text: 'Métricas', icon: <FaChartBar color="#30D158" /> },
-      { text: 'Agenda', icon: <SiGooglecalendar color="#4285F4" /> }
-    ],
+    kicker: 'Tan completo,',
+    title: 'que cabe en una pestaña',
+    text: 'Toda la comunicación de tu empresa en una sola bandeja inteligente. El historial completo de cada cliente, sin saltar entre ventanas.',
+    nombre: 'CRM omnicanal',
+    chip: 'TODO EN UNO',
+    chipTexto: 'WHATSAPP, WEB, CORREO Y LLAMADAS\nEN LA MISMA CONVERSACIÓN.',
     image: `${import.meta.env.BASE_URL}hero-4.jpg`,
     alt: 'Puesto de trabajo con varias pantallas de seguimiento de clientes',
+    link: '/crm-omnicanal',
+    actionText: 'Ver el CRM',
   },
   {
     n: '04',
-    title: 'Desarrollo web',
-    text: 'Desarrollamos interfaces de usuario espectaculares, de carga instantánea y optimizadas para máxima conversión. Combinamos la mejor tecnología con diseño de grado corporativo.',
-    benefits: [
-      'Diseño premium enfocado en conversión',
-      'Carga ultrarrápida y SEO técnico',
-      'Animaciones fluidas interactivas'
-    ],
-    tags: [
-      { text: 'React', icon: <FaReact color="#61DAFB" /> },
-      { text: 'Speed', icon: <FaBolt color="#FFD60A" /> },
-      { text: 'SEO', icon: <FaSearch color="#32ADE6" /> }
-    ],
+    kicker: 'Tan rápido,',
+    title: 'que parece instantáneo',
+    text: 'Interfaces de carga inmediata, optimizadas para convertir. La mejor tecnología con diseño de grado corporativo.',
+    nombre: 'Desarrollo web',
+    chip: 'CARGA INMEDIATA',
+    chipTexto: 'DISEÑO PREMIUM, SEO TÉCNICO\nY ANIMACIONES QUE NO ESTORBAN.',
     image: `${import.meta.env.BASE_URL}hero-5.jpg`,
-    alt: 'Equipo de desarrollo web colaborando frente a un monitor en una oficina moderna',
+    alt: 'Equipo de desarrollo web frente a un monitor en una oficina moderna',
   },
 ];
 
-const LAST = SERVICES.length - 1;
-
-// El timeline se normaliza a 1 y las vueltas se colocan en fracciones. Con N
-// fichas de una pantalla cada una, la ficha i queda centrada en el viewport
-// cuando el progreso vale i/(N-1); el punto medio entre dos fichas — y por
-// tanto el momento de girar — cae en (2i+1) / (2·(N-1)).
-const TURN = 0.11; // anchura de la media vuelta, en fracción del recorrido
-
 const Services = () => {
   const root = useRef(null);
-  const flow = useRef(null);
-  const wrap = useRef(null);
-  const faceImgs = useRef([]);
-  const wipeIncoming = useRef(null); // [imagen de la cara frontal, imagen de la trasera]
-
-  const [reduced] = useState(
-    () =>
-      typeof window !== 'undefined' &&
-      window.matchMedia('(prefers-reduced-motion: reduce)').matches
-  );
-
-  // Precarga: las caras cambian de src a mitad del giro y sin el archivo en
-  // caché la cara entrante aparecería en blanco un instante.
-  useEffect(() => {
-    SERVICES.forEach(({ image }) => {
-      const img = new Image();
-      img.src = image;
-    });
-  }, []);
 
   useGSAP(
     () => {
-      if (reduced) return;
+      const n = SERVICES.length;
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-      const [frontImg, backImg] = faceImgs.current;
+      const mm = gsap.matchMedia(root);
 
-      /**
-       * Reparte los productos entre las dos caras según el ángulo actual.
-       *
-       * Solo hay dos caras para cuatro productos, así que el src se cambia al
-       * vuelo. La regla se deduce del ángulo y no del orden de los eventos, que
-       * es lo que la hace funcionar igual hacia abajo que hacia arriba: en el
-       * tramo `seg` se pasa del producto `seg` al `seg+1` y, al diferir sus
-       * paridades, cada uno cae en una cara distinta.
-       */
-      const syncFaces = () => {
-        const rot = gsap.getProperty(wrap.current, 'rotationY');
-        const seg = gsap.utils.clamp(0, LAST - 1, Math.floor(rot / 180));
-        const front = seg % 2 === 0 ? seg : seg + 1;
-        const back = seg % 2 === 0 ? seg + 1 : seg;
+      // La tira horizontal solo existe con sitio a los lados. Por debajo de
+      // 900 px las fichas laterales no caben y el visor central se comería la
+      // pantalla entera; ahí manda una lista vertical normal, que el CSS ya
+      // resuelve sin JavaScript.
+      mm.add('(min-width: 901px)', () => {
+        const fichas = gsap.utils.toArray('.ory-ficha');
 
-        // Solo se escribe si cambia: reasignar el mismo src en cada frame
-        // dispararía trabajo de decodificación para nada.
-        if (!frontImg.src.endsWith(SERVICES[front].image)) {
-          frontImg.src = SERVICES[front].image;
-          frontImg.alt = SERVICES[front].alt;
-          frontImg.style.objectPosition = SERVICES[front].imagePosition || '50% 50%';
-        }
-        if (!backImg.src.endsWith(SERVICES[back].image)) {
-          backImg.src = SERVICES[back].image;
-          backImg.alt = SERVICES[back].alt;
-          backImg.style.objectPosition = SERVICES[back].imagePosition || '50% 50%';
-        }
-      };
+        /* La distancia entre dos fichas se MIDE, no se calcula: depende del
+           ancho real y del hueco, que salen de clamp() sobre el viewport.
+           Calcularla a mano obligaría a duplicar esas fórmulas en JS y a que
+           se desincronicen en cuanto se toque el CSS. */
+        const paso = () => (fichas[1]?.offsetLeft ?? 0) - (fichas[0]?.offsetLeft ?? 0);
 
-      const tl = gsap.timeline({
-        onUpdate: syncFaces,
-        scrollTrigger: {
-          // El disparador es el flujo completo, no una escena anclada: la
-          // página sigue corriendo con normalidad y lo único que se queda
-          // quieto es la tarjeta, igual que en la referencia.
-          trigger: flow.current,
-          start: 'top top',
-          end: 'bottom bottom',
-          scrub: 0.6,
-          invalidateOnRefresh: true,
-        },
+        const tl = gsap.timeline({
+          defaults: { ease: 'none' },
+          scrollTrigger: {
+            trigger: root.current,
+            start: 'top top',
+            end: 'bottom bottom',
+            scrub: 0.8,
+            invalidateOnRefresh: true,
+          },
+        });
+
+        // La tira se desplaza para ir dejando cada ficha en el visor.
+        tl.to('.ory-tira', { x: () => -(n - 1) * paso(), duration: n - 1 }, 0);
+
+        fichas.forEach((f, i) => {
+          /* Cada ficha crece al entrar en el visor y encoge al salir. La escala
+             no altera el hueco entre fichas — transform no toca el layout — así
+             que el reparto lateral se mantiene regular, como en la referencia. */
+          if (i > 0) tl.fromTo(f, { scale: 0.7 }, { scale: 1, duration: 1 }, i - 1);
+          if (i < n - 1) tl.to(f, { scale: 0.7, duration: 1 }, i);
+
+          // Solo la ficha del visor enseña su rótulo.
+          if (i > 0) tl.fromTo(`.ory-chip-${i}`, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.35 }, i - 0.35);
+          if (i < n - 1) tl.to(`.ory-chip-${i}`, { autoAlpha: 0, duration: 0.3 }, i + 0.05);
+
+          // Y el texto de la izquierda se releva con ella.
+          if (i > 0) tl.fromTo(`.ory-txt-${i}`, { autoAlpha: 0, y: 26 }, { autoAlpha: 1, y: 0, duration: 0.4 }, i - 0.4);
+          if (i < n - 1) tl.to(`.ory-txt-${i}`, { autoAlpha: 0, y: -26, duration: 0.35 }, i + 0.05);
+        });
+
+        // El aviso de seguir bajando sobra al llegar al final.
+        tl.to('.ory-seguir', { autoAlpha: 0, duration: 0.4 }, n - 1.4);
       });
-
-      for (let i = 0; i < LAST; i += 1) {
-        const mid = (2 * i + 1) / (2 * LAST);
-        tl.to(
-          wrap.current,
-          { rotationY: (i + 1) * 180, duration: TURN, ease: 'power2.inOut' },
-          mid - TURN / 2
-        );
-      }
-
-      // El timeline debe durar exactamente 1 para que las fracciones de arriba
-      // se correspondan con el progreso del scroll. La última vuelta acaba
-      // antes, así que se rellena el resto.
-      tl.set({}, {}, 1);
     },
-    { scope: root, dependencies: [reduced] }
+    { scope: root }
   );
 
   return (
-    <section className={`svc${reduced ? ' is-static' : ''}`} id="servicios" ref={root}>
-      <div className="shell">
-        <SectionHeading
-          align="center"
-          size="huge"
-          label="Servicios"
-          title="Cuatro piezas que trabajan como una sola"
-          lede="Cada servicio funciona por separado, pero juntos comparten datos y contexto. Ahí está la diferencia."
-        />
-      </div>
+    <section className="ory" id="servicios" ref={root}>
+      <div className="ory-stage">
+        {/* Halo cálido de fondo. Va aquí y no en la sección para que no se
+            desplace con la tira. */}
+        <span className="ory-halo" aria-hidden="true" />
 
-      <div className="svc-flow" ref={flow}>
-        {/* Izquierda: las cuatro fichas en flujo normal del documento. Nada
-            anclado ni desvaneciéndose: el bloque se recorre como cualquier otra
-            parte de la página. */}
-        <div className="svc-list">
-          {SERVICES.map(({ n, title, text, benefits, tags, image, alt, link, actionText, imagePosition }) => (
-            <article className="svc-item" key={n}>
-              {/* Solo visible en una columna y con movimiento reducido, donde no
-                  hay carril: ahí cada ficha necesita su propia imagen. */}
-              <figure className="svc-item-media">
-                <img src={image} alt={alt} loading="lazy" style={{ objectPosition: imagePosition || '50% 50%' }} />
+        {/* Columna izquierda: se releva con la ficha del visor. */}
+        <div className="ory-copy">
+          {SERVICES.map((s, i) => (
+            <div className={`ory-txt ory-txt-${i}`} key={s.n}>
+              {/* Copia de la imagen para la versión en columna. La tira vive en
+                  otro contenedor —tiene que estar fuera del elemento que se
+                  desplaza— así que aquí no se puede reutilizar aquella.
+
+                  No cuesta una descarga extra: el navegador reutiliza la misma
+                  URL. Y como cada una se oculta con display:none en el otro
+                  ancho, el lector de pantalla solo anuncia la que se ve. */}
+              <figure className="ory-txt-media">
+                <img
+                  src={s.image}
+                  alt={s.alt}
+                  loading="lazy"
+                  decoding="async"
+                  style={{ objectPosition: s.imagePosition || 'center center' }}
+                />
+                <figcaption className="ory-chip ory-chip-movil">
+                  <span className="ory-chip-tag">{s.chip}</span>
+                  <span className="ory-chip-txt">{s.chipTexto}</span>
+                </figcaption>
               </figure>
 
-              <span className="svc-n">
-                {n} <i aria-hidden="true">/ 0{SERVICES.length}</i>
-              </span>
-              <h3 className="svc-title">{title}</h3>
-              <p className="svc-desc">{text}</p>
-              
-              <ul className="svc-benefits">
-                {benefits?.map((b, i) => (
-                  <li key={i}>
-                    <CheckCircle2 size={16} className="svc-benefit-icon" />
-                    <span>{b}</span>
-                  </li>
-                ))}
-              </ul>
-
-              <ul className="svc-tags">
-                {tags.map((t) => (
-                  <li key={t.text} className="svc-tag">
-                    <span className="svc-tag-icon">{t.icon}</span>
-                    {t.text}
-                  </li>
-                ))}
-              </ul>
-              {link ? (
-                link.startsWith('/') ? (
-                  <Link className="svc-link" to={link}>
-                    {actionText || 'Saber más'} <ArrowUpRight size={15} strokeWidth={2.2} />
-                  </Link>
-                ) : (
-                  <a className="svc-link" href={link}>
-                    {actionText || 'Hablar de esto'} <ArrowUpRight size={15} strokeWidth={2.2} />
-                  </a>
-                )
+              <p className="ory-kicker">{s.kicker}</p>
+              <h3 className="ory-title">{s.title}</h3>
+              <p className="ory-nombre">
+                <span>{s.n}</span> {s.nombre}
+              </p>
+              <p className="ory-desc">{s.text}</p>
+              {s.link ? (
+                <Link className="ory-link" to={s.link}>
+                  {s.actionText} <ArrowUpRight size={15} strokeWidth={2.5} />
+                </Link>
               ) : (
-                <a className="svc-link" href="#contacto">
-                  Hablar de esto <ArrowUpRight size={15} strokeWidth={2.2} />
+                <a className="ory-link" href="#contacto">
+                  Hablar de esto <ArrowUpRight size={15} strokeWidth={2.5} />
                 </a>
               )}
-            </article>
+            </div>
           ))}
         </div>
 
-        {/* Derecha: el carril de la tarjeta. Tan alto como la lista, con un
-            hijo sticky que mantiene la tarjeta centrada en la mitad derecha
-            durante todo el recorrido. */}
-        <div className="svc-rail" aria-hidden="true">
-          <div className="svc-sticky">
-            <div className="svc-card">
-              <div className="svc-card-wrap" ref={wrap}>
-                {[0, 1].map((slot) => (
-                  <div
-                    className={`svc-card-face svc-card-face--${slot ? 'back' : 'front'}`}
-                    key={slot}
-                  >
-                    <img
-                      src={SERVICES[slot].image}
-                      alt=""
-                      style={{ objectPosition: SERVICES[slot].imagePosition || '50% 50%' }}
-                      ref={(el) => {
-                        faceImgs.current[slot] = el;
-                      }}
-                    />
-                  </div>
-                ))}
-              </div>
-            </div>
+        {/* La tira. Las fichas se desplazan; el visor no. */}
+        <div className="ory-carril">
+          <div className="ory-tira">
+            {SERVICES.map((s, i) => (
+              <figure className={`ory-ficha ory-ficha-${i}`} key={s.n}>
+                <img
+                  src={s.image}
+                  alt={s.alt}
+                  loading={i === 0 ? 'eager' : 'lazy'}
+                  decoding="async"
+                  style={{ objectPosition: s.imagePosition || 'center center' }}
+                />
+                <figcaption className={`ory-chip ory-chip-${i}`}>
+                  <span className="ory-chip-tag">{s.chip}</span>
+                  <span className="ory-chip-txt">{s.chipTexto}</span>
+                </figcaption>
+              </figure>
+            ))}
           </div>
+
+          {/* Visor punteado: fijo en el centro. Son las fichas las que pasan
+              por él, no al revés. */}
+          <span className="ory-visor" aria-hidden="true" />
         </div>
+
+        <p className="ory-seguir">
+          <span className="ory-seguir-btn" aria-hidden="true"><ChevronDown size={14} /></span>
+          Sigue bajando
+        </p>
       </div>
     </section>
   );

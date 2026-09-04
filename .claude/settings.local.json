@@ -14,7 +14,9 @@
       "PowerShell(try { $r = Invoke-WebRequest -Uri \"http://localhost:5173\" -UseBasicParsing -TimeoutSec 6; \"HTTP $\\($r.StatusCode\\) - $\\($r.Content.Length\\) bytes\" } catch { \"SIN RESPUESTA: $\\($_.Exception.Message\\)\" })",
       "Bash(sed -i '227,474d' src/components/Hero.css)",
       "Bash(grep -nE '^\\\\s*\\\\.fame-\\(top-brand|nav|cta|card|dot|mark|logo|chrome\\)[a-z-]*[ ,{]' src/components/Hero.css)",
-      "Bash(grep -nE '^\\\\s*\\\\.fame-\\(top-brand|nav|cta|card|dot|mark|logo|chrome\\)[a-z-]*[ ,{:]' src/components/Hero.css)"
+      "Bash(grep -nE '^\\\\s*\\\\.fame-\\(top-brand|nav|cta|card|dot|mark|logo|chrome\\)[a-z-]*[ ,{:]' src/components/Hero.css)",
+      "PowerShell(Get-ChildItem \"C:\\\\Users\\\\javie\\\\Desktop\\\\n\\\\public\\\\arch\" | Select-Object Name, @{n='KB';e={[math]::Round\\($_.Length/1KB\\)}})",
+      "PowerShell(Get-ChildItem \"C:\\\\Users\\\\javie\\\\Desktop\\\\n\\\\public\" -File | Select-Object Name, @{n='KB';e={[math]::Round\\($_.Length/1KB\\)}} | Sort-Object Name)"
     ]
   }
 }
