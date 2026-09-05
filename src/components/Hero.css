@@ -132,33 +132,11 @@
 
 /* ====== ABAJO CENTRO (SCROLL) ====== */
 .hero-editorial-scroll-indicator {
-  position: absolute;
-  bottom: 6%;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.scroll-icon-wrapper {
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #fff;
-}
-
-.hero-editorial-scroll-indicator span {
-  font-size: 0.75rem;
+  text-decoration: none;
   font-weight: 700;
   letter-spacing: 0.05em;
   color: #fff;
 }
-
 
 /* ====== ABAJO DERECHA (PIP VIDEO) ====== */
 .hero-editorial-pip {

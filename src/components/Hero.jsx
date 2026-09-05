@@ -1,5 +1,6 @@
 import React from 'react';
 import { ChevronDown } from 'lucide-react';
+import SpecularButton from './SpecularButton';
 import './Hero.css';
 
 const Hero = () => {
@@ -48,11 +49,21 @@ const Hero = () => {
         </div>
 
         {/* Abajo Centro: Scroll Indicator */}
-        <div className="hero-editorial-scroll-indicator">
-          <div className="scroll-icon-wrapper">
-            <ChevronDown size={14} />
-          </div>
-          <span>SCROLL TO CONTINUE</span>
+        <div className="hero-editorial-scroll-indicator-wrapper" style={{ position: 'absolute', bottom: '40px', left: '50%', transform: 'translateX(-50%)', zIndex: 10 }}>
+          <SpecularButton
+            as="a"
+            href="#asistentes"
+            className="hero-editorial-scroll-indicator"
+            size="sm"
+            radius={30}
+            baseColor="#111111"
+            lineColor="#00f3ff"
+            intensity={1.2}
+            thickness={2}
+            speed={0.5}
+          >
+            <ChevronDown size={14} style={{ marginRight: '6px' }} /> SCROLL TO CONTINUE
+          </SpecularButton>
         </div>
 
         {/* Abajo Derecha: Picture in Picture Video */}
@@ -65,7 +76,6 @@ const Hero = () => {
               playsInline
               src={`${import.meta.env.BASE_URL}Quiero_crear_un_video_en_donde.mp4`}
             ></video>
-            <div className="pip-overlay-text">PLAY</div>
           </div>
         </div>
 
